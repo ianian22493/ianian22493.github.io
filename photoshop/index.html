@@ -104,7 +104,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-bottom: 36px;
+      margin-bottom: 20px;
     }
 
     .style-btn {
@@ -167,6 +167,66 @@
 
     .style-btn.active .btn-desc { opacity: 0.6; }
 
+    /* ── Strength control ── */
+    .strength-section {
+      margin-bottom: 28px;
+    }
+
+    .strength-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .strength-pills {
+      display: flex;
+      gap: 6px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: 4px;
+    }
+
+    .strength-pill {
+      flex: 1;
+      padding: 7px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .strength-pill:hover {
+      color: var(--text1);
+      background: rgba(0,0,0,0.04);
+    }
+
+    .strength-pill.active {
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(27,45,79,0.25);
+    }
+
+    .strength-badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-weight: 700;
+    }
+
+    .strength-badge.light  { background: #eef3f8; color: #6b8aad; }
+    .strength-badge.medium { background: #e8edf5; color: #3d5a82; }
+    .strength-badge.strong { background: #dce4f0; color: #1b2d4f; }
+
     /* ── Divider ── */
     .divider {
       height: 1px;
@@ -177,7 +237,7 @@
     /* ── Prompt area ── */
     textarea {
       width: 100%;
-      min-height: 260px;
+      min-height: 280px;
       padding: 20px;
       background: var(--card);
       border: 1.5px solid var(--border);
@@ -307,6 +367,7 @@
       .header-nav { display: none; }
       textarea { min-height: 200px; }
       .fab-dock { bottom: 20px; right: 16px; }
+      .strength-pill { padding: 7px 10px; }
     }
   </style>
 </head>
@@ -345,9 +406,18 @@
 
   <!-- Main -->
   <main class="container">
-    <p class="section-label">選擇圖片風格</p>
 
+    <p class="section-label">選擇圖片風格</p>
     <div class="style-grid" id="styleGrid"></div>
+
+    <!-- Strength control -->
+    <div class="strength-section">
+      <div class="strength-header">
+        <p class="section-label" style="margin-bottom:0;">風格強度</p>
+        <span class="strength-badge" id="strengthBadge"></span>
+      </div>
+      <div class="strength-pills" id="strengthPills"></div>
+    </div>
 
     <div class="divider"></div>
 
@@ -380,56 +450,159 @@
         icon: '✏️',
         name: '手繪註解風',
         desc: '在照片上疊加手繪塗鴉與手寫備忘',
-        prompt: `Keep the original food photo unchanged and realistic.
+        base:
+`Keep the original food photo unchanged and realistic.
 
-Overlay minimal white hand-drawn doodles around the food:
-* thin, slightly uneven lines (one-line sketch style)
-* outline only along the edges of the food, do not cover the main surface
+Draw minimal white hand-drawn doodles ONLY around the edges of the food:
+- thin, slightly uneven lines (one-line sketch style)
+- avoid drawing over the main surface of the food
 
-Add small handwritten-style annotations:
-* short, casual phrases (like diary notes)
-* Japanese-style cute handwriting
-* place them near the food, not overlapping key details
+Add small handwritten annotations in a cute Japanese style:
+- use short phrases in Chinese or Japanese (e.g. 好吃, 超讚, ちょっと幸せ)
+- keep text small and light
+- place text near the food, not covering key details
 
-Include subtle decorative elements:
-* arrows or dashed lines pointing to parts of the dish
-* small steam lines to show warmth
-* a few sparkles or tiny hearts
+Add subtle decorations:
+- arrows or dashed lines pointing to details
+- small steam lines to indicate warmth
+- a few tiny sparkles or hearts
 
-Style:
-* Instagram story aesthetic
-* cozy, soft, slightly lazy feeling
-* keep plenty of empty space
+Style and mood:
+- Instagram story aesthetic
+- cozy, soft, slightly lazy feeling
+- natural and not overly designed
 
-Important constraints:
-* DO NOT block the food
-* DO NOT add too many drawings
-* DO NOT change the original colors of the food`
+Constraints:
+- DO NOT block or cover the food
+- DO NOT add too many doodles
+- DO NOT change original colors or lighting
+- keep plenty of empty space`,
+        strength: {
+          light:
+`Intensity: Light —
+Keep doodles minimal and subtle.
+Use very few annotations.
+Keep lots of empty space.`,
+          medium:
+`Intensity: Medium —
+Add a moderate amount of doodles and annotations.
+Include arrows, dashed lines, and small decorations like steam or sparkles.
+Maintain balance and avoid clutter.`,
+          strong:
+`Intensity: Strong —
+Add more visible doodles and annotations.
+Make the drawings slightly more playful and expressive.
+Include multiple arrows, notes, and decorative elements, but still do not block the food.`
+        }
       },
       {
         id: 'magazine',
         icon: '🗞️',
         name: '日系雜誌風',
         desc: '極簡排版、高質感攝影、大量留白',
-        prompt: `Clean Japanese magazine style, minimal layout, soft shadows, elegant, high-end editorial photography, lots of whitespace`
+        base:
+`Transform the image into a Japanese editorial magazine style.
+
+Composition:
+- clean and balanced layout
+- strong use of negative space (whitespace)
+- subject placed slightly off-center
+
+Lighting:
+- soft natural light
+- gentle shadows, not harsh
+
+Color:
+- neutral and slightly muted tones
+- avoid overly saturated colors
+
+Style:
+- minimal, calm, and refined
+- similar to Japanese lifestyle magazines (MUJI, BRUTUS)
+
+Details:
+- keep textures natural and realistic
+- no extra decorations or graphic elements
+
+Constraints:
+- DO NOT add text or doodles
+- DO NOT over-enhance contrast
+- maintain a soft and elegant atmosphere`,
+        strength: {
+          light:
+`Intensity: Light —
+Apply very subtle adjustments. Keep the image very close to the original with slightly cleaner composition and softer lighting.`,
+          medium:
+`Intensity: Medium —
+Moderately enhance composition and lighting. Improve balance, whitespace, and overall editorial feeling.`,
+          strong:
+`Intensity: Strong —
+Make the composition more stylized and refined. Increase the sense of structure, spacing, and editorial design while keeping a natural look.`
+        }
       },
       {
         id: 'film',
         icon: '🎞️',
         name: '底片復古風',
         desc: '底片顆粒、褪色色調、溫暖過曝感',
-        prompt: `Vintage film look, film grain, faded colors, warm tone, slightly overexposed, nostalgic feeling`
+        base:
+`Apply a realistic analog film photography look.
+
+Color and tone:
+- slightly warm tone
+- mildly faded colors (not overly yellow)
+- soft contrast
+
+Texture:
+- subtle film grain (fine, not heavy)
+- slight imperfections for realism
+
+Lighting:
+- slightly overexposed highlights
+- soft glow in bright areas
+
+Style:
+- nostalgic, calm, everyday moment feeling
+- like a casual photo taken with a film camera
+
+Constraints:
+- DO NOT make it too dark or too yellow
+- DO NOT overuse grain
+- keep image details visible and natural`,
+        strength: {
+          light:
+`Intensity: Light —
+Apply very subtle film grain and a slight warm tone. Keep the effect barely noticeable.`,
+          medium:
+`Intensity: Medium —
+Use moderate grain and slightly faded colors. Add a soft nostalgic tone with balanced contrast.`,
+          strong:
+`Intensity: Strong —
+Increase visible film grain and vintage tone. Make colors more faded and nostalgic, while still keeping image details clear.`
+        }
       }
     ];
 
-    let activeId = styles[0].id;
+    const strengthOptions = [
+      { id: 'light',  label: 'Light',  badgeLabel: 'Light',  badgeClass: 'light'  },
+      { id: 'medium', label: 'Medium', badgeLabel: 'Medium', badgeClass: 'medium' },
+      { id: 'strong', label: 'Strong', badgeLabel: 'Strong', badgeClass: 'strong' },
+    ];
+
+    let activeStyleId  = styles[0].id;
+    let activeStrength = 'medium';
+
+    function buildPrompt() {
+      const style = styles.find(s => s.id === activeStyleId);
+      return style.base + '\n\n' + style.strength[activeStrength];
+    }
 
     function renderStyles() {
       const grid = document.getElementById('styleGrid');
       grid.innerHTML = '';
       styles.forEach(s => {
         const btn = document.createElement('button');
-        btn.className = 'style-btn' + (s.id === activeId ? ' active' : '');
+        btn.className = 'style-btn' + (s.id === activeStyleId ? ' active' : '');
         btn.innerHTML = `
           <span class="btn-badge">${s.icon}</span>
           <span>
@@ -437,23 +610,38 @@ Important constraints:
             <div class="btn-desc">${s.desc}</div>
           </span>
         `;
-        btn.onclick = () => selectStyle(s.id);
+        btn.onclick = () => { activeStyleId = s.id; update(); };
         grid.appendChild(btn);
       });
     }
 
-    function selectStyle(id) {
-      activeId = id;
-      document.getElementById('promptOutput').value = styles.find(s => s.id === id).prompt;
+    function renderStrength() {
+      const container = document.getElementById('strengthPills');
+      container.innerHTML = '';
+      strengthOptions.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'strength-pill' + (opt.id === activeStrength ? ' active' : '');
+        btn.textContent = opt.label;
+        btn.onclick = () => { activeStrength = opt.id; update(); };
+        container.appendChild(btn);
+      });
+
+      const badge = document.getElementById('strengthBadge');
+      const current = strengthOptions.find(o => o.id === activeStrength);
+      badge.textContent = current.badgeLabel;
+      badge.className = 'strength-badge ' + current.badgeClass;
+    }
+
+    function update() {
       renderStyles();
+      renderStrength();
+      document.getElementById('promptOutput').value = buildPrompt();
     }
 
     function copyPrompt() {
       const text = document.getElementById('promptOutput').value;
       if (!text) return;
-      navigator.clipboard.writeText(text).then(() => {
-        feedback();
-      }).catch(() => {
+      navigator.clipboard.writeText(text).then(feedback).catch(() => {
         document.getElementById('promptOutput').select();
         document.execCommand('copy');
         feedback();
@@ -473,8 +661,7 @@ Important constraints:
       setTimeout(() => toast.classList.remove('show'), 2400);
     }
 
-    renderStyles();
-    selectStyle(activeId);
+    update();
   </script>
 
 </body>
