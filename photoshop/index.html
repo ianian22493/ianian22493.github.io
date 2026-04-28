@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yuzu Photoshop</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1b2d4f;
+      --cream:  #f0ede8;
+      --gold0:  #f0d050;
+      --gold1:  #a06010;
+      --white:  #ffffff;
+      --text1:  #1a1a1a;
+      --text2:  #555;
+      --text3:  #aaa;
+      --border: #e3dfd9;
+      --card:   #ffffff;
+      --radius: 14px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text1);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 80px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      width: 100%;
+      background: var(--navy);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 44px;
+    }
+
+    .yuzu-logo svg { display: block; }
+
+    .header-text { flex: 1; }
+
+    .header-brand {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 2px;
+    }
+
+    .header-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      transition: all 0.15s;
+    }
+
+    .header-nav a:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    /* ── Main layout ── */
+    .container {
+      width: 100%;
+      max-width: 640px;
+      padding: 0 20px;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 14px;
+    }
+
+    /* ── Style buttons ── */
+    .style-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .style-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-align: left;
+      width: 100%;
+      color: var(--text1);
+    }
+
+    .style-btn:hover {
+      border-color: #c8c3bb;
+      background: #faf8f5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+    }
+
+    .style-btn.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+      box-shadow: 0 4px 22px rgba(27,45,79,0.3);
+    }
+
+    .btn-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      transition: background 0.18s;
+    }
+
+    .style-btn.active .btn-badge {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .btn-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-desc {
+      font-size: 0.72rem;
+      opacity: 0.5;
+    }
+
+    .style-btn.active .btn-desc { opacity: 0.6; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* ── Prompt area ── */
+    textarea {
+      width: 100%;
+      min-height: 260px;
+      padding: 20px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      line-height: 1.8;
+      color: #3a3a3a;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+
+    textarea:focus { border-color: var(--navy); }
+
+    /* ── Copy button ── */
+    .copy-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 16px;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .copy-btn:hover {
+      background: #142240;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(27,45,79,0.3);
+    }
+
+    .copy-btn:active { transform: translateY(0); }
+
+    .copy-btn.success {
+      background: #3d7a56;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--navy);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      transition: all 0.28s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Floating nav dock ── */
+    .fab-dock {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      z-index: 90;
+    }
+
+    .fab-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px 10px 12px;
+      background: var(--navy);
+      color: rgba(255,255,255,0.85);
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      box-shadow: 0 4px 18px rgba(27,45,79,0.35);
+      transition: all 0.18s ease;
+      border: 1.5px solid rgba(255,255,255,0.1);
+    }
+
+    .fab-btn:hover {
+      background: #142240;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(27,45,79,0.45);
+    }
+
+    .fab-icon {
+      width: 28px;
+      height: 28px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      text-align: center;
+      margin-top: 48px;
+      font-size: 0.72rem;
+      color: var(--text3);
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 480px) {
+      .site-header { padding: 16px 20px; margin-bottom: 32px; }
+      .header-nav { display: none; }
+      textarea { min-height: 200px; }
+      .fab-dock { bottom: 20px; right: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="yuzu-logo">
+      <svg width="36" height="36" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="yg" cx="38%" cy="28%" r="72%">
+            <stop offset="0%" stop-color="#f0d050"/>
+            <stop offset="100%" stop-color="#a06010"/>
+          </radialGradient>
+        </defs>
+        <circle cx="17" cy="17" r="17" fill="url(#yg)"/>
+        <circle cx="17" cy="17" r="11.5" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
+        <circle cx="17" cy="17" r="2.8" fill="rgba(255,255,255,.75)"/>
+        <line x1="17" y1="14.2" x2="10.5" y2="7.5" stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="17" y1="14.2" x2="23.5" y2="7.5" stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="17" y1="14.2" x2="17"   y2="23"  stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="17" y1="5.5"  x2="17"   y2="14.2" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
+        <line x1="6.8" y1="22.5" x2="12.5" y2="18.5" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
+        <line x1="27.2" y1="22.5" x2="21.5" y2="18.5" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <div class="header-brand">Yuzu</div>
+      <div class="header-title">Photoshop</div>
+    </div>
+    <nav class="header-nav">
+      <a href="https://ianian22493.github.io/daily-brief/" target="_blank">每日簡報</a>
+      <a href="https://ianian22493.github.io/investment-dashboard/" target="_blank">Finance</a>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="container">
+    <p class="section-label">選擇圖片風格</p>
+
+    <div class="style-grid" id="styleGrid"></div>
+
+    <div class="divider"></div>
+
+    <p class="section-label">Prompt 內容</p>
+    <textarea id="promptOutput" readonly></textarea>
+    <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">複製 Prompt</button>
+
+    <footer class="site-footer">Yuzu Photoshop · 圖片風格 Prompt 工具</footer>
+  </main>
+
+  <!-- Floating nav dock -->
+  <div class="fab-dock">
+    <a class="fab-btn" href="https://ianian22493.github.io/daily-brief/" target="_blank">
+      <span class="fab-icon">📰</span>
+      每日簡報
+    </a>
+    <a class="fab-btn" href="https://ianian22493.github.io/investment-dashboard/" target="_blank">
+      <span class="fab-icon">📈</span>
+      Yuzu Finance
+    </a>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">✓ 已複製到剪貼簿</div>
+
+  <script>
+    const styles = [
+      {
+        id: 'handdrawn',
+        icon: '✏️',
+        name: '手繪註解風',
+        desc: '在照片上疊加手繪塗鴉與手寫備忘',
+        prompt: `Keep the original food photo unchanged and realistic.
+
+Overlay minimal white hand-drawn doodles around the food:
+* thin, slightly uneven lines (one-line sketch style)
+* outline only along the edges of the food, do not cover the main surface
+
+Add small handwritten-style annotations:
+* short, casual phrases (like diary notes)
+* Japanese-style cute handwriting
+* place them near the food, not overlapping key details
+
+Include subtle decorative elements:
+* arrows or dashed lines pointing to parts of the dish
+* small steam lines to show warmth
+* a few sparkles or tiny hearts
+
+Style:
+* Instagram story aesthetic
+* cozy, soft, slightly lazy feeling
+* keep plenty of empty space
+
+Important constraints:
+* DO NOT block the food
+* DO NOT add too many drawings
+* DO NOT change the original colors of the food`
+      },
+      {
+        id: 'magazine',
+        icon: '🗞️',
+        name: '日系雜誌風',
+        desc: '極簡排版、高質感攝影、大量留白',
+        prompt: `Clean Japanese magazine style, minimal layout, soft shadows, elegant, high-end editorial photography, lots of whitespace`
+      },
+      {
+        id: 'film',
+        icon: '🎞️',
+        name: '底片復古風',
+        desc: '底片顆粒、褪色色調、溫暖過曝感',
+        prompt: `Vintage film look, film grain, faded colors, warm tone, slightly overexposed, nostalgic feeling`
+      }
+    ];
+
+    let activeId = styles[0].id;
+
+    function renderStyles() {
+      const grid = document.getElementById('styleGrid');
+      grid.innerHTML = '';
+      styles.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'style-btn' + (s.id === activeId ? ' active' : '');
+        btn.innerHTML = `
+          <span class="btn-badge">${s.icon}</span>
+          <span>
+            <div class="btn-name">${s.name}</div>
+            <div class="btn-desc">${s.desc}</div>
+          </span>
+        `;
+        btn.onclick = () => selectStyle(s.id);
+        grid.appendChild(btn);
+      });
+    }
+
+    function selectStyle(id) {
+      activeId = id;
+      document.getElementById('promptOutput').value = styles.find(s => s.id === id).prompt;
+      renderStyles();
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('promptOutput').value;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        feedback();
+      }).catch(() => {
+        document.getElementById('promptOutput').select();
+        document.execCommand('copy');
+        feedback();
+      });
+    }
+
+    function feedback() {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ 已複製';
+      btn.classList.add('success');
+      setTimeout(() => {
+        btn.textContent = '複製 Prompt';
+        btn.classList.remove('success');
+      }, 2200);
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    renderStyles();
+    selectStyle(activeId);
+  </script>
+
+</body>
+</html>
