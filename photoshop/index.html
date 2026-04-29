@@ -10,15 +10,13 @@
     :root {
       --navy:   #1b2d4f;
       --cream:  #f0ede8;
-      --gold0:  #f0d050;
-      --gold1:  #a06010;
-      --white:  #ffffff;
       --text1:  #1a1a1a;
       --text2:  #555;
       --text3:  #aaa;
       --border: #e3dfd9;
       --card:   #ffffff;
       --radius: 14px;
+      --green:  #10a37f;
     }
 
     body {
@@ -29,7 +27,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 80px;
+      padding-bottom: 120px;
     }
 
     /* ── Header ── */
@@ -42,347 +40,263 @@
       gap: 14px;
       margin-bottom: 44px;
     }
-
     .yuzu-logo svg { display: block; }
-
     .header-text { flex: 1; }
+    .header-brand { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 2px; }
+    .header-title { font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; }
+    .header-nav { display: flex; gap: 10px; align-items: center; }
+    .header-nav a { font-size: 0.72rem; letter-spacing: 0.06em; color: rgba(255,255,255,.5); text-decoration: none; padding: 6px 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 100px; transition: all 0.15s; }
+    .header-nav a:hover { color: #fff; border-color: rgba(255,255,255,.4); }
 
-    .header-brand {
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      margin-bottom: 2px;
-    }
+    /* ── Layout ── */
+    .container { width: 100%; max-width: 640px; padding: 0 20px; }
+    .section-label { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
 
-    .header-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 0.04em;
-    }
-
-    .header-nav {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .header-nav a {
-      font-size: 0.72rem;
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      padding: 6px 12px;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 100px;
-      transition: all 0.15s;
-    }
-
-    .header-nav a:hover {
-      color: #fff;
-      border-color: rgba(255,255,255,0.4);
-    }
-
-    /* ── Main layout ── */
-    .container {
-      width: 100%;
-      max-width: 640px;
-      padding: 0 20px;
-    }
-
-    .section-label {
-      font-size: 0.68rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text3);
-      margin-bottom: 14px;
-    }
-
-    /* ── Style buttons ── */
-    .style-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+    /* ── Style Cards ── */
+    .style-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
 
     .style-btn {
       display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 18px 20px;
-      background: var(--card);
+      align-items: stretch;
       border: 1.5px solid var(--border);
       border-radius: var(--radius);
       cursor: pointer;
-      transition: all 0.18s ease;
       text-align: left;
       width: 100%;
       color: var(--text1);
-    }
-
-    .style-btn:hover {
-      border-color: #c8c3bb;
-      background: #faf8f5;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-    }
-
-    .style-btn.active {
-      background: var(--navy);
-      border-color: var(--navy);
-      color: #fff;
-      box-shadow: 0 4px 22px rgba(27,45,79,0.3);
-    }
-
-    .btn-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--cream);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      flex-shrink: 0;
-      transition: background 0.18s;
-    }
-
-    .style-btn.active .btn-badge {
-      background: rgba(255,255,255,0.12);
-    }
-
-    .btn-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 3px;
-      letter-spacing: 0.01em;
-    }
-
-    .btn-desc {
-      font-size: 0.72rem;
-      opacity: 0.5;
-    }
-
-    .style-btn.active .btn-desc { opacity: 0.6; }
-
-    /* ── Strength control ── */
-    .strength-section {
-      margin-bottom: 28px;
-    }
-
-    .strength-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .strength-pills {
-      display: flex;
-      gap: 6px;
       background: var(--card);
-      border: 1.5px solid var(--border);
-      border-radius: 100px;
-      padding: 4px;
+      overflow: hidden;
+      position: relative;
+      transition: border-color .18s, transform .18s, box-shadow .18s;
+    }
+    .style-btn:hover { border-color: #c0bbb4; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.09); }
+    .style-btn.active { border-color: var(--navy); box-shadow: 0 4px 20px rgba(27,45,79,.16); }
+    .style-btn:active { transform: translateY(0); }
+
+    .active-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--navy); opacity: 0; transition: opacity .18s; }
+    .style-btn.active .active-bar { opacity: 1; }
+
+    /* Preview strip */
+    .style-preview {
+      width: 56px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .style-btn[data-id="handdrawn"] .style-preview { background: #f7f3ec; }
+    .style-btn[data-id="magazine"]  .style-preview { background: #f5f5f5; }
+    .style-btn[data-id="film"]      .style-preview { background: #f5edda; }
+
+    .style-btn[data-id="handdrawn"] .style-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='72'%3E%3Cpath d='M4 18 Q18 10 32 18 Q46 26 52 18' stroke='%23c0aa88' stroke-width='1.4' fill='none'/%3E%3Cpath d='M4 34 Q16 26 30 34 Q44 42 52 34' stroke='%23c0aa88' stroke-width='1.4' fill='none'/%3E%3Cpath d='M4 50 Q18 42 32 50 Q46 58 52 50' stroke='%23c0aa88' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='38' cy='18' r='2' fill='%23c0aa88' opacity='.5'/%3E%3Ccircle cx='14' cy='42' r='1.5' fill='%23c0aa88' opacity='.4'/%3E%3C/svg%3E");
+    }
+    .style-btn[data-id="magazine"] .style-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='72'%3E%3Cline x1='10' y1='24' x2='46' y2='24' stroke='%23d0d0d0' stroke-width='2.5'/%3E%3Cline x1='10' y1='36' x2='46' y2='36' stroke='%23d0d0d0' stroke-width='2'/%3E%3Cline x1='10' y1='46' x2='36' y2='46' stroke='%23d0d0d0' stroke-width='2'/%3E%3Cline x1='10' y1='54' x2='28' y2='54' stroke='%23d0d0d0' stroke-width='1.5'/%3E%3C/svg%3E");
+    }
+    .style-btn[data-id="film"] .style-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='72'%3E%3Crect x='9' y='10' width='38' height='52' rx='2' stroke='%23b8965a' stroke-width='1.5' fill='none'/%3E%3Crect x='15' y='17' width='26' height='32' rx='1' stroke='%23b8965a' stroke-width='1' fill='none' opacity='.5'/%3E%3Ccircle cx='28' cy='60' r='2.5' stroke='%23b8965a' stroke-width='1' fill='none'/%3E%3Crect x='12' y='10' width='4' height='4' rx='.5' fill='%23b8965a' opacity='.4'/%3E%3Crect x='40' y='10' width='4' height='4' rx='.5' fill='%23b8965a' opacity='.4'/%3E%3C/svg%3E");
     }
 
-    .strength-pill {
-      flex: 1;
-      padding: 7px 16px;
-      background: transparent;
-      border: none;
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      color: var(--text2);
-      cursor: pointer;
-      transition: all 0.18s ease;
-      white-space: nowrap;
-    }
+    .style-content { flex: 1; padding: 15px 18px; display: flex; align-items: center; gap: 12px; }
+    .btn-info { flex: 1; }
+    .btn-name { font-size: 0.94rem; font-weight: 700; margin-bottom: 4px; }
+    .btn-desc { font-size: 0.72rem; color: var(--text2); }
+    .style-btn.active .btn-name { color: var(--navy); }
 
-    .strength-pill:hover {
-      color: var(--text1);
-      background: rgba(0,0,0,0.04);
-    }
+    .btn-copy-hint { font-size: 0.63rem; color: var(--text3); white-space: nowrap; opacity: 0; transition: opacity .15s; }
+    .style-btn:hover .btn-copy-hint { opacity: 1; }
+    .style-btn.active .btn-copy-hint { opacity: 0.6; color: var(--navy); }
 
-    .strength-pill.active {
-      background: var(--navy);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(27,45,79,0.25);
-    }
+    /* ── Strength Slider ── */
+    .strength-section { margin-bottom: 24px; }
 
-    .strength-badge {
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 100px;
-      font-weight: 700;
-    }
-
-    .strength-badge.light  { background: #eef3f8; color: #6b8aad; }
-    .strength-badge.medium { background: #e8edf5; color: #3d5a82; }
-    .strength-badge.strong { background: #dce4f0; color: #1b2d4f; }
-
-    /* ── Divider ── */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 28px 0;
-    }
-
-    /* ── Prompt area ── */
-    textarea {
-      width: 100%;
-      min-height: 280px;
-      padding: 20px;
+    .slider-card {
       background: var(--card);
       border: 1.5px solid var(--border);
       border-radius: var(--radius);
-      font-size: 0.875rem;
-      line-height: 1.8;
-      color: #3a3a3a;
-      resize: vertical;
-      outline: none;
-      transition: border-color 0.15s;
-      font-family: inherit;
+      padding: 18px 20px 14px;
     }
 
+    .strength-track {
+      position: relative;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .track-line { position: absolute; left: 8px; right: 8px; height: 2px; background: var(--border); border-radius: 2px; }
+    .track-fill { position: absolute; left: 8px; height: 2px; background: var(--navy); border-radius: 2px; width: 0; transition: width .28s cubic-bezier(.4,0,.2,1); }
+
+    .track-dots { position: absolute; left: 0; right: 0; display: flex; justify-content: space-between; }
+    .track-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s;
+      position: relative;
+    }
+    .track-dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--navy); opacity: 0; transition: opacity .2s; }
+    .track-dot.active { border-color: var(--navy); box-shadow: 0 0 0 4px rgba(27,45,79,.1); }
+    .track-dot.active::after { opacity: 1; }
+    .track-dot:hover:not(.active) { border-color: #8a9fbc; }
+
+    .strength-labels { display: flex; justify-content: space-between; }
+    .s-label { cursor: pointer; text-align: center; flex: 1; }
+    .s-label:first-child { text-align: left; }
+    .s-label:last-child { text-align: right; }
+    .s-label-name { font-size: 0.72rem; font-weight: 700; color: var(--text3); letter-spacing: 0.04em; transition: color .2s; }
+    .s-label-desc { font-size: 0.62rem; color: var(--text3); margin-top: 2px; transition: color .2s; }
+    .s-label.active .s-label-name { color: var(--navy); }
+    .s-label.active .s-label-desc { color: var(--text2); }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+    /* ── Prompt ── */
+    .prompt-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+
+    .prompt-toggle {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; color: var(--text2);
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      background: var(--card);
+      cursor: pointer;
+      transition: all .15s;
+      user-select: none;
+    }
+    .prompt-toggle:hover { border-color: #c0bbb4; color: var(--text1); }
+    .toggle-arrow { display: inline-block; transition: transform .25s; font-style: normal; }
+    .prompt-toggle.open .toggle-arrow { transform: rotate(180deg); }
+
+    .prompt-wrap {
+      position: relative;
+      max-height: 80px;
+      overflow: hidden;
+      transition: max-height .35s cubic-bezier(.4,0,.2,1);
+      border-radius: var(--radius);
+    }
+    .prompt-wrap.open { max-height: 520px; }
+
+    .prompt-fade {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 38px;
+      background: linear-gradient(transparent, var(--cream));
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+    .prompt-wrap.open .prompt-fade { opacity: 0; }
+
+    textarea {
+      width: 100%;
+      min-height: 240px;
+      padding: 16px 18px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: #3a3a3a;
+      resize: none;
+      outline: none;
+      transition: border-color .15s;
+      font-family: inherit;
+      display: block;
+    }
     textarea:focus { border-color: var(--navy); }
 
-    /* ── Copy button ── */
+    /* ── Buttons ── */
+    .action-row { display: flex; gap: 10px; margin-top: 12px; }
+
     .copy-btn {
-      width: 100%;
-      margin-top: 12px;
-      padding: 16px;
-      background: var(--navy);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      transition: all 0.18s ease;
+      flex: 1; padding: 14px;
+      background: var(--navy); color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em;
+      cursor: pointer; transition: all .18s;
     }
-
-    .copy-btn:hover {
-      background: #142240;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 22px rgba(27,45,79,0.3);
-    }
-
+    .copy-btn:hover { background: #142240; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(27,45,79,.3); }
     .copy-btn:active { transform: translateY(0); }
+    .copy-btn.success { background: #3d7a56; }
 
-    .copy-btn.success {
-      background: #3d7a56;
-      letter-spacing: 0.06em;
+    .chatgpt-btn {
+      flex: 1; padding: 14px;
+      background: var(--green); color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em;
+      cursor: pointer; transition: all .18s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
     }
+    .chatgpt-btn:hover { background: #0d8f6e; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,163,127,.35); }
+    .chatgpt-btn:active { transform: translateY(0); }
+
+    .format-btn {
+      width: 100%; margin-top: 8px; padding: 12px;
+      background: transparent; color: var(--text2);
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: all .18s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .format-btn:hover { border-color: #c0bbb4; background: var(--card); color: var(--text1); }
 
     /* ── Toast ── */
     .toast {
       position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%) translateY(16px);
-      background: var(--navy);
+      bottom: 28px; right: 24px;
+      background: #1a1a1a;
       color: #fff;
-      padding: 11px 22px;
-      border-radius: 100px;
-      font-size: 0.78rem;
-      letter-spacing: 0.05em;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em;
       opacity: 0;
-      transition: all 0.28s ease;
+      transform: translateY(8px);
+      transition: opacity .22s, transform .22s;
       pointer-events: none;
+      z-index: 200;
+      box-shadow: 0 4px 16px rgba(0,0,0,.25);
       white-space: nowrap;
-      z-index: 100;
     }
+    .toast.show { opacity: 1; transform: translateY(0); }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ── Floating nav dock ── */
-    .fab-dock {
-      position: fixed;
-      bottom: 28px;
-      right: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 10px;
-      z-index: 90;
-    }
-
-    .fab-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px 10px 12px;
-      background: var(--navy);
-      color: rgba(255,255,255,0.85);
-      border-radius: 100px;
-      text-decoration: none;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      box-shadow: 0 4px 18px rgba(27,45,79,0.35);
-      transition: all 0.18s ease;
-      border: 1.5px solid rgba(255,255,255,0.1);
-    }
-
-    .fab-btn:hover {
-      background: #142240;
-      color: #fff;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(27,45,79,0.45);
-    }
-
-    .fab-icon {
-      width: 28px;
-      height: 28px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-    }
+    /* ── FAB ── */
+    .fab-dock { position: fixed; bottom: 88px; right: 24px; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; z-index: 90; }
+    .fab-btn { display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; background: var(--navy); color: rgba(255,255,255,.85); border-radius: 100px; text-decoration: none; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; box-shadow: 0 4px 18px rgba(27,45,79,.35); transition: all .18s; border: 1.5px solid rgba(255,255,255,.1); }
+    .fab-btn:hover { background: #142240; color: #fff; transform: translateY(-2px); }
+    .fab-icon { width: 28px; height: 28px; background: rgba(255,255,255,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
 
     /* ── Footer ── */
-    .site-footer {
-      text-align: center;
-      margin-top: 48px;
-      font-size: 0.72rem;
-      color: var(--text3);
-      letter-spacing: 0.04em;
-    }
+    .site-footer { text-align: center; margin-top: 48px; font-size: 0.72rem; color: var(--text3); }
 
     @media (max-width: 480px) {
       .site-header { padding: 16px 20px; margin-bottom: 32px; }
       .header-nav { display: none; }
-      textarea { min-height: 200px; }
-      .fab-dock { bottom: 20px; right: 16px; }
-      .strength-pill { padding: 7px 10px; }
+      .action-row { flex-direction: column; }
+      .fab-dock { bottom: 72px; right: 16px; }
+      .toast { right: 16px; bottom: 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header class="site-header">
     <div class="yuzu-logo">
       <svg width="36" height="36" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="yg" cx="38%" cy="28%" r="72%">
-            <stop offset="0%" stop-color="#f0d050"/>
-            <stop offset="100%" stop-color="#a06010"/>
-          </radialGradient>
-        </defs>
+        <defs><radialGradient id="yg" cx="38%" cy="28%" r="72%"><stop offset="0%" stop-color="#f0d050"/><stop offset="100%" stop-color="#a06010"/></radialGradient></defs>
         <circle cx="17" cy="17" r="17" fill="url(#yg)"/>
         <circle cx="17" cy="17" r="11.5" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
         <circle cx="17" cy="17" r="2.8" fill="rgba(255,255,255,.75)"/>
@@ -404,50 +318,62 @@
     </nav>
   </header>
 
-  <!-- Main -->
   <main class="container">
 
     <p class="section-label">選擇圖片風格</p>
     <div class="style-grid" id="styleGrid"></div>
 
-    <!-- Strength control -->
     <div class="strength-section">
-      <div class="strength-header">
-        <p class="section-label" style="margin-bottom:0;">風格強度</p>
-        <span class="strength-badge" id="strengthBadge"></span>
+      <p class="section-label">風格強度</p>
+      <div class="slider-card">
+        <div class="strength-track" id="strengthTrack">
+          <div class="track-line"></div>
+          <div class="track-fill" id="trackFill"></div>
+          <div class="track-dots" id="trackDots"></div>
+        </div>
+        <div class="strength-labels" id="strengthLabels"></div>
       </div>
-      <div class="strength-pills" id="strengthPills"></div>
     </div>
 
     <div class="divider"></div>
 
-    <p class="section-label">Prompt 內容</p>
-    <textarea id="promptOutput" readonly></textarea>
-    <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">複製 Prompt</button>
+    <div class="prompt-header">
+      <p class="section-label" style="margin-bottom:0">Prompt 內容</p>
+      <button class="prompt-toggle" id="promptToggle" onclick="togglePrompt()">
+        <span class="toggle-text">展開 Prompt</span>
+        <span class="toggle-arrow">▼</span>
+      </button>
+    </div>
+    <div class="prompt-wrap" id="promptWrap">
+      <textarea id="promptOutput" readonly></textarea>
+      <div class="prompt-fade"></div>
+    </div>
+
+    <div class="action-row">
+      <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">複製 Prompt</button>
+      <button class="chatgpt-btn" onclick="openChatGPT()">🚀 在 ChatGPT 使用</button>
+    </div>
+    <button class="format-btn" onclick="copyChatGPTFormat()">📋 複製 ChatGPT 格式</button>
 
     <footer class="site-footer">Yuzu Photoshop · 圖片風格 Prompt 工具</footer>
   </main>
 
-  <!-- Floating nav dock -->
   <div class="fab-dock">
     <a class="fab-btn" href="https://ianian22493.github.io/daily-brief/" target="_blank">
-      <span class="fab-icon">📰</span>
-      每日簡報
+      <span class="fab-icon">📰</span>每日簡報
     </a>
     <a class="fab-btn" href="https://ianian22493.github.io/investment-dashboard/" target="_blank">
-      <span class="fab-icon">📈</span>
-      Yuzu Finance
+      <span class="fab-icon">📈</span>Yuzu Finance
     </a>
   </div>
 
-  <!-- Toast -->
-  <div class="toast" id="toast">✓ 已複製到剪貼簿</div>
+  <div class="toast" id="toast"></div>
 
   <script>
+    /* ── Data ── */
     const styles = [
       {
         id: 'handdrawn',
-        icon: '✏️',
         name: '手繪註解風',
         desc: '在照片上疊加手繪塗鴉與手寫備忘',
         base:
@@ -497,7 +423,6 @@ Include multiple arrows, notes, and decorative elements, but still do not block 
       },
       {
         id: 'magazine',
-        icon: '🗞️',
         name: '日系雜誌風',
         desc: '極簡排版、高質感攝影、大量留白',
         base:
@@ -542,7 +467,6 @@ Make the composition more stylized and refined. Increase the sense of structure,
       },
       {
         id: 'film',
-        icon: '🎞️',
         name: '底片復古風',
         desc: '底片顆粒、褪色色調、溫暖過曝感',
         base:
@@ -584,84 +508,162 @@ Increase visible film grain and vintage tone. Make colors more faded and nostalg
     ];
 
     const strengthOptions = [
-      { id: 'light',  label: 'Light',  badgeLabel: 'Light',  badgeClass: 'light'  },
-      { id: 'medium', label: 'Medium', badgeLabel: 'Medium', badgeClass: 'medium' },
-      { id: 'strong', label: 'Strong', badgeLabel: 'Strong', badgeClass: 'strong' },
+      { id: 'light',  name: 'Light',  desc: '幾乎看不出' },
+      { id: 'medium', name: 'Medium', desc: '剛剛好'    },
+      { id: 'strong', name: 'Strong', desc: '風格明顯'  },
     ];
 
-    let activeStyleId  = styles[0].id;
+    const fillWidths = ['0px', 'calc(50% - 8px)', 'calc(100% - 16px)'];
+
+    /* ── State ── */
+    let activeId = styles[0].id;
     let activeStrength = 'medium';
+    let promptOpen = false;
 
+    /* ── Core ── */
     function buildPrompt() {
-      const style = styles.find(s => s.id === activeStyleId);
-      return style.base + '\n\n' + style.strength[activeStrength];
+      const s = styles.find(s => s.id === activeId);
+      return s.base + '\n\n' + s.strength[activeStrength];
     }
 
-    function renderStyles() {
-      const grid = document.getElementById('styleGrid');
-      grid.innerHTML = '';
-      styles.forEach(s => {
-        const btn = document.createElement('button');
-        btn.className = 'style-btn' + (s.id === activeStyleId ? ' active' : '');
-        btn.innerHTML = `
-          <span class="btn-badge">${s.icon}</span>
-          <span>
-            <div class="btn-name">${s.name}</div>
-            <div class="btn-desc">${s.desc}</div>
-          </span>
-        `;
-        btn.onclick = () => { activeStyleId = s.id; update(); };
-        grid.appendChild(btn);
-      });
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.getElementById('promptOutput');
+        const prev = ta.value;
+        ta.value = text;
+        ta.select();
+        document.execCommand('copy');
+        ta.value = prev;
+      }
     }
 
-    function renderStrength() {
-      const container = document.getElementById('strengthPills');
-      container.innerHTML = '';
-      strengthOptions.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'strength-pill' + (opt.id === activeStrength ? ' active' : '');
-        btn.textContent = opt.label;
-        btn.onclick = () => { activeStrength = opt.id; update(); };
-        container.appendChild(btn);
-      });
-
-      const badge = document.getElementById('strengthBadge');
-      const current = strengthOptions.find(o => o.id === activeStrength);
-      badge.textContent = current.badgeLabel;
-      badge.className = 'strength-badge ' + current.badgeClass;
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
     }
 
-    function update() {
-      renderStyles();
-      renderStrength();
-      document.getElementById('promptOutput').value = buildPrompt();
+    /* ── Actions ── */
+    function selectStyle(id) {
+      activeId = id;
+      refresh();
+      copyText(buildPrompt());
+      const s = styles.find(s => s.id === id);
+      const str = strengthOptions.find(o => o.id === activeStrength);
+      showToast(`✔ 已複製「${s.name} · ${str.name}」`);
+    }
+
+    function selectStrength(id) {
+      activeStrength = id;
+      refresh();
     }
 
     function copyPrompt() {
-      const text = document.getElementById('promptOutput').value;
-      if (!text) return;
-      navigator.clipboard.writeText(text).then(feedback).catch(() => {
-        document.getElementById('promptOutput').select();
-        document.execCommand('copy');
-        feedback();
-      });
-    }
-
-    function feedback() {
+      copyText(buildPrompt());
+      showToast('✔ 已複製 Prompt');
       const btn = document.getElementById('copyBtn');
       btn.textContent = '✓ 已複製';
       btn.classList.add('success');
-      setTimeout(() => {
-        btn.textContent = '複製 Prompt';
-        btn.classList.remove('success');
-      }, 2200);
-      const toast = document.getElementById('toast');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2400);
+      clearTimeout(btn._t);
+      btn._t = setTimeout(() => { btn.textContent = '複製 Prompt'; btn.classList.remove('success'); }, 2000);
     }
 
-    update();
+    function copyChatGPTFormat() {
+      copyText('請根據以下風格處理圖片：\n\n' + buildPrompt());
+      showToast('✔ 已複製 ChatGPT 格式');
+    }
+
+    function openChatGPT() {
+      copyText(buildPrompt());
+      showToast('✔ Prompt 已複製，正在開啟...');
+      setTimeout(() => window.open('https://chat.openai.com/', '_blank'), 300);
+    }
+
+    function togglePrompt() {
+      promptOpen = !promptOpen;
+      document.getElementById('promptWrap').classList.toggle('open', promptOpen);
+      const btn = document.getElementById('promptToggle');
+      btn.classList.toggle('open', promptOpen);
+      btn.querySelector('.toggle-text').textContent = promptOpen ? '收起 Prompt' : '展開 Prompt';
+    }
+
+    /* ── Render ── */
+    function refresh() {
+      document.querySelectorAll('.style-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.id === activeId);
+      });
+      const idx = strengthOptions.findIndex(o => o.id === activeStrength);
+      document.querySelectorAll('.track-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      document.getElementById('trackFill').style.width = fillWidths[idx];
+      document.querySelectorAll('.s-label').forEach((l, i) => l.classList.toggle('active', i === idx));
+      document.getElementById('promptOutput').value = buildPrompt();
+    }
+
+    /* ── Init ── */
+    function init() {
+      // Style cards
+      const grid = document.getElementById('styleGrid');
+      styles.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'style-btn';
+        btn.dataset.id = s.id;
+        btn.innerHTML = `
+          <div class="active-bar"></div>
+          <div class="style-preview"></div>
+          <div class="style-content">
+            <div class="btn-info">
+              <div class="btn-name">${s.name}</div>
+              <div class="btn-desc">${s.desc}</div>
+            </div>
+            <div class="btn-copy-hint">點擊複製 ↗</div>
+          </div>`;
+        btn.addEventListener('click', () => selectStyle(s.id));
+        grid.appendChild(btn);
+      });
+
+      // Strength dots & labels
+      const dotsEl   = document.getElementById('trackDots');
+      const labelsEl = document.getElementById('strengthLabels');
+      strengthOptions.forEach((opt, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'track-dot';
+        dot.addEventListener('click', e => { e.stopPropagation(); selectStrength(opt.id); });
+        dotsEl.appendChild(dot);
+
+        const lbl = document.createElement('div');
+        lbl.className = 's-label';
+        lbl.innerHTML = `<div class="s-label-name">${opt.name}</div><div class="s-label-desc">${opt.desc}</div>`;
+        lbl.addEventListener('click', () => selectStrength(opt.id));
+        labelsEl.appendChild(lbl);
+      });
+
+      // Track click & drag
+      const track = document.getElementById('strengthTrack');
+      function trackPct(clientX) {
+        const r = track.getBoundingClientRect();
+        const p = (clientX - r.left) / r.width;
+        if (p < 0.33) selectStrength('light');
+        else if (p < 0.67) selectStrength('medium');
+        else selectStrength('strong');
+      }
+
+      let dragging = false;
+      track.addEventListener('mousedown', e => { dragging = true; trackPct(e.clientX); });
+      document.addEventListener('mousemove', e => { if (dragging) trackPct(e.clientX); });
+      document.addEventListener('mouseup', () => dragging = false);
+
+      track.addEventListener('touchstart', e => trackPct(e.touches[0].clientX), { passive: true });
+      track.addEventListener('touchmove',  e => { e.preventDefault(); trackPct(e.touches[0].clientX); }, { passive: false });
+
+      refresh();
+    }
+
+    init();
   </script>
 
 </body>
