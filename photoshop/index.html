@@ -897,6 +897,75 @@ Enhance film texture and nostalgic tone more noticeably.
 Narrative text can be slightly more expressive, but still minimal.
 Keep composition untouched and avoid heavy stylization.`
         }
+      },
+      {
+        id: 'analysis',
+        name: '解構分析風',
+        desc: '在照片上疊加圖解式標注，箭頭、細線與標籤，呈現理性觀察視角',
+        tag: 'DIAGRAM',
+        summaryBullets: ['箭頭標註', '結構解讀', '很理性的視角'],
+        thumbSvg: `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" width="80" height="100">
+          <rect width="80" height="100" fill="#F2F4F6"/>
+          <rect x="18" y="22" width="44" height="44" rx="2" stroke="#a0a8b4" stroke-width="1" fill="none"/>
+          <line x1="18" y1="22" x2="8"  y2="14" stroke="#a0a8b4" stroke-width=".9"/>
+          <rect x="2" y="10" width="12" height="7" rx="1" fill="#e2e6ea" stroke="#a0a8b4" stroke-width=".7"/>
+          <text x="8" y="15.5" font-size="4" fill="#7a8494" text-anchor="middle" font-family="sans-serif">A</text>
+          <line x1="62" y1="44" x2="72" y2="38" stroke="#a0a8b4" stroke-width=".9"/>
+          <rect x="66" y="33" width="13" height="7" rx="1" fill="#e2e6ea" stroke="#a0a8b4" stroke-width=".7"/>
+          <text x="72.5" y="38.5" font-size="4" fill="#7a8494" text-anchor="middle" font-family="sans-serif">B</text>
+          <line x1="40" y1="66" x2="40" y2="76" stroke="#a0a8b4" stroke-width=".9"/>
+          <rect x="28" y="76" width="24" height="7" rx="1" fill="#e2e6ea" stroke="#a0a8b4" stroke-width=".7"/>
+          <text x="40" y="81.5" font-size="4" fill="#7a8494" text-anchor="middle" font-family="sans-serif">detail</text>
+          <line x1="40" y1="44" x2="40" y2="44" stroke="none"/>
+          <circle cx="40" cy="44" r="1.5" fill="#a0a8b4"/>
+        </svg>`,
+        base:
+`Transform this image into a clean analytical breakdown with minimal diagram-style annotations.
+
+Preserve the original image completely. Do NOT modify objects, faces, or composition.
+
+Add subtle annotation elements:
+- thin lines or arrows pointing to key elements
+- short labels describing parts, textures, or concepts
+- optional small section titles
+
+Annotation style:
+- clean, minimal, modern
+- consistent thin white or neutral lines
+- no heavy graphics or colorful elements
+
+Text style:
+- small, precise, neutral tone
+- no emotional or casual language
+- looks like a design/UX or educational diagram
+
+Layout rules:
+- keep annotations around edges or near targets
+- DO NOT block the main subject
+- DO NOT overcrowd the image
+
+Important constraints:
+- avoid infographic style blocks
+- avoid bright colors
+- avoid excessive labels
+
+The result should feel like a thoughtful visual explanation, not a decorated image.`,
+        strength: {
+          light:
+`Intensity: Light —
+Add only a few minimal labels and very thin lines.
+Keep most of the image clean and untouched.`,
+          medium:
+`Intensity: Medium —
+Add clear but minimal annotations to key elements.
+Balance readability and visual cleanliness.
+Keep a structured and refined look.`,
+          strong:
+`Intensity: Strong —
+Add more annotations and structured labeling.
+Still maintain clean layout and avoid clutter.
+Keep professional diagram style.`
+        }
       }
     ];
 
