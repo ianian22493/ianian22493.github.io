@@ -3,379 +3,741 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yuzu Photoshop</title>
+  <title>AI Style Prompt Tool · Yuzu Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:   #1b2d4f;
-      --cream:  #f0ede8;
-      --text1:  #1a1a1a;
-      --text2:  #555;
-      --text3:  #aaa;
-      --border: #e3dfd9;
-      --card:   #ffffff;
-      --radius: 14px;
-      --green:  #10a37f;
+      --bg:       #F7F6F2;
+      --bg2:      #EFEDE8;
+      --card:     #FFFFFF;
+      --text1:    #1F1F1F;
+      --text2:    #555450;
+      --text3:    #999691;
+      --border:   #E4E1DB;
+      --border2:  #D5D1CA;
+      --green:    #7BAE7F;
+      --green-dk: #5E9563;
+      --green-bg: #EDF5EE;
+      --green-muted: rgba(123,174,127,.55);
+      --green-hero: rgba(123,174,127,.18);
+      --radius:   20px;
+      --radius-sm:12px;
+      --shadow:   0 2px 12px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
+      --shadow-md:0 8px 32px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.06);
+      --shadow-lg:0 16px 48px rgba(0,0,0,.13), 0 4px 12px rgba(0,0,0,.07);
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      background: var(--cream);
+      font-family: 'Helvetica Neue', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
       color: var(--text1);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-bottom: 120px;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Header ── */
-    .site-header {
+    /* ── Nav ── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
       width: 100%;
-      background: var(--navy);
-      padding: 20px 32px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 44px;
+      background: rgba(247,246,242,.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .yuzu-logo svg { display: block; }
-    .header-text { flex: 1; }
-    .header-brand { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 2px; }
-    .header-title { font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; }
-    .header-nav { display: flex; gap: 10px; align-items: center; }
-    .header-nav a { font-size: 0.72rem; letter-spacing: 0.06em; color: rgba(255,255,255,.5); text-decoration: none; padding: 6px 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 100px; transition: all 0.15s; }
-    .header-nav a:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo { width: 28px; height: 28px; }
+    .nav-name { font-size: 0.82rem; font-weight: 700; color: var(--text1); letter-spacing: 0.04em; }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-link {
+      font-size: 0.72rem; color: var(--text2); text-decoration: none;
+      padding: 5px 12px; border-radius: 100px;
+      border: 1px solid var(--border);
+      transition: all .15s;
+      letter-spacing: 0.03em;
+    }
+    .nav-link:hover { background: var(--card); color: var(--text1); border-color: var(--border2); }
 
-    /* ── Layout ── */
-    .container { width: 100%; max-width: 640px; padding: 0 20px; }
-    .section-label { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+    /* ── Hero ── */
+    .hero {
+      padding: 72px 24px 56px;
+      text-align: center;
+      background: linear-gradient(180deg, #F0EFE9 0%, var(--bg) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 60%, rgba(123,174,127,.05) 0%, transparent 55%),
+        radial-gradient(circle at 80% 30%, rgba(123,174,127,.04) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text2); font-weight: 600;
+      background: rgba(255,255,255,.7); border: 1px solid var(--border);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before { content: '●'; font-size: 0.5rem; color: var(--green-muted); animation: pulse-dot 2.4s ease-in-out infinite; }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; } 50% { opacity: .3; }
+    }
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700; letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text1);
+      margin-bottom: 14px;
+    }
+    .hero-title em { font-style: normal; color: oklch(58% 0.09 145); }
+    .hero-subtitle {
+      font-size: 1rem; color: var(--text2);
+      max-width: 380px; margin: 0 auto 32px;
+      line-height: 1.6; font-weight: 400;
+    }
+
+    /* ── Hero Flow Steps ── */
+    .flow-steps {
+      display: inline-flex; align-items: center; gap: 0;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 100px; padding: 6px 8px;
+      box-shadow: var(--shadow);
+    }
+    .flow-step {
+      display: flex; align-items: center; gap: 7px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      transition: background .2s ease;
+      cursor: default;
+    }
+    .flow-step.is-active {
+      background: var(--bg2);
+    }
+    .flow-step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--border);
+      font-size: 0.6rem; font-weight: 700; color: var(--text3);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s ease, color .2s ease;
+      flex-shrink: 0;
+    }
+    .flow-step.is-active .flow-step-num {
+      background: var(--green);
+      color: #fff;
+    }
+    .flow-step.is-done .flow-step-num {
+      background: var(--green-bg);
+      color: var(--green-dk);
+    }
+    .flow-step.is-done .flow-step-num::after {
+      content: '✓';
+      font-size: 0.65rem;
+    }
+    .flow-step.is-done .flow-step-num span { display: none; }
+    .flow-step-label {
+      font-size: 0.73rem; font-weight: 500;
+      color: var(--text3);
+      transition: color .2s ease;
+      white-space: nowrap;
+    }
+    .flow-step.is-active .flow-step-label { color: var(--text1); font-weight: 600; }
+    .flow-step.is-done .flow-step-label { color: var(--text2); }
+    .flow-sep {
+      font-size: 0.65rem; color: var(--border2);
+      padding: 0 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── Main layout ── */
+    .main {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ── Section label ── */
+    .sec-label {
+      font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text3); font-weight: 600;
+      margin-bottom: 14px;
+    }
 
     /* ── Style Cards ── */
-    .style-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .style-col {}
+    .style-grid { display: flex; flex-direction: column; gap: 12px; }
 
-    .style-btn {
-      display: flex;
-      align-items: stretch;
+    .style-card {
+      display: flex; align-items: stretch;
+      background: var(--card);
       border: 1.5px solid var(--border);
       border-radius: var(--radius);
       cursor: pointer;
-      text-align: left;
-      width: 100%;
-      color: var(--text1);
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .style-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border2);
+    }
+    .style-card:active {
+      transform: scale(0.98);
+      transition: transform .12s ease;
+    }
+    .style-card.active {
+      transform: scale(1.01);
+      border-color: rgba(123,174,127,.55);
+      background: #FAFCFA;
+      box-shadow: 0 0 0 3px rgba(123,174,127,.12), var(--shadow-md);
+    }
+    .style-card.active:hover {
+      transform: scale(1.01) translateY(-2px);
+    }
+
+    /* Selected indicator */
+    .card-sel {
+      position: absolute; top: 14px; right: 14px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border2);
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .style-card.active .card-sel {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .card-sel::after {
+      content: '';
+      width: 6px; height: 6px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(45deg) translate(-1px,-1px);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .style-card.active .card-sel::after { opacity: 1; }
+
+    .card-thumb {
+      width: 80px; flex-shrink: 0;
+      position: relative; overflow: hidden;
+    }
+    .card-thumb-inner {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Handdrawn thumb */
+    .thumb-handdrawn { background: #F5F1E8; }
+    /* Magazine thumb */
+    .thumb-magazine { background: #F3F3F3; }
+    /* Film thumb */
+    .thumb-film { background: #F2EAD9; }
+
+    .card-body { padding: 18px 46px 18px 18px; flex: 1; }
+    .card-name {
+      font-size: 0.95rem; font-weight: 700; color: var(--text1);
+      margin-bottom: 5px; letter-spacing: -0.01em;
+      transition: color .18s ease;
+    }
+    .style-card.active .card-name { color: var(--text1); }
+    .card-desc { font-size: 0.73rem; color: var(--text2); line-height: 1.5; }
+    .card-tag {
+      display: inline-block; margin-top: 8px;
+      font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      background: var(--bg2); color: var(--text3);
+      padding: 3px 8px; border-radius: 4px;
+      transition: background .18s ease, color .18s ease;
+    }
+    .style-card.active .card-tag { background: var(--green-bg); color: var(--green-dk); }
+
+    /* ── Right col ── */
+    .ctrl-col { display: flex; flex-direction: column; gap: 16px; }
+
+    /* Panel card base */
+    .panel {
       background: var(--card);
-      overflow: hidden;
-      position: relative;
-      transition: border-color .18s, transform .18s, box-shadow .18s;
-    }
-    .style-btn:hover { border-color: #c0bbb4; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.09); }
-    .style-btn.active { border-color: var(--navy); box-shadow: 0 4px 20px rgba(27,45,79,.16); }
-    .style-btn:active { transform: translateY(0); }
-
-    .active-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--navy); opacity: 0; transition: opacity .18s; }
-    .style-btn.active .active-bar { opacity: 1; }
-
-    /* Preview strip */
-    .style-preview {
-      width: 56px;
-      flex-shrink: 0;
-      position: relative;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       overflow: hidden;
     }
-    .style-btn[data-id="handdrawn"] .style-preview { background: #f7f3ec; }
-    .style-btn[data-id="magazine"]  .style-preview { background: #f5f5f5; }
-    .style-btn[data-id="film"]      .style-preview { background: #f5edda; }
-
-    .style-btn[data-id="handdrawn"] .style-preview::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='72'%3E%3Cpath d='M4 18 Q18 10 32 18 Q46 26 52 18' stroke='%23c0aa88' stroke-width='1.4' fill='none'/%3E%3Cpath d='M4 34 Q16 26 30 34 Q44 42 52 34' stroke='%23c0aa88' stroke-width='1.4' fill='none'/%3E%3Cpath d='M4 50 Q18 42 32 50 Q46 58 52 50' stroke='%23c0aa88' stroke-width='1.4' fill='none'/%3E%3Ccircle cx='38' cy='18' r='2' fill='%23c0aa88' opacity='.5'/%3E%3Ccircle cx='14' cy='42' r='1.5' fill='%23c0aa88' opacity='.4'/%3E%3C/svg%3E");
+    .panel-head {
+      padding: 16px 20px 0;
     }
-    .style-btn[data-id="magazine"] .style-preview::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='72'%3E%3Cline x1='10' y1='24' x2='46' y2='24' stroke='%23d0d0d0' stroke-width='2.5'/%3E%3Cline x1='10' y1='36' x2='46' y2='36' stroke='%23d0d0d0' stroke-width='2'/%3E%3Cline x1='10' y1='46' x2='36' y2='46' stroke='%23d0d0d0' stroke-width='2'/%3E%3Cline x1='10' y1='54' x2='28' y2='54' stroke='%23d0d0d0' stroke-width='1.5'/%3E%3C/svg%3E");
-    }
-    .style-btn[data-id="film"] .style-preview::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='72'%3E%3Crect x='9' y='10' width='38' height='52' rx='2' stroke='%23b8965a' stroke-width='1.5' fill='none'/%3E%3Crect x='15' y='17' width='26' height='32' rx='1' stroke='%23b8965a' stroke-width='1' fill='none' opacity='.5'/%3E%3Ccircle cx='28' cy='60' r='2.5' stroke='%23b8965a' stroke-width='1' fill='none'/%3E%3Crect x='12' y='10' width='4' height='4' rx='.5' fill='%23b8965a' opacity='.4'/%3E%3Crect x='40' y='10' width='4' height='4' rx='.5' fill='%23b8965a' opacity='.4'/%3E%3C/svg%3E");
-    }
-
-    .style-content { flex: 1; padding: 15px 18px; display: flex; align-items: center; gap: 12px; }
-    .btn-info { flex: 1; }
-    .btn-name { font-size: 0.94rem; font-weight: 700; margin-bottom: 4px; }
-    .btn-desc { font-size: 0.72rem; color: var(--text2); }
-    .style-btn.active .btn-name { color: var(--navy); }
-
-    .btn-copy-hint { font-size: 0.63rem; color: var(--text3); white-space: nowrap; opacity: 0; transition: opacity .15s; }
-    .style-btn:hover .btn-copy-hint { opacity: 1; }
-    .style-btn.active .btn-copy-hint { opacity: 0.6; color: var(--navy); }
+    .panel-body { padding: 16px 20px 20px; }
 
     /* ── Strength Slider ── */
-    .strength-section { margin-bottom: 24px; }
+    .strength-panel .panel-body { padding-top: 12px; }
 
-    .slider-card {
-      background: var(--card);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px 14px;
+    .slider-wrap {
+      padding: 8px 4px 4px;
     }
-
-    .strength-track {
-      position: relative;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      margin-bottom: 12px;
+    .slider-track-row {
+      position: relative; height: 28px;
+      display: flex; align-items: center;
+      margin-bottom: 8px;
     }
-    .track-line { position: absolute; left: 8px; right: 8px; height: 2px; background: var(--border); border-radius: 2px; }
-    .track-fill { position: absolute; left: 8px; height: 2px; background: var(--navy); border-radius: 2px; width: 0; transition: width .28s cubic-bezier(.4,0,.2,1); }
-
-    .track-dots { position: absolute; left: 0; right: 0; display: flex; justify-content: space-between; }
-    .track-dot {
-      width: 16px; height: 16px;
+    .s-track-bg {
+      position: absolute; left: 8px; right: 8px;
+      height: 3px; background: var(--border);
+      border-radius: 3px;
+    }
+    .s-track-fill {
+      position: absolute; left: 8px;
+      height: 3px; background: var(--green);
+      border-radius: 3px;
+      transition: width .3s cubic-bezier(.4,0,.2,1);
+    }
+    .s-dots {
+      position: absolute; left: 0; right: 0;
+      display: flex; justify-content: space-between;
+    }
+    .s-dot {
+      width: 20px; height: 20px;
       border-radius: 50%;
       border: 2px solid var(--border);
       background: var(--card);
       cursor: pointer;
-      transition: border-color .2s, box-shadow .2s;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
       position: relative;
     }
-    .track-dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--navy); opacity: 0; transition: opacity .2s; }
-    .track-dot.active { border-color: var(--navy); box-shadow: 0 0 0 4px rgba(27,45,79,.1); }
-    .track-dot.active::after { opacity: 1; }
-    .track-dot:hover:not(.active) { border-color: #8a9fbc; }
-
-    .strength-labels { display: flex; justify-content: space-between; }
-    .s-label { cursor: pointer; text-align: center; flex: 1; }
-    .s-label:first-child { text-align: left; }
-    .s-label:last-child { text-align: right; }
-    .s-label-name { font-size: 0.72rem; font-weight: 700; color: var(--text3); letter-spacing: 0.04em; transition: color .2s; }
-    .s-label-desc { font-size: 0.62rem; color: var(--text3); margin-top: 2px; transition: color .2s; }
-    .s-label.active .s-label-name { color: var(--navy); }
-    .s-label.active .s-label-desc { color: var(--text2); }
-
-    /* ── Divider ── */
-    .divider { height: 1px; background: var(--border); margin: 24px 0; }
-
-    /* ── Prompt ── */
-    .prompt-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-
-    .prompt-toggle {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 0.72rem; color: var(--text2);
-      padding: 5px 12px;
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      background: var(--card);
-      cursor: pointer;
-      transition: all .15s;
-      user-select: none;
+    .s-dot::after {
+      content: '';
+      position: absolute; inset: 3px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: 0;
+      transition: opacity .2s;
     }
-    .prompt-toggle:hover { border-color: #c0bbb4; color: var(--text1); }
-    .toggle-arrow { display: inline-block; transition: transform .25s; font-style: normal; }
-    .prompt-toggle.open .toggle-arrow { transform: rotate(180deg); }
-
-    .prompt-wrap {
-      position: relative;
-      max-height: 80px;
-      overflow: hidden;
-      transition: max-height .35s cubic-bezier(.4,0,.2,1);
-      border-radius: var(--radius);
+    .s-dot.active {
+      border-color: var(--green);
+      box-shadow: 0 0 0 5px rgba(123,174,127,.18);
+      transform: scale(1.15);
     }
-    .prompt-wrap.open { max-height: 520px; }
+    .s-dot.active::after { opacity: 1; }
+    .s-dot:hover:not(.active) { border-color: #a8c9ab; transform: scale(1.08); }
 
-    .prompt-fade {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 38px;
-      background: linear-gradient(transparent, var(--cream));
-      pointer-events: none;
-      transition: opacity .25s;
+    .s-labels {
+      display: flex; justify-content: space-between;
+      margin-top: 4px;
     }
-    .prompt-wrap.open .prompt-fade { opacity: 0; }
-
-    textarea {
-      width: 100%;
-      min-height: 240px;
-      padding: 16px 18px;
-      background: var(--card);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.82rem;
-      line-height: 1.75;
-      color: #3a3a3a;
-      resize: none;
-      outline: none;
-      transition: border-color .15s;
-      font-family: inherit;
+    .s-label-item {
+      flex: 1; cursor: pointer; padding: 2px 0;
+      transition: opacity .2s;
+    }
+    .s-label-item:nth-child(2) { text-align: center; }
+    .s-label-item:last-child { text-align: right; }
+    .s-label-name {
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--text3); letter-spacing: 0.04em;
+      transition: color .2s;
       display: block;
     }
-    textarea:focus { border-color: var(--navy); }
-
-    /* ── Buttons ── */
-    .action-row { display: flex; gap: 10px; margin-top: 12px; }
-
-    .copy-btn {
-      flex: 1; padding: 14px;
-      background: var(--navy); color: #fff;
-      border: none; border-radius: 12px;
-      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em;
-      cursor: pointer; transition: all .18s;
+    .s-label-desc {
+      font-size: 0.62rem; color: var(--text3);
+      transition: color .2s;
+      display: block; margin-top: 1px;
     }
-    .copy-btn:hover { background: #142240; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(27,45,79,.3); }
-    .copy-btn:active { transform: translateY(0); }
-    .copy-btn.success { background: #3d7a56; }
+    .s-label-item.active .s-label-name { color: var(--green-dk); }
+    .s-label-item.active .s-label-desc { color: var(--text2); }
 
-    .chatgpt-btn {
-      flex: 1; padding: 14px;
-      background: var(--green); color: #fff;
-      border: none; border-radius: 12px;
-      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em;
-      cursor: pointer; transition: all .18s;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
+    /* ── Summary Card ── */
+    .summary-panel {}
+    #summaryBody {
+      transition: opacity .2s ease, transform .2s ease;
     }
-    .chatgpt-btn:hover { background: #0d8f6e; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,163,127,.35); }
-    .chatgpt-btn:active { transform: translateY(0); }
+    #summaryBody.updating {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    .summary-icon {
+      font-size: 1.15rem; margin-bottom: 6px; display: block; opacity: .7;
+    }
+    .summary-title {
+      font-size: 0.98rem; font-weight: 700; color: var(--text1);
+      margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .summary-title .s-badge {
+      display: inline-block;
+      font-size: 0.6rem; font-weight: 600;
+      background: var(--bg2); color: var(--text2);
+      padding: 2px 8px; border-radius: 100px;
+      margin-left: 6px; vertical-align: middle;
+      letter-spacing: 0.06em;
+      border: 1px solid var(--border);
+    }
+    .summary-bullets { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .summary-bullets li {
+      font-size: 0.76rem; color: var(--text2);
+      padding-left: 16px; position: relative; line-height: 1.5;
+    }
+    .summary-bullets li::before {
+      content: '·';
+      position: absolute; left: 4px;
+      color: var(--text3);
+      font-size: 1.1rem; line-height: 1;
+      top: 0px;
+    }
 
-    .format-btn {
-      width: 100%; margin-top: 8px; padding: 12px;
-      background: transparent; color: var(--text2);
-      border: 1.5px solid var(--border); border-radius: 12px;
+    /* ── Prompt Block ── */
+    .prompt-panel {}
+    .prompt-header-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s ease;
+    }
+    .prompt-header-row:hover { background: #FAFAF8; }
+    .prompt-ready-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      display: inline-block; margin-right: 6px;
+      vertical-align: middle;
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+    .prompt-panel.has-content .prompt-ready-dot { opacity: 1; }
+    .prompt-header-label {
+      display: flex; align-items: center;
+      font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text3); font-weight: 600;
+    }
+    .prompt-header-title {
+      font-size: 0.88rem; font-weight: 600; color: var(--text1); margin-top: 3px;
+    }
+    .prompt-toggle-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--text2);
+      transition: transform .22s ease, background .15s ease, color .15s ease;
+      flex-shrink: 0;
+    }
+    .prompt-panel.open .prompt-toggle-icon {
+      transform: rotate(180deg);
+      background: var(--bg2);
+      color: var(--text2);
+    }
+
+    .prompt-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+      border-top: 1px solid transparent;
+      opacity: 0;
+    }
+    .prompt-panel.open .prompt-body {
+      max-height: 420px;
+      border-top-color: var(--border);
+      opacity: 1;
+    }
+    .prompt-code-wrap {
+      position: relative;
+      margin: 0;
+    }
+    .prompt-textarea {
+      width: 100%; min-height: 200px;
+      padding: 18px 20px;
+      background: #F9F8F5;
+      border: none;
+      font-size: 0.74rem; line-height: 1.85;
+      color: #4a4845;
+      resize: none; outline: none;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      display: block;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    /* ── CTA Area ── */
+    .cta-panel { background: transparent; border: none; box-shadow: none; padding: 0; }
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: var(--green);
+      color: #fff;
+      border: none; border-radius: var(--radius);
+      font-size: 0.9rem; font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .18s, transform .18s, box-shadow .18s;
+      box-shadow: 0 4px 16px rgba(123,174,127,.35);
+      margin-bottom: 10px;
+    }
+    .btn-primary:hover {
+      background: var(--green-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(123,174,127,.45);
+    }
+    .btn-primary:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(123,174,127,.3); }
+
+    .btn-secondary-row { display: flex; gap: 10px; }
+    .btn-secondary {
+      flex: 1; padding: 13px;
+      background: var(--card);
+      color: var(--text1);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
       font-size: 0.78rem; font-weight: 600;
-      cursor: pointer; transition: all .18s;
+      cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all .18s;
     }
-    .format-btn:hover { border-color: #c0bbb4; background: var(--card); color: var(--text1); }
+    .btn-secondary:hover { background: var(--bg2); border-color: var(--border2); transform: translateY(-1px); }
+    .btn-secondary:active { transform: translateY(0); }
+    .btn-secondary.success { color: var(--green); border-color: var(--green); background: var(--green-bg); }
 
     /* ── Toast ── */
     .toast {
-      position: fixed;
-      bottom: 28px; right: 24px;
-      background: #1a1a1a;
+      position: fixed; bottom: 28px; right: 24px;
+      background: #1F1F1F;
       color: #fff;
-      padding: 10px 16px;
-      border-radius: 10px;
+      padding: 11px 18px;
+      border-radius: 12px;
       font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em;
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity .22s, transform .22s;
-      pointer-events: none;
-      z-index: 200;
-      box-shadow: 0 4px 16px rgba(0,0,0,.25);
-      white-space: nowrap;
+      opacity: 0; transform: translateY(12px) scale(.96);
+      transition: opacity .22s cubic-bezier(.4,0,.2,1), transform .22s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none; z-index: 300;
+      box-shadow: 0 6px 24px rgba(0,0,0,.22);
+      white-space: nowrap; max-width: 320px;
+      display: flex; align-items: center; gap: 8px;
     }
-    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+    .toast-icon { font-size: 0.9rem; }
 
     /* ── FAB ── */
-    .fab-dock { position: fixed; bottom: 88px; right: 24px; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; z-index: 90; }
-    .fab-btn { display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; background: var(--navy); color: rgba(255,255,255,.85); border-radius: 100px; text-decoration: none; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; box-shadow: 0 4px 18px rgba(27,45,79,.35); transition: all .18s; border: 1.5px solid rgba(255,255,255,.1); }
-    .fab-btn:hover { background: #142240; color: #fff; transform: translateY(-2px); }
-    .fab-icon { width: 28px; height: 28px; background: rgba(255,255,255,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+    .fab-dock {
+      position: fixed; bottom: 90px; right: 24px;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+      z-index: 90;
+    }
+    .fab-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 14px 9px 10px;
+      background: rgba(31,31,31,.88);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      color: rgba(255,255,255,.8);
+      border-radius: 100px; text-decoration: none;
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
+      box-shadow: 0 4px 16px rgba(0,0,0,.22);
+      transition: all .18s;
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .fab-btn:hover { background: rgba(31,31,31,.96); color: #fff; transform: translateY(-2px); }
+    .fab-icon { width: 24px; height: 24px; background: rgba(255,255,255,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
 
     /* ── Footer ── */
-    .site-footer { text-align: center; margin-top: 48px; font-size: 0.72rem; color: var(--text3); }
+    .footer {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 0.68rem; color: var(--text3);
+      padding-top: 8px;
+    }
 
-    @media (max-width: 480px) {
-      .site-header { padding: 16px 20px; margin-bottom: 32px; }
-      .header-nav { display: none; }
-      .action-row { flex-direction: column; }
-      .fab-dock { bottom: 72px; right: 16px; }
-      .toast { right: 16px; bottom: 20px; }
+    /* ── Strength panel flash ── */
+    .strength-panel.flash { animation: panelFlash .3s ease; }
+    @keyframes panelFlash {
+      0%   { box-shadow: var(--shadow); }
+      40%  { box-shadow: 0 0 0 3px rgba(123,174,127,.18), var(--shadow); }
+      100% { box-shadow: var(--shadow); }
+    }
+
+    /* ── RWD ── */
+    @media (max-width: 720px) {
+      .nav { padding: 0 20px; }
+      .hero { padding: 48px 20px 40px; }
+      .flow-steps { padding: 5px 6px; gap: 0; }
+      .flow-step { padding: 5px 10px; }
+      .flow-step-label { font-size: 0.68rem; }
+      .flow-sep { padding: 0 1px; }
+      .main {
+        grid-template-columns: 1fr;
+        padding: 24px 16px 80px;
+        gap: 16px;
+      }
+      .ctrl-col { gap: 14px; }
+      .btn-secondary-row { flex-direction: column; }
+      .fab-dock { bottom: 16px; right: 16px; }
+      .toast { right: 16px; bottom: 16px; left: 16px; max-width: none; }
+      .card-thumb { width: 64px; }
     }
   </style>
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="yuzu-logo">
-      <svg width="36" height="36" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="yg" cx="38%" cy="28%" r="72%"><stop offset="0%" stop-color="#f0d050"/><stop offset="100%" stop-color="#a06010"/></radialGradient></defs>
-        <circle cx="17" cy="17" r="17" fill="url(#yg)"/>
+  <!-- Nav -->
+  <nav class="nav">
+    <a class="nav-brand" href="#">
+      <svg class="nav-logo" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="yg2" cx="38%" cy="28%" r="72%"><stop offset="0%" stop-color="#f0d050"/><stop offset="100%" stop-color="#a06010"/></radialGradient></defs>
+        <circle cx="17" cy="17" r="17" fill="url(#yg2)"/>
         <circle cx="17" cy="17" r="11.5" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
         <circle cx="17" cy="17" r="2.8" fill="rgba(255,255,255,.75)"/>
         <line x1="17" y1="14.2" x2="10.5" y2="7.5" stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
         <line x1="17" y1="14.2" x2="23.5" y2="7.5" stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
         <line x1="17" y1="14.2" x2="17"   y2="23"  stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="17" y1="5.5"  x2="17"   y2="14.2" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
-        <line x1="6.8" y1="22.5" x2="12.5" y2="18.5" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
-        <line x1="27.2" y1="22.5" x2="21.5" y2="18.5" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
       </svg>
+      <span class="nav-name">Yuzu Studio</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="https://ianian22493.github.io/daily-brief/" target="_blank">每日簡報</a>
+      <a class="nav-link" href="https://ianian22493.github.io/investment-dashboard/" target="_blank">Finance</a>
     </div>
-    <div class="header-text">
-      <div class="header-brand">Yuzu</div>
-      <div class="header-title">Photoshop</div>
-    </div>
-    <nav class="header-nav">
-      <a href="https://ianian22493.github.io/daily-brief/" target="_blank">每日簡報</a>
-      <a href="https://ianian22493.github.io/investment-dashboard/" target="_blank">Finance</a>
-    </nav>
-  </header>
+  </nav>
 
-  <main class="container">
-
-    <p class="section-label">選擇圖片風格</p>
-    <div class="style-grid" id="styleGrid"></div>
-
-    <div class="strength-section">
-      <p class="section-label">風格強度</p>
-      <div class="slider-card">
-        <div class="strength-track" id="strengthTrack">
-          <div class="track-line"></div>
-          <div class="track-fill" id="trackFill"></div>
-          <div class="track-dots" id="trackDots"></div>
-        </div>
-        <div class="strength-labels" id="strengthLabels"></div>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">AI 圖片風格工具</div>
+    <h1 class="hero-title">AI Style<br><em>Prompt</em> Tool</h1>
+    <p class="hero-subtitle">快速生成圖片風格 Prompt，一鍵套用到 ChatGPT</p>
+    <div class="flow-steps" id="flowSteps">
+      <div class="flow-step is-active" data-step="1">
+        <div class="flow-step-num"><span>1</span></div>
+        <span class="flow-step-label">選風格</span>
+      </div>
+      <div class="flow-sep">›</div>
+      <div class="flow-step" data-step="2">
+        <div class="flow-step-num"><span>2</span></div>
+        <span class="flow-step-label">調強度</span>
+      </div>
+      <div class="flow-sep">›</div>
+      <div class="flow-step" data-step="3">
+        <div class="flow-step-num"><span>3</span></div>
+        <span class="flow-step-label">開始生成</span>
       </div>
     </div>
+  </section>
 
-    <div class="divider"></div>
+  <!-- Main -->
+  <div class="main">
 
-    <div class="prompt-header">
-      <p class="section-label" style="margin-bottom:0">Prompt 內容</p>
-      <button class="prompt-toggle" id="promptToggle" onclick="togglePrompt()">
-        <span class="toggle-text">展開 Prompt</span>
-        <span class="toggle-arrow">▼</span>
-      </button>
-    </div>
-    <div class="prompt-wrap" id="promptWrap">
-      <textarea id="promptOutput" readonly></textarea>
-      <div class="prompt-fade"></div>
+    <!-- Left: Style selection -->
+    <div class="style-col">
+      <p class="sec-label">選擇圖片風格</p>
+      <div class="style-grid" id="styleGrid"></div>
     </div>
 
-    <div class="action-row">
-      <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">複製 Prompt</button>
-      <button class="chatgpt-btn" onclick="openChatGPT()">🚀 在 ChatGPT 使用</button>
-    </div>
-    <button class="format-btn" onclick="copyChatGPTFormat()">📋 複製 ChatGPT 格式</button>
+    <!-- Right: Controls -->
+    <div class="ctrl-col">
 
-    <footer class="site-footer">Yuzu Photoshop · 圖片風格 Prompt 工具</footer>
-  </main>
+      <!-- Strength Slider -->
+      <div class="panel strength-panel">
+        <div class="panel-head">
+          <p class="sec-label">風格強度</p>
+        </div>
+        <div class="panel-body">
+          <div class="slider-wrap">
+            <div class="slider-track-row" id="strengthTrack">
+              <div class="s-track-bg"></div>
+              <div class="s-track-fill" id="trackFill"></div>
+              <div class="s-dots" id="trackDots"></div>
+            </div>
+            <div class="s-labels" id="strengthLabels"></div>
+          </div>
+        </div>
+      </div>
 
+      <!-- Summary -->
+      <div class="panel summary-panel">
+        <div class="panel-body" id="summaryBody">
+          <!-- injected by JS -->
+        </div>
+      </div>
+
+      <!-- Prompt (collapsible) -->
+      <div class="panel prompt-panel has-content" id="promptPanel">
+        <div class="prompt-header-row" id="promptToggle">
+          <div>
+            <div class="prompt-header-label"><span class="prompt-ready-dot"></span>你的圖片指令已準備好</div>
+            <div class="prompt-header-title" id="promptHeaderTitle">展開查看 Prompt</div>
+          </div>
+          <div class="prompt-toggle-icon">▼</div>
+        </div>
+        <div class="prompt-body" id="promptBody">
+          <div class="prompt-code-wrap">
+            <textarea class="prompt-textarea" id="promptOutput" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-panel">
+        <button class="btn-primary" id="chatgptBtn" onclick="openChatGPT()">
+          <span>🚀</span>
+          <span>在 ChatGPT 使用</span>
+        </button>
+        <div class="btn-secondary-row">
+          <button class="btn-secondary" id="copyBtn" onclick="copyPrompt()">
+            <span>📋</span><span>複製 Prompt</span>
+          </button>
+          <button class="btn-secondary" onclick="copyChatGPTFormat()">
+            <span>📄</span><span>ChatGPT 格式</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="footer">Yuzu Studio · 圖片風格 Prompt 工具</p>
+
+    </div><!-- /ctrl-col -->
+
+  </div><!-- /main -->
+
+  <!-- FAB -->
   <div class="fab-dock">
     <a class="fab-btn" href="https://ianian22493.github.io/daily-brief/" target="_blank">
       <span class="fab-icon">📰</span>每日簡報
     </a>
     <a class="fab-btn" href="https://ianian22493.github.io/investment-dashboard/" target="_blank">
-      <span class="fab-icon">📈</span>Yuzu Finance
+      <span class="fab-icon">📈</span>Finance
     </a>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon"></span>
+    <span id="toastMsg"></span>
+  </div>
 
   <script>
-    /* ── Data ── */
+    /* ══════════════════════════════════════
+       DATA
+    ══════════════════════════════════════ */
     const styles = [
       {
         id: 'handdrawn',
         name: '手繪註解風',
-        desc: '在照片上疊加手繪塗鴉與手寫備忘',
+        desc: '在照片上疊加手繪塗鴉與手寫備忘，日系 Instagram 質感',
+        tag: 'INSTAGRAM',
+        summaryBullets: ['白色手繪線條疊加', '日系小字標注', '不遮蓋主體食物'],
+        thumbSvg: `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" width="80" height="100">
+          <rect width="80" height="100" fill="#F5F1E8"/>
+          <path d="M12 38 Q28 28 44 38 Q60 48 68 38" stroke="#c4a97a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path d="M12 55 Q26 45 42 55 Q58 65 68 55" stroke="#c4a97a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <circle cx="52" cy="30" r="2.5" fill="#c4a97a" opacity=".5"/>
+          <circle cx="18" cy="65" r="2" fill="#c4a97a" opacity=".45"/>
+          <circle cx="62" cy="70" r="1.5" fill="#c4a97a" opacity=".4"/>
+          <text x="36" y="78" font-size="8" fill="#b8975a" opacity=".7" text-anchor="middle" font-family="sans-serif">好吃 ✦</text>
+        </svg>`,
         base:
 `Keep the original food photo unchanged and realistic.
 
@@ -424,7 +786,18 @@ Include multiple arrows, notes, and decorative elements, but still do not block 
       {
         id: 'magazine',
         name: '日系雜誌風',
-        desc: '極簡排版、高質感攝影、大量留白',
+        desc: '極簡排版、高質感攝影、MUJI / BRUTUS 雜誌留白美學',
+        tag: 'EDITORIAL',
+        summaryBullets: ['大量留白構圖', '柔和自然光', '中性低飽和色調'],
+        thumbSvg: `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" width="80" height="100">
+          <rect width="80" height="100" fill="#F3F3F3"/>
+          <rect x="16" y="28" width="48" height="3" rx="1.5" fill="#cccccc"/>
+          <rect x="16" y="38" width="40" height="2" rx="1" fill="#d8d8d8"/>
+          <rect x="16" y="46" width="32" height="2" rx="1" fill="#d8d8d8"/>
+          <rect x="16" y="54" width="24" height="2" rx="1" fill="#e2e2e2"/>
+          <rect x="16" y="66" width="10" height="1.5" rx=".75" fill="#cccccc"/>
+          <rect x="30" y="66" width="10" height="1.5" rx=".75" fill="#cccccc"/>
+        </svg>`,
         base:
 `Transform the image into a Japanese editorial magazine style.
 
@@ -468,7 +841,18 @@ Make the composition more stylized and refined. Increase the sense of structure,
       {
         id: 'film',
         name: '底片復古風',
-        desc: '底片顆粒、褪色色調、溫暖過曝感',
+        desc: '底片顆粒、褪色色調、溫暖過曝感，膠卷日常美學',
+        tag: 'ANALOG FILM',
+        summaryBullets: ['細緻底片顆粒', '輕微暖色褪色', '柔和過曝高光'],
+        thumbSvg: `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" width="80" height="100">
+          <rect width="80" height="100" fill="#F2EAD9"/>
+          <rect x="16" y="16" width="48" height="62" rx="3" stroke="#c9a96e" stroke-width="1.5" fill="none"/>
+          <rect x="22" y="24" width="36" height="40" rx="2" stroke="#c9a96e" stroke-width="1" fill="none" opacity=".5"/>
+          <rect x="19" y="16" width="5" height="5" rx="1" fill="#c9a96e" opacity=".45"/>
+          <rect x="56" y="16" width="5" height="5" rx="1" fill="#c9a96e" opacity=".45"/>
+          <circle cx="40" cy="82" r="3" stroke="#c9a96e" stroke-width="1" fill="none"/>
+          <line x1="28" y1="44" x2="52" y2="44" stroke="#c9a96e" stroke-width=".8" opacity=".4"/>
+        </svg>`,
         base:
 `Apply a realistic analog film photography look.
 
@@ -508,19 +892,23 @@ Increase visible film grain and vintage tone. Make colors more faded and nostalg
     ];
 
     const strengthOptions = [
-      { id: 'light',  name: 'Light',  desc: '幾乎看不出' },
-      { id: 'medium', name: 'Medium', desc: '剛剛好'    },
-      { id: 'strong', name: 'Strong', desc: '風格明顯'  },
+      { id: 'light',  name: 'Light',  desc: '幾乎無風格' },
+      { id: 'medium', name: 'Medium', desc: '自然舒適'    },
+      { id: 'strong', name: 'Strong', desc: '風格強烈'    },
     ];
 
-    const fillWidths = ['0px', 'calc(50% - 8px)', 'calc(100% - 16px)'];
+    const fillWidths = ['0%', 'calc(50% - 10px)', 'calc(100% - 20px)'];
 
-    /* ── State ── */
+    /* ══════════════════════════════════════
+       STATE
+    ══════════════════════════════════════ */
     let activeId = styles[0].id;
     let activeStrength = 'medium';
     let promptOpen = false;
 
-    /* ── Core ── */
+    /* ══════════════════════════════════════
+       CORE
+    ══════════════════════════════════════ */
     function buildPrompt() {
       const s = styles.find(s => s.id === activeId);
       return s.base + '\n\n' + s.strength[activeStrength];
@@ -540,127 +928,219 @@ Increase visible film grain and vintage tone. Make colors more faded and nostalg
     }
 
     let toastTimer = null;
-    function showToast(msg) {
+    function showToast(icon, msg) {
       const el = document.getElementById('toast');
-      el.textContent = msg;
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastMsg').textContent = msg;
       el.classList.add('show');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
     }
 
-    /* ── Actions ── */
+    /* ══════════════════════════════════════
+       ACTIONS
+    ══════════════════════════════════════ */
     function selectStyle(id) {
       activeId = id;
-      refresh();
+      styleChosen = true;
+      refresh(true);
       copyText(buildPrompt());
       const s = styles.find(s => s.id === id);
       const str = strengthOptions.find(o => o.id === activeStrength);
-      showToast(`✔ 已複製「${s.name} · ${str.name}」`);
+      showToast('✔', `已複製「${s.name} · ${str.name}」`);
+      // Flash strength panel
+      const sp = document.querySelector('.strength-panel');
+      sp.classList.remove('flash');
+      void sp.offsetWidth;
+      sp.classList.add('flash');
+      setTimeout(() => sp.classList.remove('flash'), 350);
     }
 
     function selectStrength(id) {
       activeStrength = id;
-      refresh();
+      strengthChanged = true;
+      refresh(true);
     }
 
     function copyPrompt() {
       copyText(buildPrompt());
-      showToast('✔ 已複製 Prompt');
+      showToast('📋', '已複製 Prompt');
       const btn = document.getElementById('copyBtn');
-      btn.textContent = '✓ 已複製';
+      btn.innerHTML = '<span>✓</span><span>已複製</span>';
       btn.classList.add('success');
       clearTimeout(btn._t);
-      btn._t = setTimeout(() => { btn.textContent = '複製 Prompt'; btn.classList.remove('success'); }, 2000);
+      btn._t = setTimeout(() => {
+        btn.innerHTML = '<span>📋</span><span>複製 Prompt</span>';
+        btn.classList.remove('success');
+      }, 2000);
     }
 
     function copyChatGPTFormat() {
       copyText('請根據以下風格處理圖片：\n\n' + buildPrompt());
-      showToast('✔ 已複製 ChatGPT 格式');
+      showToast('📄', '已複製 ChatGPT 格式');
     }
 
     function openChatGPT() {
       copyText(buildPrompt());
-      showToast('✔ Prompt 已複製，正在開啟...');
+      showToast('🚀', 'Prompt 已複製，正在開啟...');
       setTimeout(() => window.open('https://chat.openai.com/', '_blank'), 300);
     }
 
     function togglePrompt() {
       promptOpen = !promptOpen;
-      document.getElementById('promptWrap').classList.toggle('open', promptOpen);
-      const btn = document.getElementById('promptToggle');
-      btn.classList.toggle('open', promptOpen);
-      btn.querySelector('.toggle-text').textContent = promptOpen ? '收起 Prompt' : '展開 Prompt';
+      const panel = document.getElementById('promptPanel');
+      panel.classList.toggle('open', promptOpen);
+      document.getElementById('promptHeaderTitle').textContent = promptOpen ? '收起 Prompt' : '展開查看 Prompt';
+      // Mark step 3 active when opened
+      if (promptOpen) {
+        strengthChanged = true;
+        styleChosen = true;
+        updateFlowSteps();
+      }
     }
 
-    /* ── Render ── */
-    function refresh() {
-      document.querySelectorAll('.style-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.id === activeId);
-      });
-      const idx = strengthOptions.findIndex(o => o.id === activeStrength);
-      document.querySelectorAll('.track-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-      document.getElementById('trackFill').style.width = fillWidths[idx];
-      document.querySelectorAll('.s-label').forEach((l, i) => l.classList.toggle('active', i === idx));
-      document.getElementById('promptOutput').value = buildPrompt();
-    }
+    /* ══════════════════════════════════════
+       RENDER / REFRESH
+    ══════════════════════════════════════ */
+    function renderSummary(animate) {
+      const s = styles.find(s => s.id === activeId);
+      const str = strengthOptions.find(o => o.id === activeStrength);
+      const body = document.getElementById('summaryBody');
 
-    /* ── Init ── */
-    function init() {
-      // Style cards
-      const grid = document.getElementById('styleGrid');
-      styles.forEach(s => {
-        const btn = document.createElement('button');
-        btn.className = 'style-btn';
-        btn.dataset.id = s.id;
-        btn.innerHTML = `
-          <div class="active-bar"></div>
-          <div class="style-preview"></div>
-          <div class="style-content">
-            <div class="btn-info">
-              <div class="btn-name">${s.name}</div>
-              <div class="btn-desc">${s.desc}</div>
+      if (animate) {
+        body.classList.add('updating');
+        setTimeout(() => {
+          body.innerHTML = `
+            <span class="summary-icon">✨</span>
+            <div class="summary-title">
+              ${s.name}
+              <span class="s-badge">${str.name}</span>
             </div>
-            <div class="btn-copy-hint">點擊複製 ↗</div>
-          </div>`;
-        btn.addEventListener('click', () => selectStyle(s.id));
-        grid.appendChild(btn);
+            <ul class="summary-bullets">
+              ${s.summaryBullets.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+          `;
+          body.classList.remove('updating');
+        }, 160);
+      } else {
+        body.innerHTML = `
+          <span class="summary-icon">✨</span>
+          <div class="summary-title">
+            ${s.name}
+            <span class="s-badge">${str.name}</span>
+          </div>
+          <ul class="summary-bullets">
+            ${s.summaryBullets.map(b => `<li>${b}</li>`).join('')}
+          </ul>
+        `;
+      }
+    }
+
+    /* ── Flow step tracker ── */
+    let styleChosen = false;
+    let strengthChanged = false;
+
+    function updateFlowSteps() {
+      const steps = document.querySelectorAll('.flow-step');
+      // Step 1: style chosen
+      if (styleChosen) {
+        steps[0].classList.remove('is-active');
+        steps[0].classList.add('is-done');
+        // Step 2: strength active or done
+        if (strengthChanged) {
+          steps[1].classList.remove('is-active');
+          steps[1].classList.add('is-done');
+          steps[2].classList.add('is-active');
+        } else {
+          steps[1].classList.add('is-active');
+        }
+      }
+    }
+
+    function refresh(animateSummary) {
+      // Cards
+      document.querySelectorAll('.style-card').forEach(c => {
+        c.classList.toggle('active', c.dataset.id === activeId);
       });
 
-      // Strength dots & labels
+      // Strength dots
+      const idx = strengthOptions.findIndex(o => o.id === activeStrength);
+      document.querySelectorAll('.s-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      document.getElementById('trackFill').style.width = fillWidths[idx];
+      document.querySelectorAll('.s-label-item').forEach((l, i) => l.classList.toggle('active', i === idx));
+
+      // Prompt textarea
+      document.getElementById('promptOutput').value = buildPrompt();
+
+      // Summary
+      renderSummary(animateSummary);
+
+      // Flow steps
+      updateFlowSteps();
+    }
+
+    /* ══════════════════════════════════════
+       INIT
+    ══════════════════════════════════════ */
+    function init() {
+      const grid = document.getElementById('styleGrid');
+
+      styles.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'style-card';
+        card.dataset.id = s.id;
+        card.innerHTML = `
+          <div class="card-sel"></div>
+          <div class="card-thumb">
+            <div class="card-thumb-inner thumb-${s.id}">${s.thumbSvg}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-name">${s.name}</div>
+            <div class="card-desc">${s.desc}</div>
+            <span class="card-tag">${s.tag}</span>
+          </div>
+        `;
+        card.addEventListener('click', () => selectStyle(s.id));
+        grid.appendChild(card);
+      });
+
+      // Strength dots
       const dotsEl   = document.getElementById('trackDots');
       const labelsEl = document.getElementById('strengthLabels');
+
       strengthOptions.forEach((opt, i) => {
         const dot = document.createElement('div');
-        dot.className = 'track-dot';
+        dot.className = 's-dot';
         dot.addEventListener('click', e => { e.stopPropagation(); selectStrength(opt.id); });
         dotsEl.appendChild(dot);
 
         const lbl = document.createElement('div');
-        lbl.className = 's-label';
-        lbl.innerHTML = `<div class="s-label-name">${opt.name}</div><div class="s-label-desc">${opt.desc}</div>`;
+        lbl.className = 's-label-item';
+        lbl.innerHTML = `<span class="s-label-name">${opt.name}</span><span class="s-label-desc">${opt.desc}</span>`;
         lbl.addEventListener('click', () => selectStrength(opt.id));
         labelsEl.appendChild(lbl);
       });
 
-      // Track click & drag
+      // Track drag
       const track = document.getElementById('strengthTrack');
       function trackPct(clientX) {
         const r = track.getBoundingClientRect();
         const p = (clientX - r.left) / r.width;
-        if (p < 0.33) selectStrength('light');
+        if      (p < 0.33) selectStrength('light');
         else if (p < 0.67) selectStrength('medium');
-        else selectStrength('strong');
+        else               selectStrength('strong');
       }
-
       let dragging = false;
       track.addEventListener('mousedown', e => { dragging = true; trackPct(e.clientX); });
       document.addEventListener('mousemove', e => { if (dragging) trackPct(e.clientX); });
       document.addEventListener('mouseup', () => dragging = false);
-
       track.addEventListener('touchstart', e => trackPct(e.touches[0].clientX), { passive: true });
-      track.addEventListener('touchmove',  e => { e.preventDefault(); trackPct(e.touches[0].clientX); }, { passive: false });
+      track.addEventListener('touchmove', e => { e.preventDefault(); trackPct(e.touches[0].clientX); }, { passive: false });
 
-      refresh();
+      // Prompt toggle
+      document.getElementById('promptToggle').addEventListener('click', togglePrompt);
+
+      refresh(false);
     }
 
     init();
