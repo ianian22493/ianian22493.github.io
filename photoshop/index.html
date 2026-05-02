@@ -840,10 +840,10 @@ Make the composition more stylized and refined. Increase the sense of structure,
       },
       {
         id: 'film',
-        name: '底片復古風',
-        desc: '底片顆粒、褪色色調、溫暖過曝感，膠卷日常美學',
+        name: '敘事底片風',
+        desc: '底片質感加上一句安靜的回憶文字，像一張被珍藏的老照片',
         tag: 'ANALOG FILM',
-        summaryBullets: ['細緻底片顆粒', '輕微暖色褪色', '柔和過曝高光'],
+        summaryBullets: ['復古底片質感', '一句回憶', '很安靜的情緒'],
         thumbSvg: `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" width="80" height="100">
           <rect width="80" height="100" fill="#F2EAD9"/>
           <rect x="16" y="16" width="48" height="62" rx="3" stroke="#c9a96e" stroke-width="1.5" fill="none"/>
@@ -854,39 +854,48 @@ Make the composition more stylized and refined. Increase the sense of structure,
           <line x1="28" y1="44" x2="52" y2="44" stroke="#c9a96e" stroke-width=".8" opacity=".4"/>
         </svg>`,
         base:
-`Apply a realistic analog film photography look.
+`Transform this image into a nostalgic film-style photo with subtle cinematic storytelling elements.
 
-Color and tone:
-- slightly warm tone
-- mildly faded colors (not overly yellow)
-- soft contrast
+Preserve the original composition and subject exactly. Do NOT alter faces, objects, or scene structure.
 
-Texture:
-- subtle film grain (fine, not heavy)
-- slight imperfections for realism
+Apply a soft analog film aesthetic:
+- natural film grain (very subtle)
+- slightly faded colors (warm tone or soft neutral)
+- gentle contrast (not high contrast)
+- mild vignetting
 
-Lighting:
-- slightly overexposed highlights
-- soft glow in bright areas
+Add minimal narrative overlay elements:
+- a small timestamp or film label (e.g., "Kodak 200", date, or location)
+- one short emotional sentence (natural, human, reflective tone)
+- text must be small, subtle, and placed near edges
 
-Style:
-- nostalgic, calm, everyday moment feeling
-- like a casual photo taken with a film camera
+Text style:
+- clean, minimal, slightly imperfect
+- looks like part of the photo, not UI overlay
 
-Constraints:
-- DO NOT make it too dark or too yellow
-- DO NOT overuse grain
-- keep image details visible and natural`,
+Important constraints:
+- DO NOT overcrowd the image
+- DO NOT use bold fonts or large text
+- DO NOT turn into a poster or design layout
+- keep everything quiet, subtle, and memory-like
+
+The result should feel like a real photo with a quiet memory attached to it.`,
         strength: {
           light:
 `Intensity: Light —
-Apply very subtle film grain and a slight warm tone. Keep the effect barely noticeable.`,
+Keep film effect extremely subtle.
+Only very light grain and minimal color shift.
+Text should be barely visible and very small.`,
           medium:
 `Intensity: Medium —
-Use moderate grain and slightly faded colors. Add a soft nostalgic tone with balanced contrast.`,
+Apply a balanced film look with soft grain and warm tone.
+Add one short narrative sentence and a small timestamp.
+Keep everything subtle and emotionally natural.`,
           strong:
 `Intensity: Strong —
-Increase visible film grain and vintage tone. Make colors more faded and nostalgic, while still keeping image details clear.`
+Enhance film texture and nostalgic tone more noticeably.
+Narrative text can be slightly more expressive, but still minimal.
+Keep composition untouched and avoid heavy stylization.`
         }
       }
     ];
