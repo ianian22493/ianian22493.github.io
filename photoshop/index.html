@@ -727,61 +727,82 @@
       {
         id: 'handdrawn',
         name: '手繪註解風',
-        desc: '在照片上疊加手繪塗鴉與手寫備忘，日系 Instagram 質感',
+        desc: '像食物圖鑑一樣，替每一樣食材標上名字與可愛的一句話描述',
         tag: 'INSTAGRAM',
-        summaryBullets: ['白色手繪線條疊加', '日系小字標注', '不遮蓋主體食物'],
+        summaryBullets: ['每樣食材各自標名', '手繪箭頭指向元素', '可愛的一句話備註'],
         thumbSvg: `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" width="80" height="100">
           <rect width="80" height="100" fill="#F5F1E8"/>
-          <path d="M12 38 Q28 28 44 38 Q60 48 68 38" stroke="#c4a97a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-          <path d="M12 55 Q26 45 42 55 Q58 65 68 55" stroke="#c4a97a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-          <circle cx="52" cy="30" r="2.5" fill="#c4a97a" opacity=".5"/>
-          <circle cx="18" cy="65" r="2" fill="#c4a97a" opacity=".45"/>
-          <circle cx="62" cy="70" r="1.5" fill="#c4a97a" opacity=".4"/>
-          <text x="36" y="78" font-size="8" fill="#b8975a" opacity=".7" text-anchor="middle" font-family="sans-serif">好吃 ✦</text>
+          <!-- food blob -->
+          <ellipse cx="40" cy="54" rx="26" ry="20" fill="#d4b896" opacity=".55"/>
+          <ellipse cx="36" cy="50" rx="10" ry="8" fill="#c08050" opacity=".6"/>
+          <!-- label 1 top-left -->
+          <line x1="14" y1="28" x2="28" y2="42" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="28" cy="42" r="1.3" fill="white"/>
+          <text x="5" y="22" font-size="5.2" fill="white" font-family="sans-serif" font-weight="bold">食材A</text>
+          <text x="5" y="29" font-size="4" fill="white" opacity=".8" font-family="sans-serif">脆脆甜甜！</text>
+          <!-- label 2 top-right -->
+          <line x1="66" y1="26" x2="52" y2="40" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="52" cy="40" r="1.3" fill="white"/>
+          <text x="55" y="22" font-size="5.2" fill="white" font-family="sans-serif" font-weight="bold">食材B</text>
+          <text x="53" y="29" font-size="4" fill="white" opacity=".8" font-family="sans-serif">超好吃～</text>
+          <!-- label 3 bottom-left -->
+          <line x1="12" y1="78" x2="26" y2="64" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="26" cy="64" r="1.3" fill="white"/>
+          <text x="3" y="74" font-size="5.2" fill="white" font-family="sans-serif" font-weight="bold">食材C</text>
+          <text x="3" y="81" font-size="4" fill="white" opacity=".8" font-family="sans-serif">暖心♡</text>
+          <!-- cloud bubble -->
+          <rect x="20" y="88" width="40" height="10" rx="5" fill="white" opacity=".25"/>
+          <text x="40" y="95" font-size="4.5" fill="white" text-anchor="middle" font-family="sans-serif">好好吃飯就是幸福♡</text>
         </svg>`,
         base:
-`Keep the original food photo unchanged and realistic.
+`Keep the original photo completely unchanged — do NOT modify colors, lighting, objects, or composition.
 
-Draw minimal white hand-drawn doodles ONLY around the edges of the food:
-- thin, slightly uneven lines (one-line sketch style)
-- avoid drawing over the main surface of the food
+Overlay hand-drawn white annotation labels onto the photo, in the style of a personal food diary or cute Instagram post.
 
-Add small handwritten annotations in a cute Japanese style:
-- use short phrases in Chinese or Japanese (e.g. 好吃, 超讚, ちょっと幸せ)
-- keep text small and light
-- place text near the food, not covering key details
+For each identifiable element in the photo (food item, ingredient, object):
+- Draw a thin, slightly curved white arrow line pointing FROM the label TO the element
+- Write the element's name as the label (e.g. 漢堡肉, 南瓜泥, 玉米粒) in handwritten-style Chinese
+- Add one short cute description below the name (e.g. 肉汁滿滿超滿足～, 脆脆甜甜！, 酸甜可口♡)
+- Use white text with a very subtle thin shadow for legibility
 
-Add subtle decorations:
-- arrows or dashed lines pointing to details
-- small steam lines to indicate warmth
-- a few tiny sparkles or hearts
+Annotation style:
+- Handwritten casual font — slightly uneven, like someone wrote it by hand
+- Arrows are thin, one-stroke, slightly curved (not perfectly straight)
+- Text is small and light — not heavy or block-style
+- Tone is personal and affectionate: warm, playful, a little diary-like
 
-Style and mood:
-- Instagram story aesthetic
-- cozy, soft, slightly lazy feeling
-- natural and not overly designed
+Layout rules:
+- Place labels around the edges and margins of the image, not over the center
+- Arrows must clearly connect to the right element
+- Do NOT block the main subject
+
+Optional: add a small cloud or speech bubble at a corner with a closing phrase (e.g. 好好吃飯就是幸福♡)
 
 Constraints:
-- DO NOT block or cover the food
-- DO NOT add too many doodles
-- DO NOT change original colors or lighting
-- keep plenty of empty space`,
+- DO NOT change the original photo in any way
+- DO NOT use English labels — use Chinese only
+- DO NOT make text too large or heavy`,
         strength: {
           light:
-`Intensity: Light —
-Keep doodles minimal and subtle.
-Use very few annotations.
-Keep lots of empty space.`,
+`Intensity: Light (弱) —
+Label only 3 to 4 of the most prominent elements in the photo.
+Each label has the item name only — no description below.
+Arrows are simple and short.
+Keep the image mostly clean with plenty of empty space.`,
           medium:
-`Intensity: Medium —
-Add a moderate amount of doodles and annotations.
-Include arrows, dashed lines, and small decorations like steam or sparkles.
-Maintain balance and avoid clutter.`,
+`Intensity: Medium (中) —
+Label most visible elements — aim for 6 to 9 labels.
+Each label has the item name AND one short cute description (e.g. 脆脆甜甜！, 好療癒～♡).
+Arrows are slightly curved and expressive.
+Balance coverage with visual breathing room — don't crowd.`,
           strong:
-`Intensity: Strong —
-Add more visible doodles and annotations.
-Make the drawings slightly more playful and expressive.
-Include multiple arrows, notes, and decorative elements, but still do not block the food.`
+`Intensity: Strong (強) —
+Label every identifiable element comprehensively.
+Each label has the item name + a description + optional small decorative marks (♡, ～, ☆, ！).
+Arrows are expressive — slightly looping or curved.
+Add a handwritten title at the top of the image (the dish name or a fun heading).
+Add a small cloud bubble caption at the bottom (a personal closing thought, e.g. 今天的自己，辛苦了～ 好好吃飯就是幸福♡).
+Fill the margins with warmth and personality — make it feel like a cherished food journal page.`
         }
       },
       {
