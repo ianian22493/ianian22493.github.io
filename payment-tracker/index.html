@@ -485,6 +485,12 @@
     <div class="ct-val" id="totalCostVal">—</div>
   </div>
 
+  <!-- 3C / 個人裝備（與房子預算分開）-->
+  <div class="sec-head" style="margin-top:52px;"><h2>3C / 個人裝備</h2></div>
+  <div class="sec-label">GADGETS · 與房子預算分開計算</div>
+  <div class="watch-grid" id="gadgetGrid"></div>
+  <div class="note">個人裝備規劃，不列入上方「入住總成本」。</div>
+
 </div>
 
 <script>
@@ -577,6 +583,18 @@ const watchlist = [
     eta: '傳聞 2026，未官宣',
     status: 'watching',
     note: '等 Gen 3 發表。若推出，現行 Gen 2 通常會降價，到時撿 Gen 2 或直上新款都划算；交屋 2026/12 時間點剛好。'
+  },
+];
+
+// 3C / 個人裝備（與房子預算分開）
+// status: 'wish'（想買/計畫）/ 'ordered'（已下訂）/ 'arrived'（已入手）
+const gadgets = [
+  {
+    name: '空拍機', icon: '🚁',
+    model: 'DJI Mini 5 Pro 暢飛套裝（RC2 帶屏遙控器）',
+    budget: 32000, plan: '今年底～明年初', status: 'wish',
+    link: 'https://feebee.com.tw/bid/dji%20mini%205%20pro/',
+    note: '<250g 免考照；2025/09 上市、當前旗艦（下一代 Mini 6 Pro 估 2027 下半）。認準暢飛套裝 + RC2，留意年底促銷。'
   },
 ];
 
@@ -839,10 +857,34 @@ function renderWatchlist() {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 
+// ── Render 3C / 個人裝備 ───────────────────────────────────────────────────────
+
+function renderGadgets() {
+  const grid = document.getElementById('gadgetGrid');
+  if (!grid) return;
+  const stMap = { wish: '計畫購入', ordered: '已下訂', arrived: '已入手' };
+  gadgets.forEach(g => {
+    grid.innerHTML += `
+      <div class="watch-card">
+        <div class="w-top">
+          <span class="w-icon">${g.icon}</span>
+          <span class="w-name">${g.name}</span>
+          <span class="w-badge watching">${stMap[g.status] || ''}</span>
+        </div>
+        <div class="w-row"><span class="w-k">型號</span><span class="w-v">${g.model}</span></div>
+        <div class="w-row"><span class="w-k">預算</span><span class="w-v">${fmtMoneyFull(g.budget)}</span></div>
+        <div class="w-row"><span class="w-k">預計購入</span><span class="w-v">${g.plan}</span></div>
+        ${g.link ? `<div class="w-row"><span class="w-k">比價</span><span class="w-v"><a href="${g.link}" target="_blank" rel="noopener" style="color:var(--brass)">查看↗</a></span></div>` : ''}
+        <div class="w-note">${g.note}</div>
+      </div>`;
+  });
+}
+
 renderTimeline();
 renderMilestones();
 renderRooms();
 renderWatchlist();
+renderGadgets();
 
 // 自動顯示資料更新日期（用本地日期，避免 UTC 時差差一天）
 document.getElementById('coverUpdated').textContent =
