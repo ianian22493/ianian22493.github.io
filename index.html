@@ -227,6 +227,26 @@
     font-size:13px;color:var(--ink-soft);line-height:1.65;
     text-wrap:pretty;margin-bottom:18px;
   }
+  /* ── 即時資訊列 ── */
+  .card-live{
+    font-size:12px;color:var(--ink-soft);
+    margin:-4px 0 16px;min-height:17px;
+    display:flex;align-items:center;gap:7px;
+    opacity:0;transform:translateY(-3px);
+    transition:opacity .55s ease,transform .55s ease;
+  }
+  .card-live.show{opacity:1;transform:none}
+  .card-live .lv-dot{
+    width:6px;height:6px;border-radius:50%;background:var(--ac);flex-shrink:0;
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 18%,transparent);
+  }
+  .card-live .lv-txt{
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .card-live .lv-time{color:var(--ink-faint);flex-shrink:0}
+  .card-live .up{color:#3F7A4F;font-weight:600}
+  .card-live .down{color:#B3503F;font-weight:600}
+
   .card-foot{
     margin-top:auto;
     display:flex;align-items:center;gap:7px;
@@ -363,6 +383,7 @@
         <div class="card-en">Daily News</div>
         <h2 class="card-title">每日新聞</h2>
         <p class="card-desc">沖一杯咖啡，讀今天值得知道的事。精選簡報，安靜開始一天。</p>
+        <div class="card-live" id="live-news"></div>
         <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
       </article>
     </a>
@@ -373,6 +394,7 @@
         <div class="card-en">Investment Dashboard</div>
         <h2 class="card-title">投資儀表板</h2>
         <p class="card-desc">市場脈動、持倉與訊號一覽。用一眼的時間，看懂今天的盤勢。</p>
+        <div class="card-live" id="live-dash"></div>
         <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
       </article>
     </a>
@@ -383,6 +405,7 @@
         <div class="card-en">Capital OS</div>
         <h2 class="card-title">投資辦公室</h2>
         <p class="card-desc">你的虛擬投資團隊。各部門協作給出決策，像走進一間安靜的辦公室。</p>
+        <div class="card-live" id="live-os"></div>
         <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
       </article>
     </a>
@@ -527,6 +550,60 @@
   } else {
     cards.forEach((c,i)=> setTimeout(()=> c.classList.add('in'), 90*i + 120));
   }
+
+  /* ── 即時資訊（同源 fetch，失敗就安靜略過）────────────────── */
+  const esc = s => String(s).replace(/[&<>"]/g, c => (
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const setLive = (id, html) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = html;
+    requestAnimationFrame(()=> el.classList.add('show'));
+  };
+  const pctTag = (v, label) => {
+    if(typeof v !== 'number') return '';
+    const cls = v >= 0 ? 'up' : 'down';
+    const sign = v >= 0 ? '▲' : '▼';
+    return `<span>${label} <span class="${cls}">${sign}${Math.abs(v).toFixed(2)}%</span></span>`;
+  };
+
+  // 每日新聞：抓今日頭條
+  fetch('/daily-brief/').then(r=>r.text()).then(html=>{
+    const m = html.match(/featured-headline"[^>]*>([^<]+)</);
+    if(m && m[1].trim()){
+      setLive('live-news',
+        `<span class="lv-dot"></span><span class="lv-txt">${esc(m[1].trim())}</span>`);
+    }
+  }).catch(()=>{});
+
+  // 投資儀表板：漲跌家數 + 更新時間
+  fetch('/investment-dashboard/data.json').then(r=>r.json()).then(d=>{
+    let up=0, down=0;
+    Object.keys(d).forEach(k=>{
+      const grp = d[k];
+      if(grp && typeof grp==='object'){
+        Object.keys(grp).forEach(t=>{
+          const p = grp[t] && grp[t].pct;
+          if(typeof p==='number'){ p>=0 ? up++ : down++; }
+        });
+      }
+    });
+    if(up+down>0){
+      const time = d.updated_at ? `<span class="lv-time">· ${esc(d.updated_at)}</span>` : '';
+      setLive('live-dash',
+        `<span class="lv-dot"></span><span><span class="up">▲${up}</span> <span class="down">▼${down}</span></span>${time}`);
+    }
+  }).catch(()=>{});
+
+  // 投資辦公室：台股 / S&P 漲跌%
+  fetch('/investment-ai/data/analysis.json').then(r=>r.json()).then(d=>{
+    const ms = d.market_snapshot || {};
+    const parts = [
+      pctTag(ms.taiex && ms.taiex.change_pct, '台股'),
+      pctTag(ms.sp500 && ms.sp500.change_pct, 'S&P')
+    ].filter(Boolean).join('　');
+    if(parts) setLive('live-os', `<span class="lv-dot"></span>${parts}`);
+  }).catch(()=>{});
 })();
 </script>
 </body>
