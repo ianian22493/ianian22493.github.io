@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yuzu · 又瑄的個人首頁</title>
+<meta name="description" content="又瑄的個人入口 Hub — 每日新聞、投資儀表板、投資辦公室、Yuzu Photoshop 與更多工具，都在這裡。">
+<!-- Open Graph / 社群分享預覽 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Yuzu · 又瑄的個人首頁">
+<meta property="og:description" content="一個溫暖的個人入口，串起所有專案與工具。">
+<meta property="og:url" content="https://ianian22493.github.io/">
+<meta property="og:image" content="https://ianian22493.github.io/favicon.svg">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    /* ── 紙感底色 ── */
+    --bg:        #F5F1EA;
+    --bg2:       #EFEAE0;
+    --paper:     #FAF7F2;
+    /* ── 文字 / 邊線 ── */
+    --ink:       #2C2620;
+    --ink-soft:  #5A4E42;
+    --ink-faint: #998B7A;
+    --line:      #D8CFC2;
+    --line-soft: #E6DFD2;
+    /* ── 柚子金 ── */
+    --gold-l:    #f0d050;
+    --gold-d:    #a06010;
+    --gold:      #B8922E;
+    --gold-bg:   #FBF4E2;
+    /* ── 暖土色點綴 ── */
+    --wood:      #B8936A;
+    --leather:   #8B5A3C;
+    --brass:     #A87E4A;
+    --olive:     #6B6B4A;
+    --sky:       #6E89A6;
+    /* ── 陰影 ── */
+    --sh-1: 0 1px 2px rgba(44,38,32,.04), 0 4px 12px rgba(44,38,32,.05);
+    --sh-2: 0 2px 6px rgba(44,38,32,.06), 0 14px 34px rgba(44,38,32,.10);
+    --radius: 22px;
+  }
+
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;
+    position:relative;
+  }
+  /* 柔和紙面光暈 */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse 60% 45% at 50% -5%, rgba(240,208,80,.10), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 92% 8%, rgba(184,147,106,.07), transparent 55%);
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ════════ NAV ════════ */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    height:64px;padding:0 clamp(18px,4vw,40px);
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(245,241,234,.82);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:38px;height:38px;flex-shrink:0;display:block;
+    filter:drop-shadow(0 3px 7px rgba(160,96,16,.22))}
+  .brand-txt{line-height:1.2}
+  .brand-name{
+    font-family:"Noto Serif TC",serif;
+    font-size:19px;font-weight:700;letter-spacing:.04em;color:var(--ink);
+  }
+  .brand-sub{
+    font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-faint);margin-top:1px;
+  }
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .nav-greet{text-align:right;line-height:1.25}
+  .nav-greet .g1{font-size:13px;font-weight:500;color:var(--ink-soft)}
+  .nav-greet .g2{font-size:11px;color:var(--ink-faint);letter-spacing:.04em}
+  .nav-chip{
+    width:42px;height:42px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:23px;line-height:1;flex-shrink:0;
+    background:var(--paper);border:1px solid var(--line);
+    box-shadow:var(--sh-1);
+  }
+  @media(max-width:480px){ .nav-greet{display:none} }
+
+  /* ════════ HERO ════════ */
+  .hero{
+    position:relative;z-index:1;
+    text-align:center;
+    padding:clamp(54px,9vw,104px) 24px clamp(34px,5vw,52px);
+    max-width:760px;margin:0 auto;
+  }
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:22px;
+  }
+  .hero-eyebrow::before,.hero-eyebrow::after{
+    content:"";width:22px;height:1px;background:var(--line);display:inline-block;
+  }
+  .hero-animal{
+    font-size:clamp(46px,9vw,66px);line-height:1;display:inline-block;
+    margin-bottom:14px;
+    filter:drop-shadow(0 6px 14px rgba(44,38,32,.12));
+    animation:floaty 5.5s ease-in-out infinite;
+  }
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+  .hero-title{
+    font-family:"Noto Serif TC",serif;
+    font-size:clamp(34px,6.5vw,58px);font-weight:900;letter-spacing:.01em;
+    color:var(--ink);line-height:1.18;margin-bottom:16px;
+  }
+  .hero-title .name{
+    background:linear-gradient(100deg,var(--gold-l) 0%,var(--gold-d) 92%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:clamp(14px,2.4vw,17px);color:var(--ink-soft);
+    font-weight:400;letter-spacing:.02em;text-wrap:balance;
+    max-width:34ch;margin:0 auto;
+  }
+  .hero-rule{
+    width:62px;height:3px;border-radius:3px;margin:30px auto 0;
+    background:linear-gradient(90deg,var(--gold-l),var(--gold-d));
+    opacity:.85;
+  }
+
+  /* ════════ CARD GRID ════════ */
+  .grid-wrap{
+    position:relative;z-index:1;flex:1;
+    max-width:1080px;width:100%;margin:0 auto;
+    padding:8px clamp(18px,4vw,40px) clamp(60px,8vw,96px);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:clamp(16px,2.2vw,24px);
+  }
+  @media(max-width:880px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:560px){ .grid{grid-template-columns:1fr} }
+
+  .card{
+    --ac:var(--wood);
+    position:relative;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px 26px 26px;
+    box-shadow:var(--sh-1);
+    display:flex;flex-direction:column;
+    min-height:212px;
+    overflow:hidden;
+    transition:transform .34s cubic-bezier(.2,.7,.3,1),
+               box-shadow .34s cubic-bezier(.2,.7,.3,1),
+               border-color .34s;
+    /* entrance */
+    opacity:0;transform:translateY(20px);
+  }
+  .card.in{opacity:1;transform:translateY(0)}
+  /* 頂部細色條 */
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--ac);opacity:.0;transition:opacity .34s;
+  }
+  .card-link:hover .card{
+    transform:translateY(-7px);
+    box-shadow:var(--sh-2);
+    border-color:color-mix(in srgb,var(--ac) 42%,var(--line));
+  }
+  .card-link:hover .card::before{opacity:.85}
+  .card-link:focus-visible .card{
+    outline:2px solid var(--ac);outline-offset:3px;
+  }
+
+  .card-icon{
+    width:58px;height:58px;border-radius:16px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:29px;line-height:1;
+    background:color-mix(in srgb,var(--ac) 12%,var(--paper));
+    border:1px solid color-mix(in srgb,var(--ac) 26%,var(--line));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+    margin-bottom:18px;
+    transition:transform .34s cubic-bezier(.2,.7,.3,1);
+  }
+  .card-link:hover .card-icon{transform:scale(1.07) rotate(-3deg)}
+
+  .card-en{
+    font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ac);margin-bottom:5px;
+  }
+  .card-title{
+    font-family:"Noto Serif TC",serif;
+    font-size:21px;font-weight:700;color:var(--ink);
+    letter-spacing:.02em;margin-bottom:9px;
+  }
+  .card-desc{
+    font-size:13px;color:var(--ink-soft);line-height:1.65;
+    text-wrap:pretty;margin-bottom:18px;
+  }
+  .card-foot{
+    margin-top:auto;
+    display:flex;align-items:center;gap:7px;
+    font-size:12px;font-weight:500;letter-spacing:.04em;
+    color:var(--ink-faint);
+    transition:color .3s,gap .3s;
+  }
+  .card-link:hover .card-foot{color:var(--ac);gap:11px}
+  .card-foot .arrow{
+    font-size:15px;line-height:1;transition:transform .3s;
+  }
+  .card-link:hover .card-foot .arrow{transform:translateX(3px)}
+
+  /* per-card accents */
+  .card.c-news  {--ac:var(--gold)}
+  .card.c-dash  {--ac:var(--olive)}
+  .card.c-os    {--ac:var(--leather)}
+  .card.c-photo {--ac:var(--wood)}
+  .card.c-pay   {--ac:var(--sky)}
+  .card.c-travel{--ac:var(--brass)}
+
+  /* ── disabled (Coming Soon) ── */
+  .card-link.is-soon{cursor:default;pointer-events:none}
+  .card.soon{
+    filter:grayscale(.85);
+    opacity:.62;
+    background:var(--bg2);
+    border-style:dashed;
+  }
+  .card.soon .card-title,.card.soon .card-en{color:var(--ink-faint)}
+  .badge-soon{
+    position:absolute;top:14px;right:14px;z-index:2;
+    font-size:10px;font-weight:700;letter-spacing:.1em;
+    padding:4px 11px;border-radius:20px;
+    background:var(--ink);color:var(--bg);
+    display:flex;align-items:center;gap:6px;
+    filter:grayscale(0);opacity:1;
+    box-shadow:0 3px 10px rgba(44,38,32,.18);
+  }
+  .badge-soon .dot{
+    width:5px;height:5px;border-radius:50%;background:var(--gold-l);
+    animation:blink 1.8s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ════════ FOOTER ════════ */
+  .footer{
+    position:relative;z-index:1;
+    border-top:1px solid var(--line-soft);
+    padding:26px 24px 32px;
+    text-align:center;
+  }
+  .footer .f-quote{
+    font-family:"Noto Serif TC",serif;
+    font-size:14px;color:var(--ink-soft);font-style:italic;
+    letter-spacing:.02em;margin-bottom:8px;
+  }
+  .footer .f-copy{
+    font-size:11px;color:var(--ink-faint);letter-spacing:.06em;
+  }
+  .footer .f-copy .dotgold{color:var(--gold)}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .card{opacity:1!important;transform:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav class="nav">
+  <a class="brand" href="/" aria-label="Yuzu home">
+    <svg class="brand-logo" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+      <defs><radialGradient id="navlogo" cx="38%" cy="28%" r="72%">
+        <stop offset="0%" stop-color="#f0d050"/><stop offset="100%" stop-color="#a06010"/>
+      </radialGradient></defs>
+      <circle cx="17" cy="17" r="17" fill="url(#navlogo)"/>
+      <circle cx="17" cy="17" r="11.5" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
+      <circle cx="17" cy="17" r="2.8" fill="rgba(255,255,255,.75)"/>
+      <line x1="17" y1="14.2" x2="10.5" y2="7.5" stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="17" y1="14.2" x2="23.5" y2="7.5" stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="17" y1="14.2" x2="17" y2="23" stroke="rgba(255,255,255,.7)" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="17" y1="5.5" x2="17" y2="14.2" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
+      <line x1="6.8" y1="22.5" x2="12.5" y2="18.5" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
+      <line x1="27.2" y1="22.5" x2="21.5" y2="18.5" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-linecap="round"/>
+    </svg>
+    <span class="brand-txt">
+      <span class="brand-name">Yuzu</span>
+      <span class="brand-sub">柚子 · 個人入口</span>
+    </span>
+  </a>
+
+  <div class="nav-right">
+    <div class="nav-greet">
+      <div class="g1" id="navGreet">你好</div>
+      <div class="g2" id="navDate">—</div>
+    </div>
+    <div class="nav-chip" id="navAnimal" title="本月小物">☕</div>
+  </div>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<header class="hero">
+  <div class="hero-eyebrow" id="heroEyebrow">WELCOME HOME</div>
+  <div class="hero-animal" id="heroAnimal">☕</div>
+  <h1 class="hero-title">Hi, <span class="name">又瑄</span></h1>
+  <p class="hero-sub" id="heroSub">這裡是你所有專案的玄關，深呼吸，慢慢來，一切都在原地等你。</p>
+  <div class="hero-rule"></div>
+</header>
+
+<!-- ════════ CARD GRID ════════ -->
+<main class="grid-wrap">
+  <div class="grid" id="grid">
+
+    <a class="card-link" href="https://ianian22493.github.io/daily-brief/">
+      <article class="card c-news">
+        <div class="card-icon">📰</div>
+        <div class="card-en">Daily News</div>
+        <h2 class="card-title">每日新聞</h2>
+        <p class="card-desc">沖一杯咖啡，讀今天值得知道的事。精選簡報，安靜開始一天。</p>
+        <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
+      </article>
+    </a>
+
+    <a class="card-link" href="https://ianian22493.github.io/investment-dashboard/">
+      <article class="card c-dash">
+        <div class="card-icon">📈</div>
+        <div class="card-en">Investment Dashboard</div>
+        <h2 class="card-title">投資儀表板</h2>
+        <p class="card-desc">市場脈動、持倉與訊號一覽。用一眼的時間，看懂今天的盤勢。</p>
+        <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
+      </article>
+    </a>
+
+    <a class="card-link" href="https://ianian22493.github.io/investment-ai/">
+      <article class="card c-os">
+        <div class="card-icon">💼</div>
+        <div class="card-en">Capital OS</div>
+        <h2 class="card-title">投資辦公室</h2>
+        <p class="card-desc">你的虛擬投資團隊。各部門協作給出決策，像走進一間安靜的辦公室。</p>
+        <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
+      </article>
+    </a>
+
+    <a class="card-link" href="https://ianian22493.github.io/photoshop/">
+      <article class="card c-photo">
+        <div class="card-icon">📷</div>
+        <div class="card-en">Photo Studio</div>
+        <h2 class="card-title">Yuzu Photoshop</h2>
+        <p class="card-desc">替照片挑風格、生成 AI 修圖指令的工作室。手繪、日雜、底片，一鍵調出想要的味道。</p>
+        <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
+      </article>
+    </a>
+
+    <a class="card-link" href="https://ianian22493.github.io/payment-tracker/">
+      <article class="card c-pay">
+        <div class="card-icon">🏠</div>
+        <div class="card-en">Payment Tracker</div>
+        <h2 class="card-title">久泰宸品繳款追蹤</h2>
+        <p class="card-desc">新家的每一筆繳款進度，清楚收好。離拿到鑰匙又近了一步。</p>
+        <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
+      </article>
+    </a>
+
+    <a class="card-link is-soon" aria-disabled="true" tabindex="-1">
+      <article class="card c-travel soon">
+        <span class="badge-soon"><span class="dot"></span>即將推出</span>
+        <div class="card-icon">📍</div>
+        <div class="card-en">Travel Map</div>
+        <h2 class="card-title">旅遊足跡</h2>
+        <p class="card-desc">把走過的城市與風景，一個個釘在地圖上。正在打包行李中⋯⋯</p>
+        <div class="card-foot"><span>準備中</span></div>
+      </article>
+    </a>
+
+  </div>
+</main>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <div class="f-quote" id="footQuote">願今天的你，溫柔而踏實。</div>
+  <div class="f-copy">© <span id="footYear">2026</span> Yuzu · 又瑄 <span class="dotgold">·</span> 用柚子的暖意，照顧每個專案</div>
+</footer>
+
+<script>
+(function(){
+  /* ── 月份 × 文青小物（每月輪替：咖啡、茶、書、底片⋯）── */
+  const MONTH_ICON = {
+    1:'☕',  2:'🫖',  3:'🌿',  4:'🪴',  5:'📖', 6:'🍵',
+    7:'🧋', 8:'🎞️', 9:'✒️', 10:'🍂', 11:'🥐', 12:'🕯️'
+  };
+  const now   = new Date();
+  const month = now.getMonth() + 1;
+  const icon  = MONTH_ICON[month] || '☕';
+  document.getElementById('navAnimal').textContent  = icon;
+  document.getElementById('heroAnimal').textContent = icon;
+
+  /* ── 時段問候（每段多句，每次造訪隨機抽一句）── */
+  const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+  const h = now.getHours();
+  let slot;
+  if(h < 5)       slot = { greet:'夜深了', eyebrow:'STILL UP', subs:[
+    '夜深了，記得替自己留一點休息。需要的工具都在這裡。',
+    '世界都睡了，這裡的燈還替你亮著。',
+    '凌晨的安靜，剛好屬於你一個人。',
+    '再做一點點就好，做完記得抱抱自己去睡。',
+  ]};
+  else if(h < 11) slot = { greet:'早安', eyebrow:'GOOD MORNING', subs:[
+    '新的一天，從一杯咖啡和一份簡報開始吧。',
+    '早安，先深呼吸，再慢慢開機。',
+    '今天也會是溫柔的一天，相信我。',
+    '陽光剛好，把窗簾拉開，一件一件來。',
+    '昨天的事就放下了，今天是嶄新的。',
+  ]};
+  else if(h < 14) slot = { greet:'午安', eyebrow:'GOOD AFTERNOON', subs:[
+    '中午好，吃飽了再繼續，這裡的一切都等著你。',
+    '午餐時間到，先照顧好胃，再照顧待辦清單。',
+    '上半天辛苦了，給自己一段不被打擾的休息。',
+    '午安，泡杯茶，把節奏調慢一點。',
+  ]};
+  else if(h < 18) slot = { greet:'午後好', eyebrow:'GOOD AFTERNOON', subs:[
+    '午後的光剛剛好，慢慢處理，不急。',
+    '一杯下午的咖啡，繼續把事情做完。',
+    '有點睏沒關係，挑一件最想做的先做。',
+    '午後時光最適合專注，安靜地往前走。',
+  ]};
+  else if(h < 23) slot = { greet:'晚安', eyebrow:'GOOD EVENING', subs:[
+    '夜晚到了，收個尾，剩下的明天再說。',
+    '辛苦一整天了，剩下的交給明天的你。',
+    '晚上好，把今天的成果好好收進口袋。',
+    '夜色溫柔，做完手邊這件就好好休息。',
+  ]};
+  else            slot = { greet:'晚安', eyebrow:'GOOD NIGHT', subs:[
+    '很晚了，這裡會替你守著。早點休息。',
+    '別熬太晚，明天的你會感謝現在的決定。',
+    '今天到這裡就好，剩下的明天再接著。',
+    '關上電腦前，記得對自己說聲辛苦了。',
+  ]};
+
+  document.getElementById('navGreet').textContent   = slot.greet + '，又瑄';
+  document.getElementById('heroEyebrow').textContent = slot.eyebrow;
+  document.getElementById('heroSub').textContent     = pick(slot.subs);
+
+  /* ── 日期 ── */
+  const WD = ['週日','週一','週二','週三','週四','週五','週六'];
+  document.getElementById('navDate').textContent =
+    `${now.getFullYear()} / ${String(month).padStart(2,'0')} / ${String(now.getDate()).padStart(2,'0')}　${WD[now.getDay()]}`;
+  document.getElementById('footYear').textContent = now.getFullYear();
+
+  /* ── 頁尾溫暖小語（每次造訪輪替）── */
+  const QUOTES = [
+    '願今天的你，溫柔而踏實。',
+    '慢慢來，比較快。',
+    '把每件小事，都好好收進口袋。',
+    '柚子很酸，但日子可以很甜。',
+    '一步一步，就會走到想去的地方。',
+    '今天也辛苦了，記得抱抱自己。'
+  ];
+  document.getElementById('footQuote').textContent =
+    QUOTES[Math.floor(Math.random()*QUOTES.length)];
+
+  /* ── 卡片進場動畫 ── */
+  const cards = document.querySelectorAll('.card');
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cards.forEach(c=>c.classList.add('in'));
+  } else {
+    cards.forEach((c,i)=> setTimeout(()=> c.classList.add('in'), 90*i + 120));
+  }
+})();
+</script>
+</body>
+</html>
