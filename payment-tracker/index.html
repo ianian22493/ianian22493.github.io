@@ -223,8 +223,29 @@
   .status-wish{background:#E8E4F0;color:#5A4A8B;}
   .status-ordered{background:var(--unpaid-bg);color:var(--unpaid);}
   .status-arrived{background:var(--paid-bg);color:var(--paid);}
+  .status-compare{background:var(--upcoming-bg);color:var(--upcoming);}
   .item-price{text-align:right;font-weight:600;color:var(--ink);}
   .item-actual{text-align:right;color:var(--paid);font-weight:600;}
+  /* 品項型號 / 查價日 / 參考連結 子行 */
+  .item-sub{display:block;font-size:11px;color:var(--ink-faint);margin-top:3px;line-height:1.5;}
+  .item-sub .is-model{color:var(--ink-soft);font-weight:600;}
+  .item-sub a{color:var(--brass);text-decoration:none;border-bottom:1px dashed var(--brass);}
+  .item-row.compare td:first-child{opacity:.85;}
+  /* 房間預算超支 */
+  .r-budget.over{color:#FFE0D8;font-weight:700;}
+
+  /* ── 家具採購進度 ── */
+  .furn-prog{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px 22px;margin-bottom:16px;}
+  .furn-prog .fp-top{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;}
+  @media(max-width:560px){.furn-prog .fp-top{grid-template-columns:1fr;gap:8px;}}
+  .furn-prog .fp-label{font-size:11px;letter-spacing:2px;color:var(--ink-soft);margin-bottom:4px;}
+  .furn-prog .fp-val{font-size:21px;font-weight:700;letter-spacing:.5px;}
+  .furn-prog .fp-val.spent{color:var(--paid);}
+  .furn-prog .fp-val.left{color:var(--brass);}
+  .furn-prog .fp-bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden;}
+  .furn-prog .fp-fill{height:100%;background:linear-gradient(90deg,var(--leather-deep),var(--brass));border-radius:5px;transition:width 1s ease;}
+  .furn-prog .fp-sub{font-size:12px;color:var(--ink-soft);margin-top:10px;display:flex;flex-wrap:wrap;gap:14px;}
+  .furn-prog .fp-sub b{color:var(--ink);}
 
   /* ── 總花費 ── */
   .cost-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
@@ -442,8 +463,9 @@
   <!-- 家具電器清單 -->
   <div class="sec-head"><h2>家具電器清單</h2></div>
   <div class="sec-label">FURNITURE &amp; APPLIANCES</div>
+  <div class="furn-prog" id="furnitureProgress"></div>
   <div class="room-grid" id="roomGrid"></div>
-  <div class="note">狀態說明：<span style="background:#E8E4F0;color:#5A4A8B;padding:2px 8px;border-radius:10px;font-size:12px;">想買</span> 規劃中　<span style="background:#F5F0E0;color:#8B7A2E;padding:2px 8px;border-radius:10px;font-size:12px;">已下訂</span> 訂購中　<span style="background:#EFF5EF;color:#5A7A5A;padding:2px 8px;border-radius:10px;font-size:12px;">已到貨</span> 到位</div>
+  <div class="note">狀態說明：<span style="background:#E8E4F0;color:#5A4A8B;padding:2px 8px;border-radius:10px;font-size:12px;">想買</span> 規劃中　<span style="background:#EDF1F5;color:#4A6B8B;padding:2px 8px;border-radius:10px;font-size:12px;">比價中</span> 二選一不計預算　<span style="background:#F5F0E0;color:#8B7A2E;padding:2px 8px;border-radius:10px;font-size:12px;">已下訂</span> 訂購中　<span style="background:#EFF5EF;color:#5A7A5A;padding:2px 8px;border-radius:10px;font-size:12px;">已到貨</span> 到位</div>
 
   <!-- 新版守望台 -->
   <div class="sec-head" style="margin-top:52px;"><h2>新版守望台</h2></div>
@@ -506,7 +528,9 @@ const rooms = [
     name: '客廳', icon: '🛋️', budget: 350000,
     items: [
       { name: '三人座布沙發', budget: 80000,  actual: null, status: 'wish' },
-      { name: 'Sonos Beam Gen 2（等 Gen 3）', budget: 19000, actual: null, status: 'wish' },
+      { name: '客廳音響', budget: 19000, actual: null, status: 'wish',
+        model: 'Sonos Beam Gen 2（等 Gen 3）', priced: '2026/06/17',
+        link: 'https://biggo.com.tw/s/SONOS+Beam+Gen+2/' },
       { name: '實木茶几',    budget: 25000,  actual: null, status: 'wish' },
       { name: '電視牆 + 電視', budget: 60000, actual: null, status: 'wish' },
       { name: '地毯',        budget: 15000,  actual: null, status: 'wish' },
@@ -680,34 +704,53 @@ function renderMilestones() {
 
 function renderRooms() {
   const grid = document.getElementById('roomGrid');
+  const stMap   = { wish: '想買', ordered: '已下訂', arrived: '已到貨', compare: '比價中' };
+  // 採購進度統計（比價中不計入預算）
   let furnitureSpent = 0, furnitureBudget = 0;
+  const cnt = { wish: 0, ordered: 0, arrived: 0, compare: 0 };
 
   rooms.forEach(r => {
-    let roomBudget = 0, roomActual = 0;
+    let roomBudget = 0;   // 房間預算佔用（不含比價中）
     let rows = '';
     r.items.forEach(item => {
-      roomBudget += item.budget;
-      furnitureBudget += item.budget;
-      if (item.actual !== null) {
-        roomActual += item.actual;
-        furnitureSpent += item.actual;
+      const isCompare = item.status === 'compare';
+      cnt[item.status] = (cnt[item.status] || 0) + 1;
+      if (!isCompare) {
+        roomBudget += item.budget;
+        furnitureBudget += item.budget;
       }
-      const stMap = { wish: '想買', ordered: '已下訂', arrived: '已到貨' };
-      const stClass = { wish: 'wish', ordered: 'ordered', arrived: 'arrived' };
-      rows += `<tr>
-        <td>${item.name}</td>
-        <td class="item-price">${fmtMoney(item.budget)}</td>
+      if (item.actual !== null) furnitureSpent += item.actual;
+
+      // 型號 / 查價日 / 參考連結 子行
+      let sub = '';
+      if (item.model || item.priced || item.link) {
+        const parts = [];
+        if (item.model)  parts.push(`<span class="is-model">${item.model}</span>`);
+        if (item.priced) parts.push(`查價 ${item.priced}`);
+        if (item.link)   parts.push(`<a href="${item.link}" target="_blank" rel="noopener">比價↗</a>`);
+        sub = `<span class="item-sub">${parts.join('　·　')}</span>`;
+      }
+
+      rows += `<tr class="item-row ${isCompare ? 'compare' : ''}">
+        <td>${item.name}${sub}</td>
+        <td class="item-price">${isCompare ? '<span style="color:var(--ink-faint)">—</span>' : fmtMoney(item.budget)}</td>
         <td class="${item.actual ? 'item-actual' : 'item-price'}">${item.actual ? fmtMoney(item.actual) : '—'}</td>
-        <td><span class="item-status status-${stClass[item.status]}">${stMap[item.status]}</span></td>
+        <td><span class="item-status status-${item.status}">${stMap[item.status]}</span></td>
       </tr>`;
     });
+
+    // 房間超支判定
+    const over = roomBudget > r.budget;
+    const budgetLabel = over
+      ? `超支 ${fmtMoney(roomBudget - r.budget)}（已列 ${fmtMoney(roomBudget)} / 預算 ${fmtMoney(r.budget)}）`
+      : `預算 ${fmtMoney(r.budget)}`;
 
     grid.innerHTML += `
       <div class="room-card">
         <div class="room-head">
           <span class="r-icon">${r.icon}</span>
           <span class="r-name">${r.name}</span>
-          <span class="r-budget">預算 ${fmtMoney(r.budget)}</span>
+          <span class="r-budget ${over ? 'over' : ''}">${over ? '⚠ ' : ''}${budgetLabel}</span>
         </div>
         <div class="room-body">
           <table class="items">
@@ -720,8 +763,34 @@ function renderRooms() {
       </div>`;
   });
 
+  renderFurnitureProgress(furnitureBudget, furnitureSpent, cnt);
   // Cost dashboard
   renderCosts(furnitureBudget, furnitureSpent);
+}
+
+// ── Render 家具採購進度 ────────────────────────────────────────────────────────
+
+function renderFurnitureProgress(budget, spent, cnt) {
+  const box = document.getElementById('furnitureProgress');
+  if (!box) return;
+  const left = budget - spent;
+  const pct = budget > 0 ? Math.min(Math.round(spent / budget * 100), 100) : 0;
+  const total = cnt.wish + cnt.ordered + cnt.arrived; // 比價中不算進「待購總數」
+  box.innerHTML = `
+    <div class="fp-top">
+      <div><div class="fp-label">家具預算總額</div><div class="fp-val">${fmtMoneyFull(budget)}</div></div>
+      <div><div class="fp-label">已花費</div><div class="fp-val spent">${fmtMoneyFull(spent)}</div></div>
+      <div><div class="fp-label">剩餘可動用</div><div class="fp-val left">${fmtMoneyFull(left)}</div></div>
+    </div>
+    <div class="fp-bar"><div class="fp-fill" style="width:${pct}%"></div></div>
+    <div class="fp-sub">
+      <span>採購進度 <b>${pct}%</b></span>
+      <span>已到貨 <b>${cnt.arrived}</b></span>
+      <span>已下訂 <b>${cnt.ordered}</b></span>
+      <span>想買 <b>${cnt.wish}</b></span>
+      <span>比價中 <b>${cnt.compare}</b></span>
+      <span>（待購共 <b>${total}</b> 件）</span>
+    </div>`;
 }
 
 // ── Render cost dashboard ────────────────────────────────────────────────────
