@@ -5,8 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Yuzu · 又瑄的個人首頁</title>
 <meta name="description" content="又瑄的個人入口 Hub — 每日新聞、投資儀表板、投資辦公室、Yuzu Photoshop 與更多工具，都在這裡。">
-<meta name="theme-color" content="#a06010" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1A1714" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" id="themeColor" content="#a06010">
+<script>
+/* 深夜模式：每天 22:00–06:00 自動套用（依本地時間，越早越好避免閃爍）*/
+(function(){
+  var h = new Date().getHours();
+  if (h >= 22 || h < 6){
+    document.documentElement.classList.add('night');
+    var m = document.getElementById('themeColor');
+    if (m) m.setAttribute('content', '#1A1714');
+  }
+})();
+</script>
 <!-- Open Graph / 社群分享預覽 -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Yuzu · 又瑄的個人首頁">
@@ -310,32 +320,30 @@
   }
   .footer .f-copy .dotgold{color:var(--gold)}
 
-  /* ════════ 夜間模式（跟隨系統）════════ */
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:        #1A1714;
-      --bg2:       #221E18;
-      --paper:     #24201A;
-      --ink:       #ECE3D3;
-      --ink-soft:  #BCAE97;
-      --ink-faint: #897C68;
-      --line:      #39312A;
-      --line-soft: #2C261F;
-      --gold:      #D8AE57;
-      --gold-bg:   #2E2517;
-      --sh-1: 0 1px 2px rgba(0,0,0,.30), 0 4px 14px rgba(0,0,0,.34);
-      --sh-2: 0 2px 8px rgba(0,0,0,.40), 0 16px 40px rgba(0,0,0,.50);
-    }
-    body::before{
-      background:
-        radial-gradient(ellipse 60% 45% at 50% -5%, rgba(240,208,80,.07), transparent 60%),
-        radial-gradient(ellipse 50% 40% at 92% 8%, rgba(184,147,106,.05), transparent 55%);
-    }
-    .nav{background:rgba(26,23,20,.82);}
-    .season{opacity:.08;}
-    .badge-soon{background:var(--gold);color:#221E18;}
-    .card.soon{background:var(--bg2);}
+  /* ════════ 深夜模式（依時間 22:00–06:00 自動）════════ */
+  html.night{
+    --bg:        #1A1714;
+    --bg2:       #221E18;
+    --paper:     #24201A;
+    --ink:       #ECE3D3;
+    --ink-soft:  #BCAE97;
+    --ink-faint: #897C68;
+    --line:      #39312A;
+    --line-soft: #2C261F;
+    --gold:      #D8AE57;
+    --gold-bg:   #2E2517;
+    --sh-1: 0 1px 2px rgba(0,0,0,.30), 0 4px 14px rgba(0,0,0,.34);
+    --sh-2: 0 2px 8px rgba(0,0,0,.40), 0 16px 40px rgba(0,0,0,.50);
   }
+  html.night body::before{
+    background:
+      radial-gradient(ellipse 60% 45% at 50% -5%, rgba(240,208,80,.07), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 92% 8%, rgba(184,147,106,.05), transparent 55%);
+  }
+  html.night .nav{background:rgba(26,23,20,.82);}
+  html.night .season{opacity:.08;}
+  html.night .badge-soon{background:var(--gold);color:#221E18;}
+  html.night .card.soon{background:var(--bg2);}
 
   /* ════════ 季節紋樣（依當月輪替）════════ */
   .season{
