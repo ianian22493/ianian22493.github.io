@@ -5,14 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Yuzu · 又瑄的個人首頁</title>
 <meta name="description" content="又瑄的個人入口 Hub — 每日新聞、投資儀表板、投資辦公室、Yuzu Photoshop 與更多工具，都在這裡。">
+<meta name="theme-color" content="#a06010">
 <!-- Open Graph / 社群分享預覽 -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Yuzu · 又瑄的個人首頁">
 <meta property="og:description" content="一個溫暖的個人入口，串起所有專案與工具。">
 <meta property="og:url" content="https://ianian22493.github.io/">
-<meta property="og:image" content="https://ianian22493.github.io/favicon.svg">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://ianian22493.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ianian22493.github.io/og-image.png">
+<!-- Icons / PWA -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
@@ -201,6 +208,11 @@
     transition:transform .34s cubic-bezier(.2,.7,.3,1);
   }
   .card-link:hover .card-icon{transform:scale(1.07) rotate(-3deg)}
+  .card-icon svg{
+    width:30px;height:30px;display:block;
+    stroke:var(--ac);fill:none;
+    stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  }
 
   .card-en{
     font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
@@ -277,6 +289,18 @@
   }
   .footer .f-copy .dotgold{color:var(--gold)}
 
+  /* ════════ 季節紋樣（依當月輪替）════════ */
+  .season{
+    position:fixed;top:54px;right:-26px;z-index:0;
+    width:330px;height:330px;pointer-events:none;
+    opacity:.10;color:var(--gold-d);
+    animation:seasonDrift 14s ease-in-out infinite;
+  }
+  .season svg{width:100%;height:100%;stroke:currentColor;fill:none;
+    stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+  @keyframes seasonDrift{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(10px) rotate(3deg)}}
+  @media(max-width:760px){ .season{width:190px;height:190px;opacity:.07;top:64px} }
+
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation:none!important;transition:none!important}
     .card{opacity:1!important;transform:none!important}
@@ -284,6 +308,9 @@
 </style>
 </head>
 <body>
+
+<!-- 季節紋樣（JS 依當月注入） -->
+<div class="season" id="season" aria-hidden="true"></div>
 
 <!-- ════════ NAV ════════ -->
 <nav class="nav">
@@ -332,7 +359,7 @@
 
     <a class="card-link" href="https://ianian22493.github.io/daily-brief/">
       <article class="card c-news">
-        <div class="card-icon">📰</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h13v14H5a2 2 0 0 1-2-2V7"/><path d="M17 8h3v9a2 2 0 0 1-2 2"/><line x1="7" y1="9" x2="14" y2="9"/><line x1="7" y1="12.5" x2="14" y2="12.5"/><line x1="7" y1="16" x2="11" y2="16"/></svg></div>
         <div class="card-en">Daily News</div>
         <h2 class="card-title">每日新聞</h2>
         <p class="card-desc">沖一杯咖啡，讀今天值得知道的事。精選簡報，安靜開始一天。</p>
@@ -342,7 +369,7 @@
 
     <a class="card-link" href="https://ianian22493.github.io/investment-dashboard/">
       <article class="card c-dash">
-        <div class="card-icon">📈</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v15a1 1 0 0 0 1 1h15"/><polyline points="7,14 11,10 14,13 19,7"/><polyline points="15,7 19,7 19,11"/></svg></div>
         <div class="card-en">Investment Dashboard</div>
         <h2 class="card-title">投資儀表板</h2>
         <p class="card-desc">市場脈動、持倉與訊號一覽。用一眼的時間，看懂今天的盤勢。</p>
@@ -352,7 +379,7 @@
 
     <a class="card-link" href="https://ianian22493.github.io/investment-ai/">
       <article class="card c-os">
-        <div class="card-icon">💼</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/><line x1="3" y1="12.5" x2="21" y2="12.5"/><line x1="12" y1="11.5" x2="12" y2="13.5"/></svg></div>
         <div class="card-en">Capital OS</div>
         <h2 class="card-title">投資辦公室</h2>
         <p class="card-desc">你的虛擬投資團隊。各部門協作給出決策，像走進一間安靜的辦公室。</p>
@@ -362,7 +389,7 @@
 
     <a class="card-link" href="https://ianian22493.github.io/photoshop/">
       <article class="card c-photo">
-        <div class="card-icon">📷</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5A1.5 1.5 0 0 1 4.5 7H7l1.4-2h7.2L17 7h2.5A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18z"/><circle cx="12" cy="13" r="3.4"/></svg></div>
         <div class="card-en">Photo Studio</div>
         <h2 class="card-title">Yuzu Photoshop</h2>
         <p class="card-desc">替照片挑風格、生成 AI 修圖指令的工作室。手繪、日雜、底片，一鍵調出想要的味道。</p>
@@ -372,7 +399,7 @@
 
     <a class="card-link" href="https://ianian22493.github.io/payment-tracker/">
       <article class="card c-pay">
-        <div class="card-icon">🏠</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5"/><path d="M6 10.5V19h12v-8.5"/><rect x="10" y="13.5" width="4" height="5.5"/></svg></div>
         <div class="card-en">Payment Tracker</div>
         <h2 class="card-title">久泰宸品繳款追蹤</h2>
         <p class="card-desc">新家的每一筆繳款進度，清楚收好。離拿到鑰匙又近了一步。</p>
@@ -383,7 +410,7 @@
     <a class="card-link is-soon" aria-disabled="true" tabindex="-1">
       <article class="card c-travel soon">
         <span class="badge-soon"><span class="dot"></span>即將推出</span>
-        <div class="card-icon">📍</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
         <div class="card-en">Travel Map</div>
         <h2 class="card-title">旅遊足跡</h2>
         <p class="card-desc">把走過的城市與風景，一個個釘在地圖上。正在打包行李中⋯⋯</p>
@@ -412,6 +439,22 @@
   const icon  = MONTH_ICON[month] || '☕';
   document.getElementById('navAnimal').textContent  = icon;
   document.getElementById('heroAnimal').textContent = icon;
+
+  /* ── 季節紋樣（春櫻 / 夏雨 / 秋葉 / 冬雪），依當月輪替 ── */
+  const flower = (x,y,s)=>{let p='';for(let i=0;i<5;i++){const a=i*72*Math.PI/180;
+    p+=`<ellipse cx="${x+Math.cos(a)*s}" cy="${y+Math.sin(a)*s}" rx="${s*0.62}" ry="${s*1.05}" transform="rotate(${i*72} ${x+Math.cos(a)*s} ${y+Math.sin(a)*s})"/>`;}
+    return p+`<circle cx="${x}" cy="${y}" r="${s*0.32}"/>`;};
+  const drop = (x,y,s)=>`<path d="M${x} ${y-s} q ${s*0.9} ${s*1.1} 0 ${s*1.8} q ${-s*0.9} ${-s*0.7} 0 ${-s*1.8} Z"/>`;
+  const leaf = (x,y,s,r)=>`<g transform="rotate(${r} ${x} ${y})"><path d="M${x} ${y-s} q ${s} ${s} 0 ${s*2} q ${-s} ${-s} 0 ${-s*2} Z"/><line x1="${x}" y1="${y-s*0.7}" x2="${x}" y2="${y+s*0.7}"/></g>`;
+  const snow = (x,y,s)=>{let p='';for(let i=0;i<6;i++){const a=i*60*Math.PI/180;
+    p+=`<line x1="${x}" y1="${y}" x2="${x+Math.cos(a)*s}" y2="${y+Math.sin(a)*s}"/>`;}return p;};
+  let motif;
+  if(month>=3 && month<=5)       motif = flower(70,80,18)+flower(180,150,13)+flower(120,240,15);   // 春
+  else if(month>=6 && month<=8)  motif = drop(70,70,20)+drop(170,130,15)+drop(110,220,18)+drop(230,200,12); // 夏
+  else if(month>=9 && month<=11) motif = leaf(80,80,20,20)+leaf(180,150,15,-30)+leaf(120,240,18,60); // 秋
+  else                           motif = snow(80,80,26)+snow(190,150,18)+snow(120,240,22);          // 冬
+  document.getElementById('season').innerHTML =
+    `<svg viewBox="0 0 280 300" xmlns="http://www.w3.org/2000/svg">${motif}</svg>`;
 
   /* ── 時段問候（每段多句，每次造訪隨機抽一句）── */
   const pick = arr => arr[Math.floor(Math.random()*arr.length)];

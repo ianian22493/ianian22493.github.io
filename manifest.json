@@ -1,0 +1,15 @@
+{
+  "name": "Yuzu · 又瑄的個人首頁",
+  "short_name": "Yuzu",
+  "description": "又瑄的個人入口 Hub — 每日新聞、投資儀表板、投資辦公室、Photoshop 與更多工具。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F1EA",
+  "theme_color": "#a06010",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
