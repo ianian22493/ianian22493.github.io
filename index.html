@@ -59,6 +59,7 @@
     --brass:     #A87E4A;
     --olive:     #6B6B4A;
     --sky:       #6E89A6;
+    --sage:      #6A8454;
     /* ── 陰影 ── */
     --sh-1: 0 1px 2px rgba(44,38,32,.04), 0 4px 12px rgba(44,38,32,.05);
     --sh-2: 0 2px 6px rgba(44,38,32,.06), 0 14px 34px rgba(44,38,32,.10);
@@ -275,6 +276,7 @@
   .card.c-news  {--ac:var(--gold)}
   .card.c-dash  {--ac:var(--olive)}
   .card.c-os    {--ac:var(--leather)}
+  .card.c-pick  {--ac:var(--sage)}
   .card.c-photo {--ac:var(--wood)}
   .card.c-pay   {--ac:var(--sky)}
   .card.c-travel{--ac:var(--brass)}
@@ -442,6 +444,17 @@
         <h2 class="card-title">投資辦公室</h2>
         <p class="card-desc">你的虛擬投資團隊。各部門協作給出決策，像走進一間安靜的辦公室。</p>
         <div class="card-live" id="live-os"></div>
+        <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
+      </article>
+    </a>
+
+    <a class="card-link" href="https://ianian22493.github.io/investment-ai/picks/">
+      <article class="card c-pick">
+        <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h7.5a2 2 0 0 1 2 2V20a1.8 1.8 0 0 0-1.8-1.8H4z"/><path d="M20 4.5h-7.5a2 2 0 0 0-2 2V20a1.8 1.8 0 0 1 1.8-1.8H20z"/><line x1="6.5" y1="8" x2="11" y2="8"/><line x1="6.5" y1="11" x2="11" y2="11"/><line x1="13" y1="8" x2="17.5" y2="8"/><line x1="13" y1="11" x2="17.5" y2="11"/></svg></div>
+        <div class="card-en">Pick Journal</div>
+        <h2 class="card-title">每日台股精選</h2>
+        <p class="card-desc">今日 pick 的完整分析、進場條件、風險劇本與執行清單。一頁一天的決策日誌。</p>
+        <div class="card-live" id="live-pick"></div>
         <div class="card-foot"><span>進入</span><span class="arrow">→</span></div>
       </article>
     </a>
@@ -631,7 +644,7 @@
     }
   }).catch(()=>{});
 
-  // 投資辦公室：台股 / S&P 漲跌%
+  // 投資辦公室：台股 / S&P 漲跌% · 每日精選：今日 pick 或觀望
   fetch('/investment-ai/data/analysis.json').then(r=>r.json()).then(d=>{
     const ms = d.market_snapshot || {};
     const parts = [
@@ -639,6 +652,16 @@
       pctTag(ms.sp500 && ms.sp500.change_pct, 'S&P')
     ].filter(Boolean).join('　');
     if(parts) setLive('live-os', `<span class="lv-dot"></span>${parts}`);
+
+    // Pick Journal live preview — today's stock or 觀望
+    const pickAgent = (d.agents || {}).tw_daily_pick || {};
+    const pick = pickAgent.pick || {};
+    if(pick.code && pick.code !== '—' && pick.code !== 'NONE'){
+      setLive('live-pick',
+        `<span class="lv-dot"></span>今日：<b>${pick.code} ${pick.name||''}</b>`);
+    } else if(pickAgent.verdict){
+      setLive('live-pick', `<span class="lv-dot"></span>今日觀望`);
+    }
   }).catch(()=>{});
 })();
 </script>
