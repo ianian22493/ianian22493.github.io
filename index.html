@@ -448,7 +448,7 @@
       </article>
     </a>
 
-    <a class="card-link" href="https://ianian22493.github.io/investment-ai/picks/">
+    <a class="card-link" id="pick-card-link" href="https://ianian22493.github.io/investment-ai/picks/">
       <article class="card c-pick">
         <div class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h7.5a2 2 0 0 1 2 2V20a1.8 1.8 0 0 0-1.8-1.8H4z"/><path d="M20 4.5h-7.5a2 2 0 0 0-2 2V20a1.8 1.8 0 0 1 1.8-1.8H20z"/><line x1="6.5" y1="8" x2="11" y2="8"/><line x1="6.5" y1="11" x2="11" y2="11"/><line x1="13" y1="8" x2="17.5" y2="8"/><line x1="13" y1="11" x2="17.5" y2="11"/></svg></div>
         <div class="card-en">Pick Journal</div>
@@ -661,6 +661,15 @@
         `<span class="lv-dot"></span>今日：<b>${pick.code} ${pick.name||''}</b>`);
     } else if(pickAgent.verdict){
       setLive('live-pick', `<span class="lv-dot"></span>今日觀望`);
+    }
+
+    // Make Pick Journal card link directly to today's page (instead of calendar).
+    // Uses analysis.json's generated_at date — guarantees the page exists.
+    // Falls back to /picks/ (calendar) if generated_at missing.
+    const cardLink = document.getElementById('pick-card-link');
+    const genDate = (d.generated_at || '').slice(0, 10);
+    if(cardLink && genDate){
+      cardLink.href = `https://ianian22493.github.io/investment-ai/picks/${genDate}.html`;
     }
   }).catch(()=>{});
 })();
