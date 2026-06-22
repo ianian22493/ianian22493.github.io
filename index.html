@@ -645,7 +645,8 @@
   }).catch(()=>{});
 
   // 投資辦公室：台股 / S&P 漲跌% · 每日精選：今日 pick 或觀望
-  fetch('/investment-ai/data/analysis.json').then(r=>r.json()).then(d=>{
+  // cache-bust：每 5 分鐘換一次 query，避免瀏覽器 cache 拿到舊的 generated_at
+  fetch('/investment-ai/data/analysis.json?t=' + Math.floor(Date.now()/300000)).then(r=>r.json()).then(d=>{
     const ms = d.market_snapshot || {};
     const parts = [
       pctTag(ms.taiex && ms.taiex.change_pct, '台股'),
