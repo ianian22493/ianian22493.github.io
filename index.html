@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Yuzu · 又瑄的個人首頁</title>
 <meta name="description" content="又瑄的個人入口 Hub — 每日新聞、投資儀表板、投資辦公室、Yuzu Photoshop 與更多工具，都在這裡。">
 <meta name="theme-color" id="themeColor" content="#a06010">
@@ -645,8 +648,8 @@
   }).catch(()=>{});
 
   // 投資辦公室：台股 / S&P 漲跌% · 每日精選：今日 pick 或觀望
-  // cache-bust：每 5 分鐘換一次 query，避免瀏覽器 cache 拿到舊的 generated_at
-  fetch('/investment-ai/data/analysis.json?t=' + Math.floor(Date.now()/300000)).then(r=>r.json()).then(d=>{
+  // no-store + query-bust：手機桌面 PWA 也吃不到舊 cache
+  fetch('/investment-ai/data/analysis.json?t=' + Date.now(), {cache:'no-store'}).then(r=>r.json()).then(d=>{
     const ms = d.market_snapshot || {};
     const parts = [
       pctTag(ms.taiex && ms.taiex.change_pct, '台股'),
