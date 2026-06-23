@@ -667,18 +667,22 @@
       setLive('live-pick', `<span class="lv-dot"></span>今日觀望`);
     }
 
-    // Make Pick Journal card link directly to today's page (instead of calendar).
-    // ONLY override when pick agent has a real pick — generated_at alone is
-    // not enough (pre-market cron updates generated_at but no pick page exists
-    // for that date yet). Falls back to /picks/ calendar otherwise.
+    // live-pick 預覽用 analysis.json 即時資料；
+    // 但 card link 改抓 picks/latest.json — 那是 generate.py 每次 cron
+    // 都更新的「最新一篇實際存在的 pick」指針，比 generated_at 可靠
+    // （盤前會清空 tw_daily_pick 但 latest.json 不會被動到）。
+  }).catch(()=>{});
+
+  fetch('/investment-ai/picks/latest.json?t=' + Date.now(), {cache:'no-store'}).then(r=>r.json()).then(latest=>{
     const cardLink = document.getElementById('pick-card-link');
-    const hasPick = pick.code && pick.code !== '—' && pick.code !== 'NONE';
-    if(cardLink && hasPick){
-      // Use pick.date if agent provides it, otherwise fall back to generated_at.
-      const pickDate = (pick.date || d.generated_at || '').slice(0, 10);
-      if(pickDate){
-        cardLink.href = `https://ianian22493.github.io/investment-ai/picks/${pickDate}.html`;
-      }
+    if(cardLink && latest && latest.date){
+      cardLink.href = `https://ianian22493.github.io/investment-ai/picks/${latest.date}.html`;
+    }
+    // 如果 live-pick 還沒填內容（analysis.json 拿到的 tw_daily_pick 是空），
+    // 用 latest.json 兜底，至少顯示「最近：6719 力智」這種資訊。
+    const live = document.getElementById('live-pick');
+    if(live && !live.textContent.trim() && latest && latest.code){
+      live.innerHTML = `<span class="lv-dot"></span>最近：<b>${latest.code} ${latest.name||''}</b>`;
     }
   }).catch(()=>{});
 })();
