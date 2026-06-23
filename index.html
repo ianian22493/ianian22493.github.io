@@ -668,12 +668,17 @@
     }
 
     // Make Pick Journal card link directly to today's page (instead of calendar).
-    // Uses analysis.json's generated_at date — guarantees the page exists.
-    // Falls back to /picks/ (calendar) if generated_at missing.
+    // ONLY override when pick agent has a real pick — generated_at alone is
+    // not enough (pre-market cron updates generated_at but no pick page exists
+    // for that date yet). Falls back to /picks/ calendar otherwise.
     const cardLink = document.getElementById('pick-card-link');
-    const genDate = (d.generated_at || '').slice(0, 10);
-    if(cardLink && genDate){
-      cardLink.href = `https://ianian22493.github.io/investment-ai/picks/${genDate}.html`;
+    const hasPick = pick.code && pick.code !== '—' && pick.code !== 'NONE';
+    if(cardLink && hasPick){
+      // Use pick.date if agent provides it, otherwise fall back to generated_at.
+      const pickDate = (pick.date || d.generated_at || '').slice(0, 10);
+      if(pickDate){
+        cardLink.href = `https://ianian22493.github.io/investment-ai/picks/${pickDate}.html`;
+      }
     }
   }).catch(()=>{});
 })();
