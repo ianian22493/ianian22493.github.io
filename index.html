@@ -679,10 +679,14 @@
       cardLink.href = `https://ianian22493.github.io/investment-ai/picks/${latest.date}.html`;
     }
     // 如果 live-pick 還沒填內容（analysis.json 拿到的 tw_daily_pick 是空），
-    // 用 latest.json 兜底，至少顯示「最近：6719 力智」這種資訊。
+    // 用 latest.json 兜底。
     const live = document.getElementById('live-pick');
-    if(live && !live.textContent.trim() && latest && latest.code){
-      live.innerHTML = `<span class="lv-dot"></span>最近：<b>${latest.code} ${latest.name||''}</b>`;
+    if(live && !live.textContent.trim() && latest){
+      if(latest.type === 'watch'){
+        live.innerHTML = `<span class="lv-dot"></span>${latest.date.slice(5)}　${latest.verdict || '觀望'}`;
+      } else if(latest.code){
+        live.innerHTML = `<span class="lv-dot"></span>${latest.date.slice(5)}　<b>${latest.code} ${latest.name||''}</b>`;
+      }
     }
   }).catch(()=>{});
 })();
