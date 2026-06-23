@@ -1,0 +1,40 @@
+# ianian22493.github.io — 站台層級 robots.txt
+# 適用於本網域下所有專案（含 /babyfood-db/、/daily-brief/、/investment-dashboard/ 等）
+
+# 一般爬蟲：全部放行
+User-agent: *
+Allow: /
+
+# 明確歡迎 AI / 答案引擎爬蟲
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemaps
+Sitemap: https://ianian22493.github.io/babyfood-db/sitemap.xml
