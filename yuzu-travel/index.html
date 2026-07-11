@@ -507,6 +507,7 @@ const COUNTRIES = [
   {id:"netherlands",n:"荷蘭",reg:"歐洲",r:2,c:6},
   {id:"germany",n:"德國",reg:"歐洲",r:2,c:7},
   {id:"poland",n:"波蘭",reg:"歐洲",r:2,c:8},
+  {id:"monaco",n:"摩納哥",reg:"歐洲",r:3,c:4},
   {id:"france",n:"法國",reg:"歐洲",r:3,c:5},
   {id:"switzerland",n:"瑞士",reg:"歐洲",r:3,c:6},
   {id:"austria",n:"奧地利",reg:"歐洲",r:3,c:7},
@@ -547,8 +548,8 @@ const COUNTRIES = [
   {id:"newzealand",n:"紐西蘭",reg:"大洋洲",r:9,c:13},
 ];
 
-// 已踏足（依 2023–2026 旅遊紀錄預設蓋章）
-const DEFAULT_VISITED = ["taiwan","japan","malaysia","germany","austria","france","spain","turkey","newzealand"];
+// 已踏足（依 2023–2026 旅遊紀錄預設蓋章；摩納哥 = 2025-07 蜜月）
+const DEFAULT_VISITED = ["taiwan","japan","malaysia","germany","austria","france","spain","turkey","newzealand","monaco"];
 // 夢想清單對應的地圖格
 const WISH_COUNTRIES = ["kazakhstan","argentina","chile","china","iceland","norway","sweden","finland","denmark"];
 
@@ -816,6 +817,12 @@ try{
     };
   }
 }catch(e){/* 壞資料就用預設 */}
+// 一次性遷移（2026-07-10）：地圖新增摩納哥，舊存檔補蓋章（蜜月足跡）
+if(!state.migMonaco){
+  if(!state.visited.includes("monaco")) state.visited.push("monaco");
+  state.migMonaco = true;
+  save();
+}
 function save(){ localStorage.setItem(LS_KEY,JSON.stringify(state)); }
 function todayStr(){
   const d = new Date();
