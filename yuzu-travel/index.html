@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yuzu Travel｜旅遊足跡</title>
 <meta name="description" content="又瑄與老婆的旅遊足跡地圖：10 個國家、9 趟旅程、23 家私房店家與夢想清單。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Yuzu Travel｜旅遊足跡">
+<meta property="og:description" content="和老婆一起走過的路：10 個國家、9 趟旅程、23 家私房店家與夢想清單。">
+<meta property="og:image" content="https://ianian22493.github.io/yuzu-travel/og-image.png">
+<meta property="og:url" content="https://ianian22493.github.io/yuzu-travel/">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 :root{
@@ -44,7 +50,10 @@ h2.sec{font-size:1.3rem;color:var(--navy);display:flex;align-items:center;gap:8p
 
 /* ===== 世界地圖 ===== */
 .map-card{background:#fbfaf7;border:1px solid var(--line);border-radius:16px;padding:18px;position:relative}
+.map-scroll{overflow-x:auto}
 #world-map{width:100%;height:auto;display:block}
+.swipe-hint{display:none;font-size:.78rem;color:var(--muted);margin:-8px 0 10px;padding-left:17px}
+@media (max-width:820px){#world-map{min-width:720px}.swipe-hint{display:block}}
 #world-map path{fill:var(--fog);stroke:#fff;stroke-width:.6;transition:fill .3s, filter .2s}
 /* 島國（jp/nz/fr/es/my/us…）在底圖是 <g> 群組，選擇器要同時涵蓋 g 與其子 path */
 #world-map .v{cursor:pointer}
@@ -55,6 +64,7 @@ h2.sec{font-size:1.3rem;color:var(--navy);display:flex;align-items:center;gap:8p
 #world-map .home,#world-map .home path{fill:var(--gold)}
 .mk{cursor:pointer}
 .mk circle{fill:var(--gold);stroke:#fff;stroke-width:1.2;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.mk.mc circle{fill:var(--c-eu)}
 .mk text{font-size:11px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .mk.star text{font-size:13px}
 .mk.star circle{fill:#fff;stroke:var(--gold);stroke-dasharray:2.5 1.8}
@@ -155,9 +165,10 @@ footer .cc{font-size:.72rem;opacity:.6;margin-top:6px}
   <!-- 世界地圖 -->
   <section id="sec-map">
     <h2 class="sec">🌍 世界地圖</h2>
-    <p class="sec-hint">亮起來的是走過的國家，點擊跳到該目的地；⭐ 是夢想清單；金色那顆小點是摩納哥。</p>
+    <p class="sec-hint">亮起來的是走過的國家，點擊跳到該目的地；⭐ 是夢想清單；金色小點是家（台灣），藍色小點是摩納哥。</p>
+    <div class="swipe-hint">👉 地圖可以左右滑動</div>
     <div class="map-card">
-      <svg version="1.1"
+      <div class="map-scroll"><svg version="1.1"
      xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
      viewBox="30.767 241.591 784.077 458.627"
@@ -277,9 +288,6 @@ footer .cc{font-size:.72rem;opacity:.6;margin-top:6px}
     <path id="er" d="M496.224,493.859l-0.216-5.093l3.423-3.992l0.926,0.709l1.686,5.637l8.091,6.023l-1.47,1.808l-5.922-5.091L496.224,493.859L496.224,493.859z"/>
     <g id="es">
         <path class="mainland" d="M402.565,416.322h-11.014l-2.222-1.004l-1.071,0.078l-1.297,2.696l0.458,2.775l4.21,0.389l0.536,1.771l-1.833,10.33l0.078,1.851l2.981,1.617l3.439,0.232l6.881-1.694l3.363-4.233l0.077-4.313l5.965-5.395l0.302-2.386l-5.428-0.078L402.565,416.322L402.565,416.322z"/>
-        <path d="M374.265,458.444l-1.513,0.873l0.7,0.709L374.265,458.444L374.265,458.444z"/>
-        <path d="M369.009,458.608l-1.875,0.476l0.935,1.418h1.407L369.009,458.608L369.009,458.608z"/>
-        <path d="M364.549,457.191l-1.176,1.184l1.643,1.418l0.935-2.126L364.549,457.191L364.549,457.191z"/>
         <path d="M413.578,426.877l-1.375,0.467l0.304,1.235h1.988l0.839-0.925L413.578,426.877L413.578,426.877z"/>
     </g>
     <path id="et" d="M489.982,508.606l6.292-14.005l6.25,0.035l5.541,4.814l-0.39,3.968h4.296l0.44,2.386l6.95,4.157l4.286,0.217l-8.15,8.756l-11.194,3.449h-2.773l-4.944-4.219l-1.953-0.82l-3.786-5.576l-2.499,0.035l-0.294-2.559L489.982,508.606L489.982,508.606z"/>
@@ -549,7 +557,7 @@ footer .cc{font-size:.72rem;opacity:.6;margin-top:6px}
     <path id="zm" d="M459.78,571.656l2.739,3.802l4.244,0.261l1.504,0.829l4.443,0.053l3.829-5.367l10.702-4.789l0.934-4.219l-1.244-6.043l-5.584-3.181l-3.727,0.26l-1.857,4.114l0.053,1.876l4.391,2.136l0.26,4.642l-3.775,0.208l-0.935-1.564l-10.495-4.479l-0.311,3.44l-4.962,0.155L459.78,571.656L459.78,571.656z"/>
     <path id="zw" d="M468.52,578.226l7.755,8.757l5.946,1.513l3.984-6.248l-0.312-8.281l-6.465-3.337l-2.431,1.098l-3.62,5.524l-5.014-0.053L468.52,578.226L468.52,578.226z"/>
 </g>
-</svg>
+</svg></div>
 
       <div class="legend">
         <span><b style="background:var(--c-eu)"></b>歐洲</span>
@@ -661,7 +669,7 @@ const DESTS = [
   areas:[
    ["尼斯",["老城與海濱","La Favola（海鮮義大利麵）","Boccaccio（海鮮燉飯）"]],
    ["芒通",["聖米歇爾階梯","彩色房屋與 Sablettes 海灘","傳統市集","檸檬香水與檸檬酒老店"]],
-   ["摩納哥 🇲🇨",["蒙特卡洛大賭場","Fontvieille 港遊艇","F1 賽道街景"]],
+   ["摩納哥",["蒙特卡洛大賭場","Fontvieille 港遊艇","F1 賽道街景"]],
    ["坎城",["影展之城半日遊（老城與海濱散步）"]],
    ["埃茲",["鷲巢村","尼采步道","熱帶植物園","Le Nid d'Aigle（米其林推薦）"]],
    ["格拉斯",["Galimard 香水 DIY","國際香水博物館"]],
@@ -752,6 +760,7 @@ const gmap = (name) => `https://www.google.com/maps/search/?api=1&query=${encode
 (function(){
   const groups = ["日本","歐洲","東南亞","大洋洲","待補"];
   const GRP_EMOJI = {日本:"🗾",歐洲:"🏰",東南亞:"🌴",大洋洲:"🌊",待補:"⏳"};
+  const DOPEN = matchMedia("(min-width:821px)").matches ? " open" : "";
   $("destArea").innerHTML = groups.map(g=>{
     const items = DESTS.filter(d=>d.grp===g);
     if(!items.length) return "";
@@ -760,7 +769,7 @@ const gmap = (name) => `https://www.google.com/maps/search/?api=1&query=${encode
         <div class="dest-head"><span class="e">${d.e}</span><h3>${d.n}</h3>${d.trips.map(t=>`<span class="chip">${t}</span>`).join("")}</div>
         ${d.c?`<p class="quote">${d.c}</p>`:""}
         <div class="areas">${d.areas.map(a=>
-          `<details><summary>${a[0]} <small>（${a[1].length}）</small></summary><ul>${a[1].map(s=>`<li>${s}</li>`).join("")}</ul></details>`).join("")}
+          `<details${DOPEN}><summary>${a[0]} <small>（${a[1].length}）</small></summary><ul>${a[1].map(s=>`<li>${s}</li>`).join("")}</ul></details>`).join("")}
         </div>
         ${d.pins.length?`<div class="blk-title">☕ 私房店家</div><div class="pins">${d.pins.map(p=>
           `<a class="pin" href="${gmap(p[0])}" target="_blank" rel="noopener">📍 ${p[0]} <small>${p[1]}</small></a>`).join("")}</div>`:""}
@@ -806,11 +815,11 @@ $("wishGrid").innerHTML = WISHLIST.map((w,i)=>
     });
     return best;
   };
-  function marker(x,y,txt,tipText,to,isStar){
+  function marker(x,y,txt,tipText,to,cls){
     const g = document.createElementNS(NS,"g");
-    g.setAttribute("class","mk"+(isStar?" star":""));
+    g.setAttribute("class","mk"+(cls?" "+cls:""));
     const c = document.createElementNS(NS,"circle");
-    c.setAttribute("cx",x);c.setAttribute("cy",y);c.setAttribute("r",isStar?7.5:5);
+    c.setAttribute("cx",x);c.setAttribute("cy",y);c.setAttribute("r",cls==="star"?7.5:5);
     const t = document.createElementNS(NS,"text");
     t.setAttribute("x",x);t.setAttribute("y",y+0.5);t.textContent=txt;
     g.appendChild(c);g.appendChild(t);
@@ -821,7 +830,10 @@ $("wishGrid").innerHTML = WISHLIST.map((w,i)=>
   }
   // 摩納哥（世界地圖上太小，用金點代表；點了跳南法卡片）
   const fr = bbox("fr");
-  if(fr) marker(fr.x+fr.width*0.94, fr.y+fr.height*0.84, "", "摩納哥 🇲🇨（蜜月）", "d-southfrance", false);
+  if(fr) marker(fr.x+fr.width*0.94, fr.y+fr.height*0.84, "", "摩納哥（蜜月）", "d-southfrance", "mc");
+  // 台灣＝家，金色小點
+  const tw = bbox("tw");
+  if(tw) marker(tw.x+tw.width/2, tw.y+tw.height/2, "", "台灣 🏠 家", null, "home");
   // 夢想清單 ⭐
   const stars = [];
   const kz = bbox("kz"); if(kz) stars.push([kz.x+kz.width*0.5, kz.y+kz.height*0.5, "哈薩克"]);
@@ -829,7 +841,7 @@ $("wishGrid").innerHTML = WISHLIST.map((w,i)=>
   const se = bbox("se"); if(se) stars.push([se.x+se.width*0.4, se.y+se.height*0.55, "北歐"]);
   const cl = bbox("cl"); if(cl) stars.push([cl.x+cl.width*0.7, cl.y+cl.height*0.86, "巴塔哥尼亞"]);
   const cn = bbox("cn"); if(cn) stars.push([cn.x+cn.width*0.16, cn.y+cn.height*0.38, "新疆"]);
-  stars.forEach(s=>marker(s[0],s[1],"⭐",`${s[2]}（夢想清單）`,"sec-wish",true));
+  stars.forEach(s=>marker(s[0],s[1],"⭐",`${s[2]}（夢想清單）`,"sec-wish","star"));
 })();
 
 /* ---------- 回頂部 ---------- */
