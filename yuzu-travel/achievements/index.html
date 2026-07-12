@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuzu Travel｜旅遊成就清單</title>
+<meta name="description" content="又瑄的旅遊成就收藏簿：世界足跡地圖、175 項旅遊成就、徽章牆與夢想清單。">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+:root{
+  --navy:#0d3347;
+  --navy-2:#164a66;
+  --bg:#f0ede8;
+  --card:#ffffff;
+  --ink:#2f3540;
+  --muted:#7d786e;
+  --line:#e3dcd0;
+  --gold:#c9a227;
+  --gold-deep:#a37f12;
+  --gold-soft:#fbf3dd;
+  --slate:#4a5e72;
+  --r-common:#8a94a6;
+  --r-rare:#3b6ea5;
+  --r-epic:#7a4fa3;
+  --r-legend:#c9a227;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.6;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* ===== Header ===== */
+.site-header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);
+  color:#fff;padding:34px 0 96px;
+}
+.header-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.06em}
+.brand svg{width:30px;height:30px;flex:none}
+.brand .b1{font-size:1.05rem}
+.home-btn{
+  color:#fff;text-decoration:none;font-size:.88rem;border:1px solid rgba(255,255,255,.45);
+  padding:7px 16px;border-radius:999px;transition:.2s;white-space:nowrap;
+}
+.home-btn:hover{background:rgba(255,255,255,.15)}
+.hero{margin-top:30px}
+.hero h1{font-size:1.9rem;letter-spacing:.05em}
+.hero p{margin-top:6px;color:rgba(255,255,255,.75);font-size:.95rem}
+
+/* ===== Profile card ===== */
+.profile{
+  background:var(--card);border-radius:16px;box-shadow:0 8px 28px rgba(13,51,71,.14);
+  margin-top:-64px;padding:26px 28px;position:relative;
+}
+.profile-top{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.avatar{
+  width:64px;height:64px;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 38% 28%,#f0d050,#a06010);
+  display:flex;align-items:center;justify-content:center;font-size:1.9rem;
+  box-shadow:0 3px 10px rgba(160,96,16,.35);
+}
+.ptitle{font-size:1.25rem;font-weight:700}
+.plevel{color:var(--muted);font-size:.85rem;letter-spacing:.12em;margin-top:2px}
+.pbar-box{flex:1;min-width:220px}
+.pbar-label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:5px}
+.pbar{height:10px;background:#ece7dd;border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),#e6c556);transition:width .5s}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.stat{background:#faf8f3;border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center}
+.stat .v{font-size:1.5rem;font-weight:800;color:var(--navy)}
+.stat .k{font-size:.8rem;color:var(--muted);margin-top:2px}
+
+/* ===== Sections ===== */
+section{margin-top:44px}
+h2.sec{
+  font-size:1.3rem;color:var(--navy);display:flex;align-items:center;gap:8px;
+  border-left:5px solid var(--gold);padding-left:12px;margin-bottom:6px;
+}
+.sec-hint{color:var(--muted);font-size:.86rem;margin-bottom:16px;padding-left:17px}
+
+/* ===== Map ===== */
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-bottom:14px;padding-left:17px;font-size:.8rem;color:var(--muted)}
+.legend b{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.map-scroll{overflow-x:auto;padding-bottom:8px}
+.map-grid{
+  display:grid;grid-template-columns:repeat(14,minmax(56px,1fr));
+  gap:6px;min-width:880px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;
+}
+.cell{
+  position:relative;border:1.5px solid #d9d2c5;border-radius:8px;background:#fbfaf6;
+  font-size:.76rem;text-align:center;padding:10px 2px;cursor:pointer;user-select:none;
+  transition:transform .15s,box-shadow .15s;color:#57534a;min-height:44px;
+  display:flex;align-items:center;justify-content:center;
+}
+.cell:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(13,51,71,.12)}
+.cell.wish{border-style:dashed;border-color:var(--gold);color:#8a6d1a;background:#fdfaf0}
+.cell.wish::after{content:"⭐";position:absolute;top:-7px;right:-4px;font-size:.7rem;z-index:3}
+.cell.on{color:#fff;font-weight:700;border-color:transparent}
+/* 迷霧：未踏足的格子蓋著霧，hover 偷看，蓋章後散開 */
+.cell::before{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:6.5px;
+  background:
+    radial-gradient(circle at 28% 25%,rgba(255,255,255,.85),rgba(255,255,255,0) 55%),
+    radial-gradient(circle at 72% 70%,rgba(233,229,221,.8),rgba(233,229,221,0) 60%),
+    linear-gradient(135deg,rgba(226,222,214,.76),rgba(201,197,188,.76));
+  opacity:1;transition:opacity .6s ease;
+}
+.cell:hover::before{opacity:.3}
+.cell.on::before{opacity:0}
+.cell .stamp{
+  position:absolute;top:-8px;right:-6px;width:20px;height:20px;border-radius:50%;z-index:3;
+  background:radial-gradient(circle at 38% 28%,#f0d050,#a06010);color:#fff;font-size:.72rem;
+  display:none;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.3);
+}
+.cell.on .stamp{display:flex}
+.cell.on.just .stamp{animation:stampIn .4s ease-out}
+@keyframes stampIn{0%{transform:scale(2.4);opacity:0}60%{transform:scale(.85)}100%{transform:scale(1);opacity:1}}
+
+/* ===== 世界探索度 ===== */
+.explore{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 22px;display:flex;gap:26px;align-items:center;margin-bottom:14px;
+}
+.exp-main{text-align:center;flex:none;min-width:130px}
+.exp-pct{font-size:2.3rem;font-weight:800;color:var(--navy);line-height:1.1}
+.exp-lbl{font-size:.8rem;color:var(--muted);margin-top:2px}
+.exp-bars{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px 20px}
+.exp-item .er{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-bottom:3px}
+.exp-item .track{height:7px;background:#ece7dd;border-radius:99px;overflow:hidden}
+.exp-item .track i{display:block;height:100%;border-radius:99px;transition:width .5s}
+
+/* ===== Journey (trips + wishlist) ===== */
+.journey{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.panel h3{color:var(--navy);font-size:1.05rem;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.trip{display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+.trip:last-child{border-bottom:none}
+.trip .y{flex:none;font-weight:700;color:var(--slate);font-size:.82rem;width:44px}
+.trip .e{flex:none}
+.trip .t{flex:1}
+.trip .d{flex:none;color:var(--muted);font-size:.78rem}
+.wish-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.wish-item:last-child{border-bottom:none}
+.wish-rank{
+  flex:none;width:26px;height:26px;border-radius:50%;background:var(--gold-soft);
+  border:1.5px solid var(--gold);color:var(--gold-deep);font-weight:800;font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.wish-item .n{font-weight:700}
+.wish-item .d{color:var(--muted);font-size:.8rem}
+.wish-note{
+  margin-top:14px;background:var(--gold-soft);border:1px dashed var(--gold);
+  border-radius:10px;padding:10px 14px;font-size:.84rem;color:#7a621d;
+}
+
+/* ===== Achievements ===== */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px;padding-left:17px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  border:1.5px solid var(--line);background:var(--card);border-radius:999px;
+  padding:5px 14px;font-size:.82rem;cursor:pointer;color:#5d594f;transition:.15s;
+}
+.chip:hover{border-color:var(--gold)}
+.chip.act{background:var(--navy);border-color:var(--navy);color:#fff}
+.frow{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 16px;padding-left:17px}
+.frow select,.frow input{
+  font:inherit;font-size:.85rem;padding:6px 12px;border:1.5px solid var(--line);
+  border-radius:8px;background:var(--card);color:var(--ink);outline:none;
+}
+.frow input{flex:1;min-width:160px}
+.frow select:focus,.frow input:focus{border-color:var(--gold)}
+.achv-count{padding-left:17px;font-size:.84rem;color:var(--muted);margin-bottom:12px}
+.cat-head{
+  margin:20px 0 10px;font-weight:800;color:var(--slate);font-size:.95rem;
+  display:flex;align-items:center;gap:8px;
+}
+.cat-head small{color:var(--muted);font-weight:400}
+.achv-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ach{
+  background:var(--card);border:1.5px solid var(--line);border-radius:12px;
+  padding:13px 15px;display:flex;gap:12px;cursor:pointer;transition:.15s;position:relative;
+}
+.ach:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(13,51,71,.1)}
+.ach.on{background:var(--gold-soft);border-color:var(--gold)}
+.chk{
+  flex:none;width:30px;height:30px;border-radius:50%;border:2px solid #d5cfc2;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-top:2px;
+  color:transparent;transition:.15s;background:#fff;
+}
+.ach.on .chk{
+  background:radial-gradient(circle at 38% 28%,#f0d050,#a06010);
+  border-color:transparent;color:#fff;
+}
+.ach.on.just .chk{animation:stampIn .4s ease-out}
+.ach-body{flex:1;min-width:0}
+.ach-name{font-weight:700;font-size:.95rem}
+.ach-desc{font-size:.8rem;color:var(--muted);margin-top:2px}
+.ach-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;align-items:center}
+.stars{font-size:.74rem;color:var(--gold);letter-spacing:1px}
+.stars .off{color:#d8d2c4}
+.pill{font-size:.68rem;padding:1.5px 8px;border-radius:999px;color:#fff;font-weight:700}
+.pill.tag{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:400}
+.pill.unlock{background:transparent;border:1px solid var(--gold);color:var(--gold-deep);cursor:pointer}
+.pill.unlock:hover{background:var(--gold-soft)}
+
+/* ===== Custom ===== */
+.cform{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;padding-left:17px}
+.cform input,.cform select{
+  font:inherit;font-size:.88rem;padding:8px 12px;border:1.5px solid var(--line);
+  border-radius:8px;background:var(--card);outline:none;
+}
+.cform input{flex:1;min-width:200px}
+.btn{
+  font:inherit;font-size:.88rem;padding:8px 20px;border:none;border-radius:8px;cursor:pointer;
+  background:var(--navy);color:#fff;font-weight:700;transition:.15s;
+}
+.btn:hover{background:var(--navy-2)}
+.btn.gold{background:var(--gold);color:#fff}
+.btn.gold:hover{background:var(--gold-deep)}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--muted)}
+.btn.ghost:hover{border-color:#c0392b;color:#c0392b}
+.custom-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ach .del{
+  position:absolute;top:8px;right:10px;border:none;background:none;cursor:pointer;
+  color:#c9c3b6;font-size:.9rem;padding:2px 5px;
+}
+.ach .del:hover{color:#c0392b}
+.empty{padding:14px 17px;color:var(--muted);font-size:.86rem}
+
+/* ===== Badges + Radar ===== */
+.brgrid{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start}
+.radar-panel{text-align:center}
+.radar-panel canvas{max-width:100%}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.badge{
+  background:var(--card);border:1.5px solid var(--line);border-radius:12px;
+  padding:14px 10px;text-align:center;transition:.15s;
+}
+.badge .be{font-size:1.9rem;filter:grayscale(1);opacity:.45}
+.badge .bn{font-weight:700;font-size:.88rem;margin-top:6px;color:var(--muted)}
+.badge .bd{font-size:.72rem;color:var(--muted);margin-top:2px;min-height:2.2em}
+.badge .bp{font-size:.74rem;margin-top:6px;color:var(--muted);font-weight:700}
+.badge.on{border-color:var(--gold);background:var(--gold-soft);box-shadow:0 3px 12px rgba(201,162,39,.25)}
+.badge.on .be{filter:none;opacity:1}
+.badge.on .bn{color:var(--gold-deep)}
+.badge.on .bp{color:var(--gold-deep)}
+
+/* ===== Data ===== */
+.data-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-left:17px}
+.data-hint{padding-left:17px;margin-top:10px;font-size:.8rem;color:var(--muted)}
+
+/* ===== 快速導覽 / 回頂部 / 滑動提示 ===== */
+.quicknav{
+  position:sticky;top:0;z-index:60;background:rgba(240,237,232,.94);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+}
+.qwrap{max-width:1080px;margin:0 auto;padding:8px 20px;display:flex;gap:8px;overflow-x:auto}
+.qlink{
+  white-space:nowrap;font-size:.8rem;color:#5d594f;text-decoration:none;
+  border:1.5px solid var(--line);background:var(--card);border-radius:999px;
+  padding:4px 12px;transition:.15s;
+}
+.qlink:hover{border-color:var(--gold);color:var(--gold-deep)}
+section{scroll-margin-top:58px}
+#toTop{
+  position:fixed;right:18px;bottom:18px;z-index:70;width:42px;height:42px;
+  border-radius:50%;border:none;cursor:pointer;background:var(--navy);color:#fff;
+  font-size:1.1rem;box-shadow:0 4px 14px rgba(13,51,71,.35);
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+#toTop.show{opacity:1;pointer-events:auto}
+#toTop:hover{background:var(--navy-2)}
+.swipe-hint{display:none;font-size:.78rem;color:var(--muted);margin:0 0 8px;padding-left:17px}
+@media (max-width:820px){.swipe-hint{display:block}}
+
+/* ===== Footer / toast ===== */
+footer{
+  margin-top:60px;background:var(--navy);color:rgba(255,255,255,.72);
+  text-align:center;padding:26px 20px;font-size:.84rem;
+}
+footer a{color:#f0d050;text-decoration:none}
+#toasts{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99;display:flex;flex-direction:column;gap:8px;align-items:center}
+.toast{
+  background:var(--navy);color:#fff;padding:10px 22px;border-radius:999px;font-size:.88rem;
+  box-shadow:0 6px 18px rgba(0,0,0,.3);animation:toastIn .3s ease-out;white-space:nowrap;
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+@media (max-width:820px){
+  .journey,.brgrid{grid-template-columns:1fr}
+  .explore{flex-direction:column;align-items:stretch;gap:14px}
+  .exp-bars{grid-template-columns:repeat(2,1fr)}
+  .achv-list,.custom-list{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:1.55rem}
+  .radar-panel{margin:0 auto}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="header-top">
+      <div class="brand">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+          <defs><radialGradient id="g" cx="38%" cy="28%" r="72%">
+            <stop offset="0%" stop-color="#f0d050"/><stop offset="100%" stop-color="#a06010"/>
+          </radialGradient></defs>
+          <circle cx="16" cy="16" r="16" fill="url(#g)"/>
+          <circle cx="16" cy="16" r="10.5" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+          <circle cx="16" cy="16" r="2.5" fill="rgba(255,255,255,.8)"/>
+          <line x1="16" y1="13.5" x2="10" y2="7" stroke="rgba(255,255,255,.75)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="16" y1="13.5" x2="22" y2="7" stroke="rgba(255,255,255,.75)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="16" y1="13.5" x2="16" y2="22" stroke="rgba(255,255,255,.75)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="b1">Yuzu Travel</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="home-btn" href="../">🗺️ 足跡地圖</a><a class="home-btn" href="https://ianian22493.github.io/">⌂ 回首頁</a></div>
+    </div>
+    <div class="hero">
+      <h1>🏆 旅遊成就清單</h1>
+      <p>和老婆一起，把世界一格一格蓋上章。</p>
+    </div>
+  </div>
+</header>
+
+<nav class="quicknav">
+  <div class="qwrap">
+    <a class="qlink" href="#sec-map">🗺️ 足跡</a>
+    <a class="qlink" href="#sec-journey">✈️ 旅程</a>
+    <a class="qlink" href="#sec-achv">🏆 成就</a>
+    <a class="qlink" href="#sec-custom">✨ 自訂</a>
+    <a class="qlink" href="#sec-badges">🎖️ 徽章</a>
+    <a class="qlink" href="#sec-data">💾 備份</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- Profile -->
+  <div class="profile">
+    <div class="profile-top">
+      <div class="avatar">🧳</div>
+      <div>
+        <div class="ptitle" id="pTitle">🌱 旅行初心者</div>
+        <div class="plevel">LEVEL <span id="pLevel">0</span></div>
+      </div>
+      <div class="pbar-box">
+        <div class="pbar-label"><span>距離下一級</span><span id="pBarTxt">0 / 10</span></div>
+        <div class="pbar"><i id="pBar" style="width:0%"></i></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v" id="stAch">0</div><div class="k">🏆 已解鎖成就</div></div>
+      <div class="stat"><div class="v" id="stCty">0</div><div class="k">🗺️ 踏足國家/地區</div></div>
+      <div class="stat"><div class="v" id="stCon">0</div><div class="k">🌍 踏足大洲</div></div>
+      <div class="stat"><div class="v" id="stBdg">0</div><div class="k">🎖️ 徽章</div></div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <section id="sec-map">
+    <h2 class="sec">🗺️ 世界足跡</h2>
+    <p class="sec-hint">未踏足的地方蓋著一層迷霧（滑鼠移上去可以偷看）；點擊蓋章，迷霧就散了。⭐ 虛線框是夢想清單目的地。</p>
+    <div class="legend" id="legend"></div>
+    <div class="explore">
+      <div class="exp-main">
+        <div class="exp-pct" id="expPct">0%</div>
+        <div class="exp-lbl">世界探索度</div>
+      </div>
+      <div class="exp-bars" id="expBars"></div>
+    </div>
+    <div class="swipe-hint">👉 地圖可以左右滑動</div>
+    <div class="map-scroll"><div class="map-grid" id="mapGrid"></div></div>
+  </section>
+
+  <!-- Trips + wishlist -->
+  <section id="sec-journey">
+    <h2 class="sec">✈️ 我們的旅程</h2>
+    <p class="sec-hint">左邊是走過的路，右邊是接下來的夢。</p>
+    <div class="journey">
+      <div class="panel">
+        <h3>📖 旅遊履歷</h3>
+        <div id="tripList"></div>
+      </div>
+      <div class="panel">
+        <h3>🌠 夢想清單</h3>
+        <div id="wishList"></div>
+        <div class="wish-note">✈️ 預計 2027 年 2–3 月出發（寒假後、返馬祖上工前的空檔）。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Achievements -->
+  <section id="sec-achv">
+    <h2 class="sec">🏆 成就清單</h2>
+    <p class="sec-hint">做過的就點下去蓋章——會記下解鎖日期，點日期標籤可以改成實際體驗的日子，慢慢累積成你們的旅行年表。</p>
+    <div class="filters"><div class="chips" id="catChips"></div></div>
+    <div class="frow">
+      <select id="fStatus">
+        <option value="all">全部狀態</option>
+        <option value="on">已解鎖</option>
+        <option value="off">未解鎖</option>
+      </select>
+      <select id="fRarity">
+        <option value="全部">全部稀有度</option>
+        <option value="普通">普通</option>
+        <option value="稀有">稀有</option>
+        <option value="史詩">史詩</option>
+        <option value="傳說">傳說</option>
+      </select>
+      <input id="fSearch" type="search" placeholder="🔍 搜尋成就…">
+    </div>
+    <div class="achv-count" id="achvCount"></div>
+    <div id="achvArea"></div>
+  </section>
+
+  <!-- Custom -->
+  <section id="sec-custom">
+    <h2 class="sec">✨ 自訂成就</h2>
+    <p class="sec-hint">自己的成就自己開（最多 10 項），例如「帶爸媽出國」「小孩的第一次飛行」。</p>
+    <div class="cform">
+      <input id="cName" maxlength="30" placeholder="成就名稱…">
+      <select id="cCat"></select>
+      <button class="btn gold" id="cAdd">＋ 新增</button>
+    </div>
+    <div class="custom-list" id="customList"></div>
+  </section>
+
+  <!-- Badges + radar -->
+  <section id="sec-badges">
+    <h2 class="sec">🎖️ 徽章牆與探索雷達</h2>
+    <p class="sec-hint">徽章會隨著成就與足跡自動點亮。</p>
+    <div class="brgrid">
+      <div class="panel radar-panel">
+        <h3>📡 探索雷達</h3>
+        <canvas id="radar" width="340" height="320"></canvas>
+      </div>
+      <div class="badges" id="badgeWall"></div>
+    </div>
+  </section>
+
+  <!-- Data -->
+  <section id="sec-data">
+    <h2 class="sec">💾 資料備份與分享</h2>
+    <div class="data-bar">
+      <button class="btn gold" id="btnCard">📸 產生分享卡</button>
+      <button class="btn" id="btnExport">📤 匯出備份 JSON</button>
+      <button class="btn" id="btnImport">📥 匯入備份</button>
+      <button class="btn ghost" id="btnReset">重設全部進度</button>
+      <input type="file" id="fileImport" accept=".json" style="display:none">
+    </div>
+    <p class="data-hint">進度自動儲存在此瀏覽器（localStorage）。換裝置前先匯出備份，再到新裝置匯入即可。</p>
+  </section>
+
+</main>
+
+<footer>
+  <div>🍋 Yuzu Travel · <a href="../">足跡地圖</a> · <a href="https://ianian22493.github.io/">回首頁</a></div>
+  <div style="margin-top:4px;opacity:.7">資料只存在你的瀏覽器裡 · 2026</div>
+</footer>
+
+<button id="toTop" title="回頂部">↑</button>
+<div id="toasts"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   Yuzu Travel 旅遊成就清單
+   - 成就 id 一經發布不可改號（localStorage 以 id 記錄進度）
+   - 旅遊履歷 / 夢想清單 / 預設足跡直接改下方陣列即可
+   ============================================================ */
+
+// ---------- 常數 ----------
+const LS_KEY = "yuzuTravelAchievementsV1";
+const CATS = ["自然","美食","文化","交通","住宿","極限挑戰","攝影","祭典","離島","購物"];
+const CAT_EMOJI = {自然:"🌿",美食:"🍜",文化:"🏛️",交通:"🚄",住宿:"🛏️",極限挑戰:"🪂",攝影:"📷",祭典:"🎪",離島:"🏝️",購物:"🛍️"};
+const RARITY_COLOR = {普通:"var(--r-common)",稀有:"var(--r-rare)",史詩:"var(--r-epic)",傳說:"var(--r-legend)"};
+const REGION_COLOR = {北美洲:"#b3573b",南美洲:"#a06a2c",歐洲:"#56628f",非洲:"#8a5a33",亞洲:"#3f7d5f",大洋洲:"#3c7d8a"};
+
+// ---------- 世界地圖（抽象格子，14 欄 × 9 列） ----------
+const COUNTRIES = [
+  // 北美洲
+  {id:"canada",n:"加拿大",reg:"北美洲",r:1,c:2},
+  {id:"usa",n:"美國",reg:"北美洲",r:2,c:2},
+  {id:"mexico",n:"墨西哥",reg:"北美洲",r:3,c:2},
+  {id:"cuba",n:"古巴",reg:"北美洲",r:3,c:3},
+  // 南美洲
+  {id:"colombia",n:"哥倫比亞",reg:"南美洲",r:4,c:2},
+  {id:"peru",n:"秘魯",reg:"南美洲",r:5,c:2},
+  {id:"brazil",n:"巴西",reg:"南美洲",r:5,c:3},
+  {id:"bolivia",n:"玻利維亞",reg:"南美洲",r:6,c:2},
+  {id:"chile",n:"智利",reg:"南美洲",r:7,c:2},
+  {id:"argentina",n:"阿根廷",reg:"南美洲",r:7,c:3},
+  // 歐洲
+  {id:"iceland",n:"冰島",reg:"歐洲",r:1,c:4},
+  {id:"norway",n:"挪威",reg:"歐洲",r:1,c:5},
+  {id:"sweden",n:"瑞典",reg:"歐洲",r:1,c:6},
+  {id:"finland",n:"芬蘭",reg:"歐洲",r:1,c:7},
+  {id:"denmark",n:"丹麥",reg:"歐洲",r:2,c:4},
+  {id:"uk",n:"英國",reg:"歐洲",r:2,c:5},
+  {id:"netherlands",n:"荷蘭",reg:"歐洲",r:2,c:6},
+  {id:"germany",n:"德國",reg:"歐洲",r:2,c:7},
+  {id:"poland",n:"波蘭",reg:"歐洲",r:2,c:8},
+  {id:"monaco",n:"摩納哥",reg:"歐洲",r:3,c:4},
+  {id:"france",n:"法國",reg:"歐洲",r:3,c:5},
+  {id:"switzerland",n:"瑞士",reg:"歐洲",r:3,c:6},
+  {id:"austria",n:"奧地利",reg:"歐洲",r:3,c:7},
+  {id:"czech",n:"捷克",reg:"歐洲",r:3,c:8},
+  {id:"portugal",n:"葡萄牙",reg:"歐洲",r:4,c:4},
+  {id:"spain",n:"西班牙",reg:"歐洲",r:4,c:5},
+  {id:"italy",n:"義大利",reg:"歐洲",r:4,c:6},
+  {id:"greece",n:"希臘",reg:"歐洲",r:4,c:7},
+  {id:"turkey",n:"土耳其",reg:"歐洲",r:4,c:8},
+  {id:"russia",n:"俄羅斯",reg:"歐洲",r:1,c:10,span:3},
+  // 非洲
+  {id:"morocco",n:"摩洛哥",reg:"非洲",r:5,c:5},
+  {id:"egypt",n:"埃及",reg:"非洲",r:5,c:7},
+  {id:"kenya",n:"肯亞",reg:"非洲",r:6,c:7},
+  {id:"tanzania",n:"坦尚尼亞",reg:"非洲",r:7,c:7},
+  {id:"southafrica",n:"南非",reg:"非洲",r:8,c:6},
+  {id:"madagascar",n:"馬達加斯加",reg:"非洲",r:8,c:8},
+  // 亞洲
+  {id:"kazakhstan",n:"哈薩克",reg:"亞洲",r:2,c:10,span:2},
+  {id:"mongolia",n:"蒙古",reg:"亞洲",r:2,c:12},
+  {id:"china",n:"中國",reg:"亞洲",r:3,c:10,span:2},
+  {id:"korea",n:"韓國",reg:"亞洲",r:3,c:13},
+  {id:"japan",n:"日本",reg:"亞洲",r:3,c:14},
+  {id:"india",n:"印度",reg:"亞洲",r:4,c:10},
+  {id:"hongkong",n:"香港",reg:"亞洲",r:4,c:12},
+  {id:"taiwan",n:"台灣",reg:"亞洲",r:4,c:13},
+  {id:"uae",n:"阿聯",reg:"亞洲",r:5,c:9},
+  {id:"thailand",n:"泰國",reg:"亞洲",r:5,c:11},
+  {id:"vietnam",n:"越南",reg:"亞洲",r:5,c:12},
+  {id:"philippines",n:"菲律賓",reg:"亞洲",r:5,c:14},
+  {id:"maldives",n:"馬爾地夫",reg:"亞洲",r:6,c:9},
+  {id:"malaysia",n:"馬來西亞",reg:"亞洲",r:6,c:11},
+  {id:"singapore",n:"新加坡",reg:"亞洲",r:6,c:12},
+  {id:"indonesia",n:"印尼",reg:"亞洲",r:7,c:12},
+  // 大洋洲
+  {id:"fiji",n:"斐濟",reg:"大洋洲",r:7,c:14},
+  {id:"australia",n:"澳洲",reg:"大洋洲",r:8,c:12,span:2},
+  {id:"newzealand",n:"紐西蘭",reg:"大洋洲",r:9,c:13},
+];
+
+// 已踏足（依 2023–2026 旅遊紀錄預設蓋章；摩納哥 = 2025-07 蜜月）
+const DEFAULT_VISITED = ["taiwan","japan","malaysia","germany","austria","france","spain","turkey","newzealand","monaco"];
+// 夢想清單對應的地圖格
+const WISH_COUNTRIES = ["kazakhstan","argentina","chile","china","iceland","norway","sweden","finland","denmark"];
+
+// ---------- 旅遊履歷 ----------
+const TRIPS = [
+  {y:"—",t:"土耳其",d:"年份待補",e:"🎈"},
+  {y:"2023",t:"德國・奧地利",d:"18天15夜",e:"🏰"},
+  {y:"2023",t:"東京",d:"9天8夜",e:"🗼"},
+  {y:"2024",t:"大阪",d:"5天4夜",e:"🐙"},
+  {y:"2025",t:"京都・大阪",d:"9天8夜",e:"⛩️"},
+  {y:"2025",t:"南法・巴賽隆納（蜜月）",d:"14天12夜",e:"💍"},
+  {y:"2025",t:"銀山溫泉・日本東北",d:"9天8夜",e:"❄️"},
+  {y:"2025",t:"馬來西亞",d:"9天8夜",e:"🌴"},
+  {y:"2026",t:"紐西蘭南島（自駕）",d:"15天13夜",e:"🥝"},
+];
+
+// ---------- 夢想清單（依優先順序） ----------
+const WISHLIST = [
+  {n:"哈薩克",e:"🦅",d:"大草原、雪山湖泊與遊牧文化"},
+  {n:"巴塔哥尼亞",e:"🏔️",d:"百內塔、莫雷諾冰川、世界盡頭"},
+  {n:"新疆",e:"🐫",d:"喀納斯、天山天池、絲路喀什"},
+  {n:"冰島",e:"🌋",d:"極光、藍湖、黑沙灘與冰川"},
+  {n:"北歐",e:"❄️",d:"挪威峽灣、極光、聖誕老人村"},
+];
+
+// ---------- 成就資料庫（175 項；t: japan=日本通、dream=夢想清單；id 一經發布不可重用，移除後留空號） ----------
+const ACH = [
+  // 自然 1–18
+  {id:1,e:"🌌",n:"親眼看過北極光",d:"在冰島或北歐的冬夜，親眼見證綠色光帶在頭頂舞動。",df:4,r:"史詩",c:"自然",t:["dream"]},
+  {id:2,e:"♨️",n:"冰島藍湖溫泉",d:"泡進乳藍色的地熱溫泉，感受冰與火之國的魔幻。",df:3,r:"稀有",c:"自然",t:["dream"]},
+  {id:3,e:"🛳️",n:"米佛峽灣遊船",d:"乘船穿過紐西蘭南島的米佛峽灣，仰望千米峭壁與飛瀑。",df:3,r:"稀有",c:"自然"},
+  {id:4,e:"✨",n:"蒂卡波湖觀星",d:"在世界級暗空保護區抬頭，看銀河灑滿紐西蘭的夜空。",df:3,r:"稀有",c:"自然"},
+  {id:5,e:"🗻",n:"富士山清晰全景",d:"在河口湖或新幹線窗邊，遇上無雲的完整富士山。",df:2,r:"普通",c:"自然",t:["japan"]},
+  {id:6,e:"🏔️",n:"百內塔日出",d:"凌晨摸黑上山，看巴塔哥尼亞三塔在日出時燒成金紅色。",df:5,r:"傳說",c:"自然",t:["dream"]},
+  {id:7,e:"🧊",n:"莫雷諾冰川崩落",d:"在阿根廷冰川前，親耳聽見巨冰崩落的轟然巨響。",df:4,r:"史詩",c:"自然",t:["dream"]},
+  {id:8,e:"🍂",n:"喀納斯湖秋色",d:"秋天走進新疆喀納斯，看湖水與金黃樺樹林交織。",df:4,r:"史詩",c:"自然",t:["dream"]},
+  {id:9,e:"🏔️",n:"天山天池倒影",d:"在新疆天山腳下，看雪峰倒映在湛藍的天池裡。",df:3,r:"稀有",c:"自然",t:["dream"]},
+  {id:10,e:"🐎",n:"哈薩克草原騎馬",d:"跟著遊牧民族在中亞大草原上策馬奔馳一回。",df:4,r:"史詩",c:"自然",t:["dream"]},
+  {id:11,e:"⛰️",n:"挪威峽灣遊船",d:"航行在松恩或蓋倫格峽灣，兩岸山壁直落海面。",df:3,r:"稀有",c:"自然",t:["dream"]},
+  {id:12,e:"🐫",n:"撒哈拉沙漠過夜",d:"騎駱駝進沙漠，在滿天星斗下的帳篷睡一晚。",df:3,r:"稀有",c:"自然"},
+  {id:13,e:"🤍",n:"土耳其棉堡",d:"赤腳走上雪白的石灰棚田，泡進溫熱的藍色池水。",df:2,r:"普通",c:"自然"},
+  {id:14,e:"🪨",n:"卡帕多奇亞奇岩谷",d:"走進精靈煙囪與奇岩構成的異星地景。",df:2,r:"普通",c:"自然"},
+  {id:15,e:"🐋",n:"出海看見鯨魚",d:"搭賞鯨船出海，親眼看到鯨魚浮出水面換氣。",df:3,r:"稀有",c:"自然"},
+  {id:16,e:"💫",n:"螢火蟲或藍眼淚",d:"在無光害的夜裡，看見成片螢火蟲或發光的藍眼淚。",df:2,r:"普通",c:"自然"},
+  {id:18,e:"🌊",n:"世界盡頭烏斯懷亞",d:"抵達阿根廷最南端，站在通往南極的門口。",df:5,r:"傳說",c:"自然",t:["dream"]},
+  // 美食 19–34
+  {id:19,e:"⭐",n:"米其林星級餐廳",d:"訂到一間米其林星級餐廳，完整吃完一套 tasting menu。",df:2,r:"稀有",c:"美食"},
+  {id:20,e:"🍣",n:"豐洲市場壽司晨餐",d:"一早排隊，在魚市場旁吃到現捏的頂級壽司。",df:2,r:"普通",c:"美食",t:["japan"]},
+  {id:21,e:"🐙",n:"道頓堀小吃制霸",d:"章魚燒、串炸、大阪燒，一晚全部吃過一輪。",df:1,r:"普通",c:"美食",t:["japan"]},
+  {id:22,e:"🍱",n:"京都懷石料理",d:"在京都老鋪體驗一期一會的懷石全席。",df:3,r:"稀有",c:"美食",t:["japan"]},
+  {id:23,e:"🥘",n:"西班牙海鮮燉飯",d:"在西班牙當地吃到鍋底帶焦香的正宗 paella。",df:2,r:"普通",c:"美食"},
+  {id:24,e:"🍷",n:"Tapas 酒館巡禮",d:"一晚連跑三家 tapas 酒館，配著 sangria 或 vermut。",df:2,r:"普通",c:"美食"},
+  {id:25,e:"🥂",n:"法式全餐配酒",d:"前菜到甜點的完整法餐，讓侍酒師替每道菜配酒。",df:2,r:"稀有",c:"美食"},
+  {id:26,e:"🍺",n:"德國豬腳配啤酒",d:"在啤酒館切開脆皮豬腳，配一公升黑啤。",df:1,r:"普通",c:"美食"},
+  {id:27,e:"🍰",n:"維也納咖啡館文化",d:"在百年咖啡館點一份 Sachertorte 配 Melange。",df:1,r:"普通",c:"美食"},
+  {id:28,e:"🫖",n:"土耳其烤肉與紅茶",d:"路邊 kebab 配鬱金香杯紅茶，土耳其日常滿分。",df:1,r:"普通",c:"美食"},
+  {id:29,e:"🍲",n:"肉骨茶與海南雞飯",d:"在馬來西亞把肉骨茶、海南雞飯、沙嗲吃好吃滿。",df:1,r:"普通",c:"美食"},
+  {id:31,e:"🦪",n:"現撈生蠔配白酒",d:"在海港邊吃現開生蠔，配一杯冰鎮白酒。",df:2,r:"稀有",c:"美食"},
+  {id:32,e:"🥛",n:"草原馬奶酒初體驗",d:"在哈薩克牧民家喝一碗發酵馬奶酒 Kumis。",df:4,r:"史詩",c:"美食",t:["dream"]},
+  {id:33,e:"🍗",n:"新疆大盤雞烤包子",d:"在新疆吃現做大盤雞、烤包子與手抓飯。",df:3,r:"稀有",c:"美食",t:["dream"]},
+  {id:34,e:"🍽️",n:"北歐新式料理",d:"體驗一餐以在地食材重新詮釋的 New Nordic 料理。",df:3,r:"稀有",c:"美食",t:["dream"]},
+  // 文化 35–48
+  {id:35,e:"⛪",n:"聖家堂內部朝聖",d:"走進高第的聖家堂，被彩色玻璃光影包圍。",df:2,r:"普通",c:"文化"},
+  {id:36,e:"🦎",n:"高第建築巡禮",d:"米拉之家、巴特婁之家、奎爾公園一次收集。",df:2,r:"普通",c:"文化"},
+  {id:37,e:"🖼️",n:"羅浮宮鎮館三寶",d:"親眼看過蒙娜麗莎、勝利女神與維納斯。",df:2,r:"普通",c:"文化"},
+  {id:38,e:"👑",n:"凡爾賽宮鏡廳",d:"走過路易十四的鏡廳與後花園。",df:2,r:"普通",c:"文化"},
+  {id:39,e:"🏰",n:"新天鵝堡",d:"朝聖迪士尼城堡的原型，巴伐利亞的新天鵝堡。",df:2,r:"普通",c:"文化"},
+  {id:40,e:"🎻",n:"維也納聽一場音樂會",d:"在音樂之都的金色大廳或歌劇院聽一場演出。",df:2,r:"稀有",c:"文化"},
+  {id:41,e:"🕰️",n:"布拉格舊城天文鐘",d:"整點時在舊城廣場，看天文鐘的使徒報時。",df:2,r:"普通",c:"文化"},
+  {id:42,e:"🕌",n:"聖索菲亞與藍色清真寺",d:"一日之內走進伊斯坦堡兩座傳奇清真寺。",df:2,r:"普通",c:"文化"},
+  {id:43,e:"👘",n:"京都和服半日",d:"穿著和服漫步清水寺與二三年坂。",df:2,r:"普通",c:"文化",t:["japan"]},
+  {id:44,e:"⛩️",n:"伏見稻荷千本鳥居",d:"穿過綿延山頭的朱紅色鳥居隧道。",df:1,r:"普通",c:"文化",t:["japan"]},
+  {id:45,e:"🦌",n:"奈良公園餵鹿",d:"被鞠躬討仙貝的鹿群包圍。",df:1,r:"普通",c:"文化",t:["japan"]},
+  {id:46,e:"🛕",n:"吳哥窟日出",d:"天亮前佔好位置，看日出映在吳哥窟的蓮花池上。",df:3,r:"稀有",c:"文化"},
+  {id:47,e:"🧱",n:"萬里長城好漢坡",d:"登上長城，當一回好漢。",df:2,r:"普通",c:"文化"},
+  {id:48,e:"🕌",n:"喀什老城絲路風情",d:"走進新疆喀什老城，感受千年絲路的市集與工坊。",df:4,r:"史詩",c:"文化",t:["dream"]},
+  // 交通 49–60
+  {id:49,e:"🚄",n:"新幹線初體驗",d:"搭上時速 300 公里的子彈列車，便當配車窗風景。",df:1,r:"普通",c:"交通",t:["japan"]},
+  {id:50,e:"🚉",n:"JR Pass 日本縱斷",d:"用一張 pass 從南到北，一路換乘玩遍日本。",df:3,r:"稀有",c:"交通",t:["japan"]},
+  {id:51,e:"🚂",n:"歐洲跨國列車",d:"搭火車跨過一條國界，護照不用蓋章。",df:2,r:"普通",c:"交通"},
+  {id:52,e:"🚞",n:"阿爾卑斯景觀列車",d:"冰河列車或少女峰鐵道，窗外全程都是明信片。",df:3,r:"稀有",c:"交通"},
+  {id:53,e:"✈️",n:"十二小時以上長途飛行",d:"撐過一趟 12 小時以上的直飛航班。",df:2,r:"普通",c:"交通"},
+  {id:54,e:"🥂",n:"商務艙初體驗",d:"躺平的座位、香檳迎賓——體驗一次就回不去。",df:3,r:"稀有",c:"交通"},
+  {id:55,e:"🚗",n:"海外自駕公路旅行",d:"在國外租車自駕，來一趟說走就走的公路旅行。",df:3,r:"稀有",c:"交通"},
+  {id:56,e:"🚢",n:"郵輪海上過夜",d:"在郵輪或渡輪上睡一晚，醒來已是另一座港口。",df:3,r:"稀有",c:"交通"},
+  {id:57,e:"🚋",n:"路面電車城市漫遊",d:"用一日券搭路面電車，把一座城市慢慢逛完。",df:1,r:"普通",c:"交通"},
+  {id:58,e:"🌙",n:"夜臥火車",d:"在臥鋪火車的搖晃中入睡，睜眼抵達目的地。",df:3,r:"稀有",c:"交通"},
+  {id:59,e:"🛤️",n:"中亞長途鐵路",d:"搭上橫越哈薩克草原的長途火車，看地平線一整天。",df:5,r:"傳說",c:"交通",t:["dream"]},
+  {id:60,e:"🌃",n:"紅眼航班生存者",d:"凌晨起飛、清晨落地，落地直接開玩。",df:1,r:"普通",c:"交通"},
+  // 住宿 61–70
+  {id:61,e:"♨️",n:"溫泉旅館一泊二食",d:"浴衣、會席料理、睡前再泡一次露天風呂。",df:2,r:"普通",c:"住宿",t:["japan"]},
+  {id:62,e:"❄️",n:"銀山溫泉雪見風呂",d:"在大正浪漫的溫泉街，邊泡湯邊看雪落下。",df:3,r:"稀有",c:"住宿",t:["japan"]},
+  {id:63,e:"🏮",n:"京町家老宅住一晚",d:"住進百年町家，木地板嘎吱作響也是情調。",df:2,r:"稀有",c:"住宿",t:["japan"]},
+  {id:64,e:"🏰",n:"歐洲古堡飯店",d:"在真正的城堡裡當一晚貴族。",df:3,r:"史詩",c:"住宿"},
+  {id:65,e:"🛖",n:"玻璃屋等極光",d:"躺在玻璃圓頂屋的床上，等極光劃過頭頂。",df:4,r:"史詩",c:"住宿",t:["dream"]},
+  {id:66,e:"⛺",n:"沙漠豪華帳篷",d:"在沙漠營地的帳篷裡，聽風吹過沙丘。",df:3,r:"稀有",c:"住宿"},
+  {id:67,e:"🌊",n:"水上屋醒來就是海",d:"推開房門直接跳進潟湖，馬爾地夫式的奢侈。",df:4,r:"史詩",c:"住宿"},
+  {id:68,e:"🛌",n:"膠囊旅館體驗",d:"鑽進太空艙般的膠囊，體驗日式極簡住宿。",df:1,r:"普通",c:"住宿",t:["japan"]},
+  {id:69,e:"🏕️",n:"草原氈房住一晚",d:"住進哈薩克遊牧民族的氈房 yurt，與星空為鄰。",df:4,r:"史詩",c:"住宿",t:["dream"]},
+  {id:70,e:"🥂",n:"五星酒店徹底耍廢",d:"整天不出門，泳池、下午茶、浴缸輪著享受。",df:2,r:"稀有",c:"住宿"},
+  // 極限挑戰 71–80
+  {id:71,e:"🎈",n:"卡帕多奇亞熱氣球",d:"日出時分升空，看數百顆熱氣球飄過奇岩谷地。",df:3,r:"稀有",c:"極限挑戰"},
+  {id:72,e:"🪂",n:"高空跳傘",d:"從四千米一躍而下，60 秒自由落體。",df:4,r:"史詩",c:"極限挑戰"},
+  {id:73,e:"🤸",n:"皇后鎮高空彈跳",d:"在高空彈跳發源地紐西蘭皇后鎮縱身一跳。",df:4,r:"史詩",c:"極限挑戰"},
+  {id:74,e:"⛷️",n:"滑雪初體驗",d:"第一次穿上雪板，摔倒也算完成。",df:2,r:"普通",c:"極限挑戰"},
+  {id:75,e:"🏂",n:"日本粉雪進階",d:"在北海道或東北的 powder snow 上滑出一條線。",df:3,r:"稀有",c:"極限挑戰",t:["japan"]},
+  {id:76,e:"🤿",n:"浮潛看珊瑚礁",d:"浮在溫暖的海面上，看腳下的珊瑚與熱帶魚。",df:2,r:"普通",c:"極限挑戰"},
+  {id:77,e:"🐠",n:"水肺潛水考照",d:"拿到 Open Water 執照，解鎖地球七成的表面。",df:4,r:"史詩",c:"極限挑戰"},
+  {id:78,e:"🧊",n:"冰川健行",d:"踩著冰爪走上萬年冰川，冰隙藍得發光。",df:4,r:"史詩",c:"極限挑戰",t:["dream"]},
+  {id:79,e:"⛰️",n:"三千米級登頂",d:"登上一座三千米以上的高山，例如富士山。",df:3,r:"稀有",c:"極限挑戰"},
+  {id:80,e:"🏃",n:"異地路跑完賽",d:"在國外完成一場路跑賽事，獎牌是最好的紀念品。",df:4,r:"史詩",c:"極限挑戰"},
+  // 攝影 81–90
+  {id:81,e:"📸",n:"拍下滿意的極光照",d:"腳架、長曝、零下的手指，換一張此生最魔幻的照片。",df:4,r:"史詩",c:"攝影",t:["dream"]},
+  {id:82,e:"🌌",n:"銀河星空攝影",d:"在無光害的地方，拍下清晰的銀河拱橋。",df:3,r:"稀有",c:"攝影"},
+  {id:83,e:"🍁",n:"京都紅葉大片",d:"楓紅時節的永觀堂或東福寺，快門停不下來。",df:2,r:"普通",c:"攝影",t:["japan"]},
+  {id:84,e:"🌸",n:"滿開櫻花寫真",d:"遇上滿開的櫻花季，拍下粉紅色的隧道。",df:2,r:"普通",c:"攝影",t:["japan"]},
+  {id:85,e:"🚁",n:"空拍上帝視角",d:"用空拍機或直升機記錄一次旅途的上帝視角。",df:3,r:"稀有",c:"攝影"},
+  {id:86,e:"🌃",n:"城市夜景長曝",d:"腳架架好，拍下車軌流光與城市天際線。",df:2,r:"普通",c:"攝影"},
+  {id:87,e:"☃️",n:"雪中銀山溫泉街",d:"大雪紛飛的溫泉街配上煤氣燈，大正浪漫名場面。",df:3,r:"稀有",c:"攝影",t:["japan"]},
+  {id:88,e:"💍",n:"海外婚紗或紀念寫真",d:"在旅途中拍一組正式的兩人紀念照。",df:3,r:"稀有",c:"攝影"},
+  {id:89,e:"🦭",n:"野生動物特寫",d:"不靠動物園，拍到一張野生動物的清晰特寫。",df:3,r:"稀有",c:"攝影"},
+  {id:90,e:"🏞️",n:"鏡面倒影名場面",d:"無風的湖面、完美的倒影，例如紐西蘭鏡湖。",df:2,r:"普通",c:"攝影"},
+  // 祭典 91–100
+  {id:91,e:"🎆",n:"浴衣花火大會",d:"穿浴衣參加日本夏日花火大會，手上要有蘋果糖。",df:2,r:"普通",c:"祭典",t:["japan"]},
+  {id:92,e:"🏮",n:"京都祇園祭",d:"七月的京都，看山鉾巡行穿過四条通。",df:3,r:"稀有",c:"祭典",t:["japan"]},
+  {id:93,e:"👹",n:"青森睡魔祭",d:"東北夏祭的魄力擔當，巨大燈籠武者在夜裡遊行。",df:4,r:"史詩",c:"祭典",t:["japan"]},
+  {id:94,e:"🍻",n:"慕尼黑啤酒節",d:"在 Oktoberfest 的帳篷裡舉杯，跟全世界乾杯。",df:3,r:"稀有",c:"祭典"},
+  {id:95,e:"🎄",n:"歐洲聖誕市集",d:"熱紅酒配薑餅，逛一場飄雪的聖誕市集。",df:2,r:"普通",c:"祭典"},
+  {id:96,e:"🎇",n:"跨年煙火名場面",d:"在著名地標下倒數，例如雪梨港或杜拜。",df:2,r:"普通",c:"祭典"},
+  {id:97,e:"💃",n:"佛朗明哥之夜",d:"在西班牙看一場血脈賁張的 Flamenco。",df:2,r:"普通",c:"祭典"},
+  {id:98,e:"🌀",n:"旋轉舞儀式",d:"在土耳其看蘇菲旋轉舞，安靜得只剩裙襬的風聲。",df:2,r:"普通",c:"祭典"},
+  {id:100,e:"🐎",n:"遊牧那吾魯孜節",d:"在中亞過一次諾魯孜新年，看叼羊與賽馬。",df:5,r:"傳說",c:"祭典",t:["dream"]},
+  // 離島 101–110
+  {id:101,e:"🏝️",n:"沖繩跳島",d:"從那霸跳到離島，海的顏色一島比一島誇張。",df:2,r:"普通",c:"離島",t:["japan"]},
+  {id:102,e:"🎨",n:"瀨戶內海藝術跳島",d:"直島、豐島、犬島，坐船收集海上美術館。",df:3,r:"稀有",c:"離島",t:["japan"]},
+  {id:105,e:"🏖️",n:"東南亞海島度假",d:"長灘、普吉或沙巴，白沙灘加一杯冰椰子。",df:2,r:"普通",c:"離島"},
+  {id:106,e:"🌊",n:"馬爾地夫夢幻潟湖",d:"水清得像特效，沙白得像麵粉。",df:4,r:"史詩",c:"離島"},
+  {id:107,e:"💙",n:"聖托里尼藍白世界",d:"在藍頂教堂與白牆巷弄裡看愛琴海日落。",df:3,r:"稀有",c:"離島"},
+  {id:108,e:"⛴️",n:"檳城與蘭卡威",d:"馬來西亞雙島連線：老城壁畫配免稅海島。",df:2,r:"普通",c:"離島"},
+  {id:109,e:"🛕",n:"峇里島神廟與梯田",d:"海神廟的日落、烏布的梯田，一次收集。",df:2,r:"普通",c:"離島"},
+  {id:110,e:"🏔️",n:"羅弗敦群島",d:"北極圈內的挪威漁村群島，尖峰直接插進海裡。",df:5,r:"傳說",c:"離島",t:["dream"]},
+  // 購物 111–118
+  {id:111,e:"🛍️",n:"東京藥妝電器掃貨",d:"行李箱一半是藥妝，另一半是電器。",df:1,r:"普通",c:"購物",t:["japan"]},
+  {id:112,e:"🧸",n:"日本雜貨尋寶",d:"在百元店、文具店與選物店裡失去時間感。",df:1,r:"普通",c:"購物",t:["japan"]},
+  {id:113,e:"🕰️",n:"歐洲跳蚤市場挖寶",d:"在週末市集淘到一件有故事的老東西。",df:2,r:"普通",c:"購物"},
+  {id:114,e:"👜",n:"Outlet 折扣季戰役",d:"在歐洲或日本 outlet 的折扣季滿載而歸。",df:2,r:"普通",c:"購物"},
+  {id:115,e:"🧿",n:"大巴扎殺價成功",d:"在伊斯坦堡大巴扎談笑間砍到滿意的價格。",df:3,r:"稀有",c:"購物"},
+  {id:116,e:"🎁",n:"收藏在地手工藝品",d:"帶回一件當地職人手作的紀念品。",df:1,r:"普通",c:"購物"},
+  {id:117,e:"🛒",n:"免稅店最後衝刺",d:"登機前 30 分鐘，在免稅店完成最後採購。",df:1,r:"普通",c:"購物"},
+  {id:118,e:"🧳",n:"行李超重的幸福",d:"在報到櫃檯前緊急重新分配行李的戰利品。",df:2,r:"稀有",c:"購物"},
+  // ---- 2026-07-10 擴充：多元化（美洲、非洲、中東、世界祭典等） ----
+  // 自然 119–126
+  {id:119,e:"🏜️",n:"美國大峽谷",d:"站在科羅拉多河億萬年切出的紅色峽谷邊緣。",df:3,r:"稀有",c:"自然"},
+  {id:120,e:"🌊",n:"尼加拉瀑布濕身",d:"搭遊船開到瀑布腳下，讓水霧淋個痛快。",df:3,r:"稀有",c:"自然"},
+  {id:121,e:"🪞",n:"烏尤尼天空之鏡",d:"雨季的玻利維亞鹽沼，天地連成一面鏡子。",df:4,r:"史詩",c:"自然"},
+  {id:122,e:"🦁",n:"東非動物大遷徙",d:"在賽倫蓋提或馬賽馬拉，看百萬牛羚渡河。",df:4,r:"史詩",c:"自然"},
+  {id:123,e:"⛵",n:"下龍灣石林巡航",d:"乘船穿梭越南下龍灣的石灰岩島嶼之間。",df:2,r:"普通",c:"自然"},
+  {id:124,e:"📰",n:"死海飄浮讀報",d:"躺在死海上讓超高鹽度托著你，順便拍張讀報照。",df:3,r:"稀有",c:"自然"},
+  {id:125,e:"🌑",n:"追逐日全食",d:"專程飛到全食帶，看太陽被吞掉的那幾分鐘。",df:5,r:"傳說",c:"自然"},
+  {id:126,e:"🐧",n:"踏上南極大陸",d:"登上第七大陸，被企鵝圍觀。",df:5,r:"傳說",c:"自然"},
+  // 美食 127–134
+  {id:127,e:"🍕",n:"拿坡里柴燒披薩",d:"在披薩發源地咬下第一口 Margherita。",df:2,r:"普通",c:"美食"},
+  {id:128,e:"☕",n:"英式傳統下午茶",d:"三層架、司康與伯爵茶的儀式感。",df:2,r:"普通",c:"美食"},
+  {id:129,e:"🫕",n:"瑞士起司火鍋",d:"阿爾卑斯山腳下，麵包沾滾燙起司。",df:2,r:"普通",c:"美食"},
+  {id:130,e:"🦆",n:"北京烤鴨全套",d:"看師傅片鴨，捲餅沾醬一氣呵成。",df:2,r:"普通",c:"美食"},
+  {id:131,e:"🍤",n:"冬蔭功與泰式掃街",d:"酸辣湯配泰國夜市，一路吃到宵夜場。",df:1,r:"普通",c:"美食"},
+  {id:132,e:"🍜",n:"越南河粉現嗑",d:"在河內或西貢的路邊攤，配一杯滴漏咖啡。",df:1,r:"普通",c:"美食"},
+  {id:133,e:"🤢",n:"挑戰水果之王榴槤",d:"在東南亞現開現吃，聞了還敢吞才算數。",df:2,r:"稀有",c:"美食"},
+  {id:134,e:"🍷",n:"酒莊品酒之旅",d:"走進波爾多或托斯卡尼酒莊，從葡萄園喝到酒窖。",df:3,r:"稀有",c:"美食"},
+  // 文化 135–144
+  {id:135,e:"⚔️",n:"羅馬競技場",d:"走進兩千年前的角鬥士戰場。",df:2,r:"普通",c:"文化"},
+  {id:136,e:"⛪",n:"梵蒂岡聖彼得大教堂",d:"在世界最小的國家仰望穹頂。",df:2,r:"普通",c:"文化"},
+  {id:137,e:"🏛️",n:"大英博物館尋寶",d:"羅塞塔石碑與木乃伊一次看完。",df:2,r:"普通",c:"文化"},
+  {id:138,e:"🕌",n:"泰姬瑪哈陵",d:"清晨看白色大理石陵墓在晨光中變色。",df:3,r:"稀有",c:"文化"},
+  {id:139,e:"🐪",n:"吉薩金字塔與人面獅身",d:"站在四千五百年的奇蹟腳下。",df:3,r:"稀有",c:"文化"},
+  {id:140,e:"⛰️",n:"馬丘比丘失落之城",d:"攀上印加古道，雲霧中的空中之城。",df:4,r:"史詩",c:"文化"},
+  {id:141,e:"🏺",n:"佩特拉玫瑰古城",d:"穿過蛇道，寶庫在眼前豁然展開。",df:4,r:"史詩",c:"文化"},
+  {id:142,e:"🕌",n:"阿爾罕布拉宮",d:"格拉納達的伊斯蘭美學巔峰。",df:3,r:"稀有",c:"文化"},
+  {id:143,e:"🗿",n:"復活節島摩艾",d:"飛到太平洋深處，跟石像面對面。",df:5,r:"傳說",c:"文化"},
+  {id:144,e:"🕌",n:"撒馬爾罕雷吉斯坦廣場",d:"中亞絲路明珠，藍色磁磚的極致。",df:4,r:"史詩",c:"文化"},
+  // 交通 145–150
+  {id:145,e:"🛶",n:"威尼斯貢多拉",d:"讓船夫搖著槳穿過水都的巷弄。",df:2,r:"普通",c:"交通"},
+  {id:146,e:"🚌",n:"倫敦紅色雙層巴士",d:"坐上二樓最前排，把倫敦街景看好看滿。",df:1,r:"普通",c:"交通"},
+  {id:147,e:"🛺",n:"東南亞嘟嘟車殺價",d:"講好價錢再上車，體驗風馳電掣。",df:1,r:"普通",c:"交通"},
+  {id:148,e:"🌐",n:"跨越赤道線",d:"一腳北半球、一腳南半球。",df:2,r:"普通",c:"交通"},
+  {id:149,e:"🚢",n:"破冰船極地航行",d:"聽船首碾過浮冰的聲音。",df:5,r:"傳說",c:"交通"},
+  {id:150,e:"🚄",n:"青藏鐵路天路",d:"翻過五千米的唐古拉山口，一路看藏羚羊。",df:4,r:"史詩",c:"交通"},
+  // 住宿 151–155
+  {id:151,e:"🪨",n:"卡帕多奇亞洞穴旅館",d:"睡進鑿在火山岩裡的房間。",df:3,r:"稀有",c:"住宿"},
+  {id:152,e:"🧊",n:"北極圈冰旅館",d:"連床都是冰做的，裹著馴鹿皮入睡。",df:4,r:"史詩",c:"住宿",t:["dream"]},
+  {id:153,e:"🌳",n:"森林樹屋住一晚",d:"睡在樹冠層，被鳥叫聲叫醒。",df:3,r:"稀有",c:"住宿"},
+  {id:154,e:"😴",n:"機場長椅過一夜",d:"紅眼轉機的成年禮，行李當枕頭。",df:1,r:"普通",c:"住宿"},
+  {id:155,e:"🎒",n:"青年旅館交朋友",d:"住多人房，跟陌生旅人聊到半夜。",df:1,r:"普通",c:"住宿"},
+  // 極限挑戰 156–161
+  {id:156,e:"🦈",n:"與鯊魚共游",d:"籠潛或自由潛，直視海洋頂級掠食者。",df:4,r:"史詩",c:"極限挑戰"},
+  {id:157,e:"🪂",n:"高空滑翔傘",d:"從山頭起飛，像鳥一樣盤旋。",df:3,r:"稀有",c:"極限挑戰"},
+  {id:158,e:"🚣",n:"白水激流泛舟",d:"抓緊槳，衝過翻滾的白浪。",df:3,r:"稀有",c:"極限挑戰"},
+  {id:159,e:"🧗",n:"叢林高空飛索",d:"掛在鋼索上飛越雨林樹冠。",df:2,r:"普通",c:"極限挑戰"},
+  {id:160,e:"🌟",n:"懷托摩黑水漂流",d:"漂在紐西蘭的地下河，頭頂是藍色螢火蟲星空。",df:4,r:"史詩",c:"極限挑戰"},
+  {id:161,e:"🚶",n:"西班牙朝聖之路",d:"徒步數百公里，拿到貝殼證書。",df:5,r:"傳說",c:"極限挑戰"},
+  // 攝影 162–165
+  {id:162,e:"🚶",n:"異國街頭人文紀實",d:"徵得同意後，拍下一張有故事的陌生人肖像。",df:2,r:"普通",c:"攝影"},
+  {id:163,e:"🤸",n:"地標前跳躍照",d:"三、二、一、跳！拍到全員滯空才算。",df:1,r:"普通",c:"攝影"},
+  {id:164,e:"🌋",n:"活火山熔岩紀錄",d:"安全距離內，拍下地球的心跳。",df:4,r:"史詩",c:"攝影"},
+  {id:165,e:"📹",n:"旅行 Vlog 剪成片",d:"把一趟旅程剪成一支能重看的影片。",df:2,r:"普通",c:"攝影"},
+  // 祭典 166–171
+  {id:166,e:"💦",n:"泰國潑水節",d:"全身濕透，跟全曼谷打一場水仗。",df:2,r:"普通",c:"祭典"},
+  {id:167,e:"🕯️",n:"清邁萬人天燈節",d:"千盞天燈同時升空的名場面。",df:3,r:"稀有",c:"祭典"},
+  {id:168,e:"🎭",n:"威尼斯面具嘉年華",d:"戴上面具，走進十八世紀。",df:3,r:"稀有",c:"祭典"},
+  {id:169,e:"💃",n:"里約熱內盧狂歡節",d:"森巴大道上的極致視聽轟炸。",df:4,r:"史詩",c:"祭典"},
+  {id:170,e:"💀",n:"墨西哥亡靈節",d:"萬壽菊與骷髏妝，慶祝生死的節日。",df:4,r:"史詩",c:"祭典"},
+  {id:171,e:"⚽",n:"現場看世界級賽事",d:"世界盃、奧運或大滿貫，親臨現場。",df:3,r:"稀有",c:"祭典"},
+  // 離島 172–176
+  {id:172,e:"🐠",n:"大堡礁浮潛",d:"在世界最大珊瑚礁系上方漂浮。",df:3,r:"稀有",c:"離島"},
+  {id:173,e:"🌺",n:"夏威夷火山與草裙舞",d:"白天看火山，晚上看 Luau。",df:3,r:"稀有",c:"離島"},
+  {id:174,e:"💙",n:"卡布里島藍洞",d:"小船鑽進洞口，整個洞穴藍得發光。",df:3,r:"稀有",c:"離島"},
+  {id:175,e:"🏝️",n:"仙本那水上屋跳島",d:"馬來西亞的玻璃海與水上村落。",df:3,r:"稀有",c:"離島"},
+  {id:176,e:"🪼",n:"帛琉水母湖共游",d:"跟無毒水母一起漂浮。",df:4,r:"史詩",c:"離島"},
+  // 購物 177–180
+  {id:177,e:"☕",n:"收集城市星巴克杯",d:"每到一個城市帶回一只當地限定杯。",df:1,r:"普通",c:"購物"},
+  {id:178,e:"🕰️",n:"百年老店朝聖",d:"在京都或維也納，走進傳承百年的老鋪。",df:2,r:"普通",c:"購物"},
+  {id:179,e:"👘",n:"民族服飾入手",d:"買一套當地傳統服飾，回國還敢穿。",df:2,r:"普通",c:"購物"},
+  {id:180,e:"📚",n:"異國書店與古董書",d:"在莎士比亞書店或舊書攤帶走一本書。",df:2,r:"稀有",c:"購物"},
+];
+
+// ---------- 徽章 ----------
+const BADGES = [
+  {id:"backpacker",e:"🎒",n:"背包客",d:"解鎖 10 項交通／購物成就",type:"cat",match:["交通","購物"],th:10},
+  {id:"foodie",e:"🍜",n:"世界饕客",d:"解鎖 10 項美食成就",type:"cat",match:["美食"],th:10},
+  {id:"nature",e:"🏕️",n:"荒野獵人",d:"解鎖 8 項自然成就",type:"cat",match:["自然"],th:8},
+  {id:"culture",e:"🏛️",n:"文明探索者",d:"解鎖 8 項文化成就",type:"cat",match:["文化"],th:8},
+  {id:"extreme",e:"🪂",n:"極限挑戰者",d:"解鎖 6 項極限挑戰成就",type:"cat",match:["極限挑戰"],th:6},
+  {id:"shutter",e:"📸",n:"快門旅人",d:"解鎖 6 項攝影成就",type:"cat",match:["攝影"],th:6},
+  {id:"island",e:"🏝️",n:"跳島達人",d:"解鎖 5 項離島成就",type:"cat",match:["離島"],th:5},
+  {id:"festival",e:"🎪",n:"祭典狂歡家",d:"解鎖 5 項祭典成就",type:"cat",match:["祭典"],th:5},
+  {id:"sleeper",e:"🛏️",n:"一宿一世界",d:"解鎖 5 項住宿成就",type:"cat",match:["住宿"],th:5},
+  {id:"japanmaster",e:"🗾",n:"日本通",d:"解鎖 10 項日本成就",type:"tag",match:"japan",th:10},
+  {id:"dreamer",e:"🌠",n:"夢想收藏家",d:"完成 6 項夢想清單成就",type:"tag",match:"dream",th:6},
+  {id:"worldwalker",e:"👑",n:"世界旅人",d:"足跡踏遍 15 個國家/地區",type:"country",th:15},
+  {id:"globetrotter",e:"🌍",n:"環球旅行家",d:"足跡踏遍 30 個國家/地區",type:"country",th:30},
+];
+
+// ---------- 等級稱號 ----------
+function levelInfo(n){
+  let title;
+  if(n<10) title="🌱 旅行初心者";
+  else if(n<30) title="🎒 週末旅人";
+  else if(n<60) title="✈️ 冒險探索家";
+  else if(n<100) title="🌏 環球行者";
+  else if(n<150) title="👑 傳奇旅行家";
+  else title="🌌 宇宙級旅神";
+  return {title,level:Math.floor(n/10)};
+}
+
+// ---------- 狀態 ----------
+let state = {visited:[...DEFAULT_VISITED],done:[],custom:[],doneAt:{}};
+try{
+  const saved = JSON.parse(localStorage.getItem(LS_KEY));
+  if(saved && Array.isArray(saved.visited) && Array.isArray(saved.done)){
+    state = {
+      visited:saved.visited,
+      done:saved.done,
+      custom:Array.isArray(saved.custom)?saved.custom:[],
+      doneAt:(saved.doneAt && typeof saved.doneAt==="object")?saved.doneAt:{}
+    };
+  }
+}catch(e){/* 壞資料就用預設 */}
+// 一次性遷移（2026-07-10）：地圖新增摩納哥，舊存檔補蓋章（蜜月足跡）
+if(!state.migMonaco){
+  if(!state.visited.includes("monaco")) state.visited.push("monaco");
+  state.migMonaco = true;
+  save();
+}
+function save(){ localStorage.setItem(LS_KEY,JSON.stringify(state)); }
+function todayStr(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+// 接受 2025-1-5 / 2025/01/05 / 2025.01.05，統一成 YYYY-MM-DD；無效回 null
+function normDate(s){
+  const m = String(s).trim().match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+  if(!m) return null;
+  const y = +m[1], mo = +m[2], d = +m[3];
+  const dt = new Date(y, mo-1, d);
+  if(dt.getFullYear()!==y || dt.getMonth()!==mo-1 || dt.getDate()!==d) return null;
+  return `${y}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+}
+function editDate(store, key, onOk){
+  const input = prompt("修改解鎖日期（格式 2025-01-15）", store[key] || todayStr());
+  if(input === null) return;
+  const norm = normDate(input);
+  if(!norm){ toast("⚠️ 日期格式要像 2025-01-15"); return; }
+  store[key] = norm;
+  save(); onOk();
+  toast("🔓 日期已更新：" + norm);
+}
+
+const filter = {cat:"全部",status:"all",rarity:"全部",q:""};
+let knownBadges = null; // 已解鎖徽章集合（用來偵測新解鎖）
+let knownLevel = null;
+
+const $ = id => document.getElementById(id);
+const doneSet = () => new Set(state.done);
+
+// ---------- Toast ----------
+function toast(msg){
+  const el = document.createElement("div");
+  el.className = "toast"; el.textContent = msg;
+  $("toasts").appendChild(el);
+  setTimeout(()=>{ el.style.opacity="0"; el.style.transition="opacity .4s"; setTimeout(()=>el.remove(),400); },2600);
+}
+
+// ---------- 地圖 ----------
+const cellMap = {};
+function buildMap(){
+  const grid = $("mapGrid");
+  COUNTRIES.forEach(cty=>{
+    const el = document.createElement("div");
+    el.className = "cell";
+    el.dataset.id = cty.id;
+    el.style.gridRow = cty.r;
+    el.style.gridColumn = cty.span ? `${cty.c} / span ${cty.span}` : cty.c;
+    el.innerHTML = `${cty.n}<span class="stamp">✓</span>`;
+    if(WISH_COUNTRIES.includes(cty.id)) el.classList.add("wish");
+    grid.appendChild(el);
+    cellMap[cty.id] = el;
+  });
+  grid.addEventListener("click",ev=>{
+    const cell = ev.target.closest(".cell");
+    if(!cell) return;
+    const id = cell.dataset.id;
+    const i = state.visited.indexOf(id);
+    if(i>=0){ state.visited.splice(i,1); }
+    else{ state.visited.push(id); }
+    save();
+    syncMap(id);
+    refresh();
+  });
+  // 圖例
+  const lg = $("legend");
+  lg.innerHTML = Object.entries(REGION_COLOR)
+    .map(([k,v])=>`<span><b style="background:${v}"></b>${k}</span>`).join("")
+    + `<span><b style="background:#fdfaf0;border:1.5px dashed var(--gold)"></b>夢想清單</span>`;
+}
+function syncMap(justId){
+  const vs = new Set(state.visited);
+  COUNTRIES.forEach(cty=>{
+    const el = cellMap[cty.id];
+    const on = vs.has(cty.id);
+    el.classList.toggle("on",on);
+    el.classList.toggle("just",on && cty.id===justId);
+    el.style.background = on ? REGION_COLOR[cty.reg] : "";
+  });
+}
+
+// ---------- 旅程與夢想清單 ----------
+function buildJourney(){
+  $("tripList").innerHTML = TRIPS.map(t=>
+    `<div class="trip"><span class="y">${t.y}</span><span class="e">${t.e}</span><span class="t">${t.t}</span><span class="d">${t.d}</span></div>`
+  ).join("");
+  $("wishList").innerHTML = WISHLIST.map((w,i)=>
+    `<div class="wish-item"><span class="wish-rank">${i+1}</span><span class="e">${w.e}</span><div><div class="n">${w.n}</div><div class="d">${w.d}</div></div></div>`
+  ).join("");
+}
+
+// ---------- 成就清單 ----------
+function starHTML(df){
+  return `<span class="stars">${"★".repeat(df)}<span class="off">${"★".repeat(5-df)}</span></span>`;
+}
+function metaHTML(a,on){
+  const pills = [`<span class="pill" style="background:${RARITY_COLOR[a.r]}">${a.r}</span>`];
+  if(a.t && a.t.includes("japan")) pills.push(`<span class="pill tag">🗾 日本</span>`);
+  if(a.t && a.t.includes("dream")) pills.push(`<span class="pill tag">🌠 夢想清單</span>`);
+  if(on && state.doneAt[a.id]) pills.push(`<span class="pill unlock">🔓 ${state.doneAt[a.id]}</span>`);
+  return `${starHTML(a.df)}${pills.join("")}`;
+}
+function achCardHTML(a,on){
+  return `<div class="ach${on?" on":""}" data-id="${a.id}">
+    <div class="chk">✓</div>
+    <div class="ach-body">
+      <div class="ach-name">${a.e} ${a.n}</div>
+      <div class="ach-desc">${a.d}</div>
+      <div class="ach-meta">${metaHTML(a,on)}</div>
+    </div>
+  </div>`;
+}
+function filteredAch(){
+  const ds = doneSet();
+  const q = filter.q.trim().toLowerCase();
+  return ACH.filter(a=>{
+    if(filter.cat!=="全部" && a.c!==filter.cat) return false;
+    if(filter.rarity!=="全部" && a.r!==filter.rarity) return false;
+    const on = ds.has(a.id);
+    if(filter.status==="on" && !on) return false;
+    if(filter.status==="off" && on) return false;
+    if(q && !(a.n+a.d).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+function renderAch(){
+  const ds = doneSet();
+  const list = filteredAch();
+  const area = $("achvArea");
+  if(!list.length){ area.innerHTML = `<div class="empty">沒有符合條件的成就。</div>`; }
+  else if(filter.cat==="全部"){
+    // 依分類分組顯示
+    area.innerHTML = CATS.map(cat=>{
+      const items = list.filter(a=>a.c===cat);
+      if(!items.length) return "";
+      const total = ACH.filter(a=>a.c===cat).length;
+      const done = ACH.filter(a=>a.c===cat && ds.has(a.id)).length;
+      return `<div class="cat-head">${CAT_EMOJI[cat]} ${cat} <small>${done} / ${total}</small></div>
+        <div class="achv-list">${items.map(a=>achCardHTML(a,ds.has(a.id))).join("")}</div>`;
+    }).join("");
+  }else{
+    area.innerHTML = `<div class="achv-list">${list.map(a=>achCardHTML(a,ds.has(a.id))).join("")}</div>`;
+  }
+  $("achvCount").textContent = `顯示 ${list.length} 項 ｜ 已解鎖 ${state.done.length} / ${ACH.length}`;
+}
+function buildChips(){
+  const box = $("catChips");
+  const ds = doneSet();
+  const chips = ["全部",...CATS];
+  box.innerHTML = chips.map(c=>{
+    const label = c==="全部" ? "全部" : `${CAT_EMOJI[c]} ${c}`;
+    return `<button class="chip${filter.cat===c?" act":""}" data-cat="${c}">${label}</button>`;
+  }).join("");
+}
+function bindAchEvents(){
+  $("achvArea").addEventListener("click",ev=>{
+    const card = ev.target.closest(".ach");
+    if(!card) return;
+    const id = Number(card.dataset.id);
+    const pill = ev.target.closest(".pill.unlock");
+    if(pill){ // 點日期標籤 → 編輯日期，不切換成就
+      editDate(state.doneAt, id, ()=>{ pill.textContent = "🔓 " + state.doneAt[id]; });
+      return;
+    }
+    const i = state.done.indexOf(id);
+    const unlocking = i<0;
+    if(unlocking){ state.done.push(id); state.doneAt[id] = todayStr(); }
+    else{ state.done.splice(i,1); delete state.doneAt[id]; }
+    save();
+    card.classList.toggle("on",unlocking);
+    card.classList.toggle("just",unlocking);
+    const a = ACH.find(x=>x.id===id);
+    if(a) card.querySelector(".ach-meta").innerHTML = metaHTML(a,unlocking);
+    refresh(false); // 不重繪清單，只更新統計/徽章/雷達
+  });
+  $("catChips").addEventListener("click",ev=>{
+    const chip = ev.target.closest(".chip");
+    if(!chip) return;
+    filter.cat = chip.dataset.cat;
+    buildChips(); renderAch();
+  });
+  $("fStatus").addEventListener("change",e=>{filter.status=e.target.value;renderAch();});
+  $("fRarity").addEventListener("change",e=>{filter.rarity=e.target.value;renderAch();});
+  $("fSearch").addEventListener("input",e=>{filter.q=e.target.value;renderAch();});
+}
+
+// ---------- 自訂成就 ----------
+function renderCustom(){
+  const box = $("customList");
+  if(!state.custom.length){
+    box.innerHTML = `<div class="empty">還沒有自訂成就，開一個吧！</div>`;
+    return;
+  }
+  box.innerHTML = state.custom.map(c=>{
+    const pills = [`<span class="pill tag">${CAT_EMOJI[c.c]||"✨"} ${c.c}</span>`,`<span class="pill tag">自訂</span>`];
+    if(c.done && c.doneAt) pills.push(`<span class="pill unlock">🔓 ${c.doneAt}</span>`);
+    return `<div class="ach${c.done?" on":""}" data-cid="${c.id}">
+      <div class="chk">✓</div>
+      <div class="ach-body">
+        <div class="ach-name">✨ ${c.n}</div>
+        <div class="ach-meta">${pills.join("")}</div>
+      </div>
+      <button class="del" title="刪除">✕</button>
+    </div>`;
+  }).join("");
+}
+function bindCustom(){
+  $("cCat").innerHTML = CATS.map(c=>`<option>${c}</option>`).join("");
+  $("cAdd").addEventListener("click",()=>{
+    const name = $("cName").value.trim();
+    if(!name){ toast("先輸入成就名稱"); return; }
+    if(state.custom.length>=10){ toast("自訂成就最多 10 項"); return; }
+    state.custom.push({id:"c"+Date.now(),n:name,c:$("cCat").value,done:false});
+    $("cName").value = "";
+    save(); renderCustom(); refresh(false);
+  });
+  $("customList").addEventListener("click",ev=>{
+    const card = ev.target.closest(".ach");
+    if(!card) return;
+    const c = state.custom.find(x=>x.id===card.dataset.cid);
+    if(!c) return;
+    if(ev.target.closest(".pill.unlock")){
+      editDate(c, "doneAt", renderCustom);
+      return;
+    }
+    if(ev.target.closest(".del")){
+      state.custom = state.custom.filter(x=>x.id!==c.id);
+      save(); renderCustom(); refresh(false);
+      return;
+    }
+    c.done = !c.done;
+    if(c.done) c.doneAt = todayStr(); else delete c.doneAt;
+    save(); renderCustom(); refresh(false);
+  });
+}
+
+// ---------- 徽章 ----------
+function badgeProgress(b){
+  if(b.type==="country") return Math.min(state.visited.length,b.th);
+  const ds = doneSet();
+  if(b.type==="cat") return Math.min(ACH.filter(a=>b.match.includes(a.c)&&ds.has(a.id)).length,b.th);
+  return Math.min(ACH.filter(a=>a.t&&a.t.includes(b.match)&&ds.has(a.id)).length,b.th);
+}
+function renderBadges(){
+  const unlocked = new Set();
+  $("badgeWall").innerHTML = BADGES.map(b=>{
+    const p = badgeProgress(b);
+    const on = p>=b.th;
+    if(on) unlocked.add(b.id);
+    return `<div class="badge${on?" on":""}">
+      <div class="be">${b.e}</div><div class="bn">${b.n}</div>
+      <div class="bd">${b.d}</div><div class="bp">${p} / ${b.th}</div>
+    </div>`;
+  }).join("");
+  // 新徽章通知（頁面載入那次不通知）
+  if(knownBadges){
+    unlocked.forEach(id=>{
+      if(!knownBadges.has(id)){
+        const b = BADGES.find(x=>x.id===id);
+        toast(`🎖️ 徽章解鎖：${b.e} ${b.n}`);
+      }
+    });
+  }
+  knownBadges = unlocked;
+  return unlocked.size;
+}
+
+// ---------- 雷達 ----------
+function renderRadar(){
+  const cv = $("radar");
+  const dpr = window.devicePixelRatio||1;
+  const W = 340, H = 320;
+  cv.width = W*dpr; cv.height = H*dpr;
+  cv.style.width = W+"px"; cv.style.height = H+"px";
+  const ctx = cv.getContext("2d");
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H/2+4, R = 105, n = CATS.length;
+  const ds = doneSet();
+  const pct = CATS.map(cat=>{
+    const all = ACH.filter(a=>a.c===cat);
+    return all.length ? all.filter(a=>ds.has(a.id)).length/all.length : 0;
+  });
+  const pt = (i,rr)=>{
+    const ang = -Math.PI/2 + i*2*Math.PI/n;
+    return [cx+rr*Math.cos(ang), cy+rr*Math.sin(ang)];
+  };
+  // 網格
+  ctx.strokeStyle = "#ddd6c8"; ctx.lineWidth = 1;
+  for(let ring=1;ring<=4;ring++){
+    ctx.beginPath();
+    for(let i=0;i<=n;i++){ const [x,y]=pt(i%n,R*ring/4); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+    ctx.stroke();
+  }
+  for(let i=0;i<n;i++){
+    const [x,y]=pt(i,R);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.stroke();
+  }
+  // 數據面
+  ctx.beginPath();
+  for(let i=0;i<=n;i++){
+    const [x,y]=pt(i%n,Math.max(R*pct[i%n],3));
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = "rgba(201,162,39,.28)";
+  ctx.strokeStyle = "#c9a227"; ctx.lineWidth = 2;
+  ctx.fill(); ctx.stroke();
+  // 標籤
+  ctx.fillStyle = "#4a5e72"; ctx.font = "11px 'Noto Sans TC',sans-serif";
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  CATS.forEach((cat,i)=>{
+    const [x,y]=pt(i,R+26);
+    ctx.fillText(`${CAT_EMOJI[cat]}${cat==="極限挑戰"?"極限":cat}`,x,y);
+  });
+}
+
+// ---------- 世界探索度 ----------
+function renderExplore(){
+  const vs = new Set(state.visited);
+  const pct = state.visited.length/COUNTRIES.length*100;
+  $("expPct").textContent = (Math.round(pct*10)/10)+"%";
+  $("expBars").innerHTML = Object.keys(REGION_COLOR).map(reg=>{
+    const all = COUNTRIES.filter(c=>c.reg===reg);
+    const got = all.filter(c=>vs.has(c.id)).length;
+    const w = all.length ? got/all.length*100 : 0;
+    return `<div class="exp-item">
+      <div class="er"><span>${reg}</span><span>${got} / ${all.length}</span></div>
+      <div class="track"><i style="width:${w}%;background:${REGION_COLOR[reg]}"></i></div>
+    </div>`;
+  }).join("");
+}
+
+// ---------- 統計與等級 ----------
+function refresh(redrawList=true){
+  const customDone = state.custom.filter(c=>c.done).length;
+  const total = state.done.length + customDone;
+  const {title,level} = levelInfo(total);
+  $("pTitle").textContent = title;
+  $("pLevel").textContent = level;
+  $("pBarTxt").textContent = `${total%10} / 10`;
+  $("pBar").style.width = (total%10*10)+"%";
+  if(knownLevel!==null && level>knownLevel) toast(`🎉 升級！LEVEL ${level}｜${title}`);
+  knownLevel = level;
+  $("stAch").textContent = `${total}`;
+  $("stCty").textContent = `${state.visited.length}`;
+  const regions = new Set(COUNTRIES.filter(c=>state.visited.includes(c.id)).map(c=>c.reg));
+  $("stCon").textContent = `${regions.size}`;
+  $("stBdg").textContent = renderBadges();
+  renderExplore();
+  renderRadar();
+  buildChips();
+  if(redrawList) renderAch();
+  else $("achvCount").textContent = `顯示 ${filteredAch().length} 項 ｜ 已解鎖 ${state.done.length} / ${ACH.length}`;
+}
+
+// ---------- 分享卡 ----------
+function roundRect(x,px,py,w,h,r){
+  x.beginPath();x.moveTo(px+r,py);
+  x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);
+  x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath();
+}
+function makeShareCard(){
+  const W=1080,H=1350;
+  const cv = document.createElement("canvas");
+  cv.width=W; cv.height=H;
+  const x = cv.getContext("2d");
+  // 背景
+  const g = x.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,"#0d3347"); g.addColorStop(1,"#164a66");
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  x.globalAlpha=.06; x.fillStyle="#fff";
+  x.beginPath(); x.arc(W-110,150,260,0,7); x.fill();
+  x.beginPath(); x.arc(100,H-170,210,0,7); x.fill();
+  x.globalAlpha=1;
+  // Yuzu 標誌
+  const lg = x.createRadialGradient(W/2-14,106,4,W/2,120,46);
+  lg.addColorStop(0,"#f0d050"); lg.addColorStop(1,"#a06010");
+  x.fillStyle=lg; x.beginPath(); x.arc(W/2,120,46,0,7); x.fill();
+  x.textAlign="center";
+  x.fillStyle="rgba(255,255,255,.85)"; x.font="700 34px 'Noto Sans TC',sans-serif";
+  x.fillText("Y U Z U   T R A V E L",W/2,214);
+  x.fillStyle="#fff"; x.font="800 62px 'Noto Sans TC',sans-serif";
+  x.fillText("🏆 旅遊成就清單",W/2,304);
+  // 稱號與等級
+  const customDone = state.custom.filter(c=>c.done).length;
+  const total = state.done.length + customDone;
+  const li = levelInfo(total);
+  x.fillStyle="#f0d050"; x.font="700 58px 'Noto Sans TC',sans-serif";
+  x.fillText(li.title,W/2,436);
+  x.fillStyle="rgba(255,255,255,.7)"; x.font="500 34px 'Noto Sans TC',sans-serif";
+  x.fillText("LEVEL "+li.level,W/2,492);
+  // 四格統計
+  const regions = new Set(COUNTRIES.filter(c=>state.visited.includes(c.id)).map(c=>c.reg));
+  const badgeCount = BADGES.filter(b=>badgeProgress(b)>=b.th).length;
+  [[total,"成就"],[state.visited.length,"國家/地區"],[regions.size,"大洲"],[badgeCount,"徽章"]].forEach((s,i)=>{
+    const cx = W/2 + (i-1.5)*236;
+    x.fillStyle="#fff"; x.font="800 74px 'Noto Sans TC',sans-serif";
+    x.fillText(s[0],cx,652);
+    x.fillStyle="rgba(255,255,255,.62)"; x.font="400 30px 'Noto Sans TC',sans-serif";
+    x.fillText(s[1],cx,702);
+  });
+  // 世界探索度
+  const pct = state.visited.length/COUNTRIES.length;
+  x.fillStyle="#f0d050"; x.font="800 96px 'Noto Sans TC',sans-serif";
+  x.fillText((Math.round(pct*1000)/10)+"%",W/2,856);
+  x.fillStyle="rgba(255,255,255,.62)"; x.font="400 32px 'Noto Sans TC',sans-serif";
+  x.fillText("世界探索度",W/2,906);
+  const bw=640, bx=(W-bw)/2, by=944;
+  x.fillStyle="rgba(255,255,255,.18)"; roundRect(x,bx,by,bw,18,9); x.fill();
+  x.fillStyle="#f0d050"; roundRect(x,bx,by,Math.max(bw*pct,18),18,9); x.fill();
+  // 已解鎖徽章
+  const got = BADGES.filter(b=>badgeProgress(b)>=b.th).map(b=>b.e);
+  x.fillStyle="#fff"; x.font="54px 'Noto Sans TC',sans-serif";
+  x.fillText(got.length ? got.join("  ") : "⋯ 徽章待解鎖 ⋯",W/2,1090);
+  // 頁尾
+  x.fillStyle="rgba(255,255,255,.5)"; x.font="400 28px 'Noto Sans TC',sans-serif";
+  x.fillText(todayStr()+" ・ 和老婆一起把世界蓋上章",W/2,1272);
+  // 下載
+  const a = document.createElement("a");
+  a.download = "yuzu-travel-card.png";
+  a.href = cv.toDataURL("image/png");
+  a.click();
+  toast("📸 分享卡已下載");
+}
+
+// ---------- 匯出 / 匯入 / 重設 ----------
+function bindData(){
+  $("btnCard").addEventListener("click",makeShareCard);
+  $("btnExport").addEventListener("click",()=>{
+    const blob = new Blob([JSON.stringify({app:"yuzu-travel-achievements",version:1,exportedAt:new Date().toISOString(),...state},null,2)],{type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "yuzu-travel-backup.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("📤 已匯出備份");
+  });
+  $("btnImport").addEventListener("click",()=>$("fileImport").click());
+  $("fileImport").addEventListener("change",ev=>{
+    const file = ev.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      try{
+        const data = JSON.parse(reader.result);
+        if(!Array.isArray(data.visited)||!Array.isArray(data.done)) throw 0;
+        state = {
+          visited:data.visited,
+          done:data.done,
+          custom:Array.isArray(data.custom)?data.custom:[],
+          doneAt:(data.doneAt && typeof data.doneAt==="object")?data.doneAt:{}
+        };
+        save(); syncMap(); renderCustom(); refresh();
+        toast("📥 匯入成功，進度已恢復");
+      }catch(e){ alert("檔案格式不正確，請匯入本頁匯出的 JSON 備份檔。"); }
+    };
+    reader.readAsText(file);
+    ev.target.value = "";
+  });
+  $("btnReset").addEventListener("click",()=>{
+    if(!confirm("確定要重設全部進度嗎？成就、足跡與自訂成就都會清空（預設足跡會保留）。")) return;
+    state = {visited:[...DEFAULT_VISITED],done:[],custom:[],doneAt:{}};
+    save(); syncMap(); renderCustom(); refresh();
+    toast("已重設");
+  });
+}
+
+// ---------- 回頂部 ----------
+const toTopBtn = $("toTop");
+addEventListener("scroll",()=>toTopBtn.classList.toggle("show",scrollY>600),{passive:true});
+toTopBtn.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));
+
+// ---------- init ----------
+buildMap();
+syncMap();
+buildJourney();
+bindAchEvents();
+bindCustom();
+renderCustom();
+bindData();
+refresh();
+</script>
+</body>
+</html>
