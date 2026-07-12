@@ -54,13 +54,16 @@ h2.sec{font-size:1.3rem;color:var(--navy);display:flex;align-items:center;gap:8p
 #world-map{width:100%;height:auto;display:block}
 .swipe-hint{display:none;font-size:.78rem;color:var(--muted);margin:-8px 0 10px;padding-left:17px}
 @media (max-width:820px){#world-map{min-width:720px}.swipe-hint{display:block}}
-#world-map path{fill:var(--fog);stroke:#fff;stroke-width:.6;transition:fill .3s, filter .2s}
+#world-map path{fill:var(--fog);stroke:#fff;stroke-width:.6;transition:filter .2s}
 /* 島國（jp/nz/fr/es/my/us…）在底圖是 <g> 群組，選擇器要同時涵蓋 g 與其子 path */
 #world-map .v{cursor:pointer}
 #world-map .v:hover{filter:brightness(1.18)}
 #world-map .v-eu,#world-map .v-eu path{fill:var(--c-eu)}
 #world-map .v-as,#world-map .v-as path{fill:var(--c-as)}
 #world-map .v-oc,#world-map .v-oc path{fill:var(--c-oc)}
+#world-map .v-na,#world-map .v-na path{fill:#b3573b}
+#world-map .v-sa,#world-map .v-sa path{fill:#a06a2c}
+#world-map .v-af,#world-map .v-af path{fill:#8a5a33}
 #world-map .home,#world-map .home path{fill:var(--gold)}
 .mk{cursor:pointer}
 .mk circle{fill:var(--gold);stroke:#fff;stroke-width:1.2;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
@@ -165,7 +168,7 @@ footer .cc{font-size:.72rem;opacity:.6;margin-top:6px}
   <!-- 世界地圖 -->
   <section id="sec-map">
     <h2 class="sec">🌍 世界地圖</h2>
-    <p class="sec-hint">亮起來的是走過的國家，點擊跳到該目的地；⭐ 是夢想清單；金色小點是家（台灣），藍色小點是摩納哥。</p>
+    <p class="sec-hint">亮起來的是走過的國家，點擊跳到該目的地；⭐ 是夢想清單；金色小點是家（台灣），藍色小點是摩納哥。這張地圖跟<a href="./achievements/">成就清單</a>連動——在成就頁蓋新章，這裡就會自動亮。</p>
     <div class="swipe-hint">👉 地圖可以左右滑動</div>
     <div class="map-card">
       <div class="map-scroll"><svg version="1.1"
@@ -559,14 +562,7 @@ footer .cc{font-size:.72rem;opacity:.6;margin-top:6px}
 </g>
 </svg></div>
 
-      <div class="legend">
-        <span><b style="background:var(--c-eu)"></b>歐洲</span>
-        <span><b style="background:var(--c-as)"></b>亞洲</span>
-        <span><b style="background:var(--c-oc)"></b>大洋洲</span>
-        <span><b style="background:var(--gold)"></b>台灣（家）</span>
-        <span><b style="background:var(--fog)"></b>還在迷霧裡</span>
-        <span>⭐ 夢想清單</span>
-      </div>
+      <div class="legend" id="mapLegend"></div>
     </div>
   </section>
 
@@ -737,24 +733,48 @@ const WISHLIST = [
  {n:"北歐",e:"❄️",d:"挪威峽灣、極光、聖誕老人村"}
 ];
 
-// 地圖：ISO → 樣式與跳轉
-const VISITED = {tw:{cls:"home",tip:"台灣 🏠 家"},jp:{cls:"v-as",tip:"日本",to:"g-日本"},
- my:{cls:"v-as",tip:"馬來西亞",to:"d-malaysia"},de:{cls:"v-eu",tip:"德國",to:"d-germany"},
- at:{cls:"v-eu",tip:"奧地利",to:"d-austria"},fr:{cls:"v-eu",tip:"法國（南法蜜月）",to:"d-southfrance"},
- es:{cls:"v-eu",tip:"西班牙（巴塞隆納）",to:"d-barcelona"},tr:{cls:"v-eu",tip:"土耳其（待補）",to:"d-turkey"},
- nz:{cls:"v-oc",tip:"紐西蘭南島",to:"d-newzealand"}};
+// ---------- 與成就頁連動（同網域共用 localStorage）----------
+const LS_KEY = "yuzuTravelAchievementsV1";
+const DEFAULT_VISITED = ["taiwan","japan","malaysia","germany","austria","france","spain","turkey","newzealand","monaco"];
+// 成就頁格子 id → [SVG iso（null=底圖無形狀）, 中文名, 大洲]
+const COUNTRY_MAP = {
+ canada:["ca","加拿大","na"],usa:["us","美國","na"],mexico:["mx","墨西哥","na"],cuba:["cu","古巴","na"],
+ colombia:["co","哥倫比亞","sa"],peru:["pe","秘魯","sa"],brazil:["br","巴西","sa"],bolivia:["bo","玻利維亞","sa"],chile:["cl","智利","sa"],argentina:["ar","阿根廷","sa"],
+ iceland:["is","冰島","eu"],norway:["no","挪威","eu"],sweden:["se","瑞典","eu"],finland:["fi","芬蘭","eu"],denmark:["dk","丹麥","eu"],
+ uk:["gb","英國","eu"],netherlands:["nl","荷蘭","eu"],germany:["de","德國","eu"],poland:["pl","波蘭","eu"],france:["fr","法國","eu"],
+ switzerland:["ch","瑞士","eu"],austria:["at","奧地利","eu"],czech:["cz","捷克","eu"],portugal:["pt","葡萄牙","eu"],spain:["es","西班牙","eu"],
+ italy:["it","義大利","eu"],greece:["gr","希臘","eu"],turkey:["tr","土耳其","eu"],russia:["ru","俄羅斯","eu"],monaco:[null,"摩納哥","eu"],
+ morocco:["ma","摩洛哥","af"],egypt:["eg","埃及","af"],kenya:["ke","肯亞","af"],tanzania:["tz","坦尚尼亞","af"],southafrica:["za","南非","af"],madagascar:["mg","馬達加斯加","af"],
+ kazakhstan:["kz","哈薩克","as"],mongolia:["mn","蒙古","as"],china:["cn","中國","as"],korea:["kr","韓國","as"],japan:["jp","日本","as"],
+ india:["in","印度","as"],taiwan:["tw","台灣","as"],uae:["ae","阿聯","as"],thailand:["th","泰國","as"],vietnam:["vn","越南","as"],
+ philippines:["ph","菲律賓","as"],maldives:["mv","馬爾地夫","as"],malaysia:["my","馬來西亞","as"],singapore:["sg","新加坡","as"],indonesia:["id","印尼","as"],
+ hongkong:[null,"香港","as"],fiji:[null,"斐濟","oc"],australia:["au","澳洲","oc"],newzealand:["nz","紐西蘭","oc"]
+};
+const REGION_NAME = {eu:"歐洲",as:"亞洲",oc:"大洋洲",na:"北美洲",sa:"南美洲",af:"非洲"};
+const REGION_HEX = {eu:"#56628f",as:"#3f7d5f",oc:"#3c7d8a",na:"#b3573b",sa:"#a06a2c",af:"#8a5a33"};
+const REGION_ORDER = ["eu","as","oc","na","sa","af"];
+// 有目的地卡片的國家 → 點擊跳轉
+const DEST_LINK = {japan:"g-日本",malaysia:"d-malaysia",germany:"d-germany",austria:"d-austria",france:"d-southfrance",spain:"d-barcelona",turkey:"d-turkey",newzealand:"d-newzealand",monaco:"d-southfrance"};
+function loadVisited(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LS_KEY));
+    if(s && Array.isArray(s.visited)) return s.visited;
+  }catch(e){/* 壞資料用預設 */}
+  return DEFAULT_VISITED;
+}
 
 const $ = id => document.getElementById(id);
 const gmap = (name) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
 
-/* ---------- 統計 ---------- */
-(function(){
+/* ---------- 統計（跟著蓋章紀錄變動）---------- */
+function renderStats(visited){
   const pinCount = DESTS.reduce((s,d)=>s+d.pins.length,0);
+  const regs = new Set(visited.map(c=>COUNTRY_MAP[c]&&COUNTRY_MAP[c][2]).filter(Boolean));
   // 9 趟 = 德奧、東京、大阪、京都大阪、蜜月、銀山溫泉（含東京段）、馬來西亞、紐西蘭、土耳其
   $("stats").innerHTML = [
-    ["10","踏足國家/地區"],["3","踏足大洲"],["9","趟旅程"],[pinCount,"家私房店家"]
+    [visited.length,"踏足國家/地區"],[regs.size,"踏足大洲"],["9","趟旅程"],[pinCount,"家私房店家"]
   ].map(s=>`<div class="stat"><div class="v">${s[0]}</div><div class="k">${s[1]}</div></div>`).join("");
-})();
+}
 
 /* ---------- 目的地卡片 ---------- */
 (function(){
@@ -785,7 +805,7 @@ const gmap = (name) => `https://www.google.com/maps/search/?api=1&query=${encode
 $("wishGrid").innerHTML = WISHLIST.map((w,i)=>
   `<div class="wish"><div class="r">${i+1}</div><div class="e">${w.e}</div><div class="n">${w.n}</div><div class="d">${w.d}</div></div>`).join("");
 
-/* ---------- 地圖互動 ---------- */
+/* ---------- 地圖互動（讀成就頁蓋章紀錄自動亮燈）---------- */
 (function(){
   const svg = $("world-map");
   if(!svg) return;
@@ -793,15 +813,6 @@ $("wishGrid").innerHTML = WISHLIST.map((w,i)=>
   const NS = "http://www.w3.org/2000/svg";
   const show = (t,ev)=>{tip.textContent=t;tip.style.opacity=1;tip.style.left=(ev.clientX+14)+"px";tip.style.top=(ev.clientY-10)+"px";};
   const hide = ()=>tip.style.opacity=0;
-
-  Object.entries(VISITED).forEach(([iso,cfg])=>{
-    const p = svg.getElementById(iso);
-    if(!p) return;
-    p.classList.add("v",cfg.cls);
-    p.addEventListener("mousemove",ev=>show(cfg.tip,ev));
-    p.addEventListener("mouseleave",hide);
-    if(cfg.to) p.addEventListener("click",()=>{hide();document.getElementById(cfg.to).scrollIntoView({behavior:"smooth"});});
-  });
 
   // g 群組取「面積最大的子 path」當本土外框，避免海外領地或離島把外框撐到別的大洲
   const bbox = iso => {
@@ -827,14 +838,58 @@ $("wishGrid").innerHTML = WISHLIST.map((w,i)=>
     g.addEventListener("mouseleave",hide);
     if(to) g.addEventListener("click",()=>{hide();document.getElementById(to).scrollIntoView({behavior:"smooth"});});
     svg.appendChild(g);
+    return g;
   }
-  // 摩納哥（世界地圖上太小，用金點代表；點了跳南法卡片）
-  const fr = bbox("fr");
-  if(fr) marker(fr.x+fr.width*0.94, fr.y+fr.height*0.84, "", "摩納哥（蜜月）", "d-southfrance", "mc");
-  // 台灣＝家，金色小點
-  const tw = bbox("tw");
-  if(tw) marker(tw.x+tw.width/2, tw.y+tw.height/2, "", "台灣 🏠 家", null, "home");
-  // 夢想清單 ⭐
+
+  const ALL_CLS = ["v","home","v-eu","v-as","v-oc","v-na","v-sa","v-af"];
+  const litPaths = [], dynMarkers = [];
+  function applyVisited(){
+    const visited = loadVisited();
+    litPaths.forEach(p=>p.classList.remove(...ALL_CLS));
+    litPaths.length = 0;
+    dynMarkers.forEach(mk=>mk.remove());
+    dynMarkers.length = 0;
+    visited.forEach(cid=>{
+      const cfg = COUNTRY_MAP[cid];
+      if(!cfg) return;
+      const iso = cfg[0], name = cfg[1], reg = cfg[2];
+      if(cid==="monaco"){
+        const fr = bbox("fr");
+        if(fr) dynMarkers.push(marker(fr.x+fr.width*0.94, fr.y+fr.height*0.84, "", "摩納哥（蜜月）", DEST_LINK.monaco, "mc"));
+        return;
+      }
+      if(!iso) return; // 香港、斐濟：底圖無獨立形狀
+      const p = svg.getElementById(iso);
+      if(!p) return;
+      p.classList.add("v", cid==="taiwan" ? "home" : "v-"+reg);
+      if(!p.__wired){
+        p.__wired = true;
+        p.addEventListener("mousemove",ev=>{ if(p.classList.contains("v")) show(p.__tip,ev); });
+        p.addEventListener("mouseleave",hide);
+        p.addEventListener("click",()=>{ if(p.__to && p.classList.contains("v")){ hide(); document.getElementById(p.__to).scrollIntoView({behavior:"smooth"}); } });
+      }
+      p.__tip = cid==="taiwan" ? "台灣 🏠 家" : name;
+      p.__to = DEST_LINK[cid] || null;
+      litPaths.push(p);
+      if(cid==="taiwan"){
+        const tb = bbox("tw");
+        if(tb) dynMarkers.push(marker(tb.x+tb.width/2, tb.y+tb.height/2, "", "台灣 🏠 家", null, "home"));
+      }
+    });
+    // 圖例：依實際亮起的大洲動態產生
+    const lit = REGION_ORDER.filter(r=>visited.some(c=>COUNTRY_MAP[c] && COUNTRY_MAP[c][2]===r && c!=="taiwan"));
+    $("mapLegend").innerHTML =
+      lit.map(r=>`<span><b style="background:${REGION_HEX[r]}"></b>${REGION_NAME[r]}</span>`).join("")
+      + `<span><b style="background:var(--gold)"></b>台灣（家）</span>`
+      + `<span><b style="background:var(--fog)"></b>還在迷霧裡</span>`
+      + `<span>⭐ 夢想清單</span>`;
+    renderStats(visited);
+  }
+  applyVisited();
+  // 成就頁在另一個分頁蓋章時即時同步
+  addEventListener("storage", ev=>{ if(ev.key===LS_KEY) applyVisited(); });
+
+  // 夢想清單 ⭐（固定顯示）
   const stars = [];
   const kz = bbox("kz"); if(kz) stars.push([kz.x+kz.width*0.5, kz.y+kz.height*0.5, "哈薩克"]);
   const is_ = bbox("is"); if(is_) stars.push([is_.x+is_.width*0.5, is_.y+is_.height*0.5, "冰島"]);
