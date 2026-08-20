@@ -453,7 +453,7 @@
   <div class="sec-head"><h2>繳款時間軸</h2></div>
   <div class="sec-label">PAYMENT TIMELINE</div>
   <div class="timeline" id="timelineContainer"></div>
-  <div class="note">💡 銀行貸款部分（1,540 萬）將於交屋時一次撥款，不列入自備款完成度計算。</div>
+  <div class="note">💡 目前列出的是已知的 5 筆繳款紀錄；交屋尾款/銀行貸款金額待補（未列入自備款完成度計算）。</div>
 
   <!-- 建案 Milestone -->
   <div class="sec-head" style="margin-top:52px;"><h2>建案進度</h2></div>
@@ -506,16 +506,11 @@ const UPCOMING_DAYS = 60;
 // 繳款項目
 // 維護方式：實際繳完一筆，就把該筆 paid 從 false 改成 true，其餘狀態會自動計算。
 const payments = [
-  { id: 1,  name: '簽約款',             date: '2024-06-15', amount: 1100000,  type: 'self', paid: true  },
-  { id: 2,  name: '開工款',             date: '2024-10-01', amount: 660000,   type: 'self', paid: true  },
-  { id: 3,  name: '地下室完工款',       date: '2025-01-15', amount: 660000,   type: 'self', paid: true  },
-  { id: 4,  name: '一至五樓完工款',     date: '2025-05-01', amount: 660000,   type: 'self', paid: true  },
-  { id: 5,  name: '六至十樓完工款',     date: '2025-09-01', amount: 660000,   type: 'self', paid: true  },
-  { id: 6,  name: '十一至十三樓完工款', date: '2026-01-15', amount: 660000,   type: 'self', paid: true  },
-  { id: 7,  name: '屋頂結構完工款',     date: '2026-04-01', amount: 660000,   type: 'self', paid: true  },
-  { id: 8,  name: '外牆裝修完工款',     date: '2026-07-01', amount: 660000,   type: 'self', paid: false },
-  { id: 9,  name: '竣工驗收款',         date: '2026-10-01', amount: 880000,   type: 'self', paid: false },
-  { id: 10, name: '交屋尾款（銀行貸款撥付）', date: '2026-12-01', amount: 15400000, type: 'loan', paid: false },
+  { id: 1, name: '訂金',       date: '2024-02-12', amount: 100000,  type: 'self', paid: true  },
+  { id: 2, name: '簽約款',     date: '2024-02-25', amount: 2180000, type: 'self', paid: true  },
+  { id: 3, name: '工程期款 ①', date: '2025-06-18', amount: 1140000, type: 'self', paid: true  },
+  { id: 4, name: '工程期款 ②', date: '2026-09-01', amount: 460000,  type: 'self', paid: false },
+  { id: 5, name: '工程期款 ③', date: '2026-09-01', amount: 210000,  type: 'self', paid: false },
 ];
 
 // 建案 Milestone
@@ -622,7 +617,7 @@ const gadgets = [
 ];
 
 // 總花費
-const houseCost = 22000000;   // 房屋總價
+const houseCost = 22800000;   // 房屋總價
 const renovCost = 1200000;    // 裝潢費（預計）
 const renovActual = 0;        // 裝潢已花費
 
@@ -839,7 +834,7 @@ function renderFurnitureProgress(budget, spent, cnt) {
 function renderCosts(furnitureBudget, furnitureSpent) {
   const grid = document.getElementById('costGrid');
   const cards = [
-    { label: '房屋總價',       val: houseCost,     sub: '（含貸款 1,540 萬）' },
+    { label: '房屋總價',       val: houseCost,     sub: '久泰宸品 B2-13F' },
     { label: '裝潢費（預計）', val: renovCost,     sub: '實際費用待確認' },
     { label: '家具電器（預算）', val: furnitureBudget, sub: `已花費 ${fmtMoneyFull(furnitureSpent)}` },
   ];
