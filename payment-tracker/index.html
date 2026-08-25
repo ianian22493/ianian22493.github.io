@@ -529,9 +529,9 @@ const rooms = [
     name: '客廳', icon: '🛋️', budget: 350000,
     items: [
       { name: '三人座布沙發', budget: 80000,  actual: null, status: 'wish' },
-      { name: '客廳音響', budget: 19000, actual: null, status: 'wish',
-        model: 'Sonos Beam Gen 2（等 Gen 3）', priced: '2026/06/17',
-        link: 'https://biggo.com.tw/s/SONOS+Beam+Gen+2/' },
+      { name: '客廳音響', budget: 34600, actual: null, status: 'wish',
+        model: 'Sonos Arc（配 75 吋・免 Sub）｜Arc Ultra 為頂規升級 ~4.19萬', priced: '2026/08/25',
+        link: 'https://biggo.com.tw/s/SONOS+Arc/' },
       { name: '實木茶几',    budget: 25000,  actual: null, status: 'wish' },
       { name: '電視牆 + 電視', budget: 60000, actual: null, status: 'wish' },
       { name: '地毯',        budget: 15000,  actual: null, status: 'wish' },
@@ -594,14 +594,7 @@ const rooms = [
 // 新版守望台：在等新款、先觀望不急著買的品項
 // status: 'watching'（觀望中）/ 'announced'（已發表）/ 'ready'（可入手）
 const watchlist = [
-  {
-    name: '客廳音響', icon: '🔊',
-    current: 'Sonos Beam Gen 2（約 1.9 萬）',
-    waiting: 'Sonos Beam Gen 3',
-    eta: '傳聞 2026，未官宣',
-    status: 'watching',
-    note: '等 Gen 3 發表。若推出，現行 Gen 2 通常會降價，到時撿 Gen 2 或直上新款都划算；交屋 2026/12 時間點剛好。'
-  },
+  // 客廳音響已改定 Sonos Arc（不再等 Beam Gen 3）。目前無觀望品項。
 ];
 
 // 3C / 個人裝備（與房子預算分開）
@@ -856,6 +849,10 @@ function renderCosts(furnitureBudget, furnitureSpent) {
 function renderWatchlist() {
   const grid = document.getElementById('watchGrid');
   if (!grid) return;
+  if (!watchlist.length) {
+    grid.innerHTML = `<div class="w-note" style="grid-column:1/-1;">目前無觀望品項（客廳音響已定 Sonos Arc）。</div>`;
+    return;
+  }
   const stMap = { watching: '觀望中', announced: '已發表', ready: '可入手' };
   watchlist.forEach(w => {
     grid.innerHTML += `
