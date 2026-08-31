@@ -460,8 +460,14 @@
   <div class="sec-label">CONSTRUCTION MILESTONE</div>
   <div class="milestone-row" id="milestoneRow"></div>
 
+  <!-- 選購決策清單（比較中）-->
+  <div class="sec-head" style="margin-top:52px;"><h2>選購決策清單</h2></div>
+  <div class="sec-label">SHORTLIST · 比較中・出門手機看</div>
+  <div class="watch-grid" id="decisionGrid"></div>
+  <div class="note">📱 出門用的快速清單：目前正在比較、還沒拍板的品項。「⭐首選」是目前建議方向，實際以現場試用／年終促銷為準。</div>
+
   <!-- 家具電器清單 -->
-  <div class="sec-head"><h2>家具電器清單</h2></div>
+  <div class="sec-head" style="margin-top:52px;"><h2>家具電器清單</h2></div>
   <div class="sec-label">FURNITURE &amp; APPLIANCES</div>
   <div class="furn-prog" id="furnitureProgress"></div>
   <div class="room-grid" id="roomGrid"></div>
@@ -559,7 +565,8 @@ const rooms = [
   {
     name: '廚房 / 家電', icon: '🍳', budget: 250000,
     items: [
-      { name: '冰箱（法式四門）', budget: 50000, actual: null, status: 'wish' },
+      { name: '冰箱（日系六門・要製冰）', budget: 60000, actual: null, status: 'compare',
+        model: '寬≤70（開口72）｜門往左開（櫃在右）｜首選 Panasonic NR-F552YT 或 日立 RHSF53NJ（寬65・凸出少）｜大容量備案 日立 RHW620RJ 614L / 三菱 MR-WZ61K 607L｜詳見上方選購決策清單' },
       { name: '洗碗機',         budget: 25000, actual: null, status: 'wish' },
       { name: '微波爐 + 烤箱', budget: 18000, actual: null, status: 'wish' },
       { name: '洗衣機 + 烘衣機', budget: 60000, actual: null, status: 'wish' },
@@ -585,8 +592,8 @@ const rooms = [
         model: '全室冷暖・一級變頻｜路線A：國際 Panasonic（與全熱連動/省電/nanoeX）｜路線B：三菱重工（送風遠/靜音/耐用）｜待設計師推薦・確認噸數' },
       { name: '吊隱式全室除濕', budget: 100000, actual: null, status: 'wish',
         model: '天花吊隱・自動排水（另帶移動式除濕機備用）｜待設計師報價' },
-      { name: '全熱交換器', budget: 80000, actual: null, status: 'wish',
-        model: '樓高 3.5m 可做吊隱式｜路線A：國際 Panasonic（與冷氣連動）/ 路線B：三菱電機 Lossnay（最強ERV）｜待設計師' },
+      { name: '全熱交換器（❌ 決定不做）', budget: 0, actual: null, status: 'wish',
+        model: '❌ 不做｜原因：平日空屋、週末才住，全熱最大好處（有人在時的新鮮空氣/CO2/開冷氣省電）用不到；空屋防潮已由「全室除濕」解決；6年內不會長住。省下 ~8萬。' },
     ]
   },
 ];
@@ -606,6 +613,47 @@ const gadgets = [
     budget: 32000, plan: '今年底～明年初', status: 'wish',
     link: 'https://feebee.com.tw/bid/dji%20mini%205%20pro/',
     note: '<250g 免考照；2025/09 上市、當前旗艦（下一代 Mini 6 Pro 估 2027 下半）。認準暢飛套裝 + RC2，留意年底促銷。'
+  },
+];
+
+// 選購決策清單（比較中・出門手機快速看）
+// status: 'compare'（比較中）/ 'leaning'（傾向某案）/ 'decided'（已選定）
+const decisions = [
+  {
+    name: '客廳電視 75/77吋', icon: '📺', status: 'leaning',
+    pick: 'LG C5 77吋 OLED（OLED77C5PTA・公司貨）✅ 已鎖定',
+    price: '約 NT$6.7–7.6 萬',
+    alts: '尺寸硬條件 75"+。若客廳超亮→Samsung QN90F/S95F；預算省→Hisense 75U8Q',
+    where: 'LG 官網／PChome（$75,900 含原廠壁掛+安裝+舊機回收+2年保・最省心）｜認明結尾 PTA，避開水貨 PCA 與蝦皮超低裸機價',
+    note: 'C5=2025 款清倉中，故便宜；沒真的缺貨（官網/PChome/樂天有現貨）。B計畫：標準 C6 與 C5「同一片面板」，清完可無痛接。距離 2.8-3m、牆 223cm → 77吋剛好。接 Sonos 一條 HDMI eARC。',
+    link: 'https://biggo.com.tw/s/lg%20c5%20oled%2077'
+  },
+  {
+    name: '客廳音響 Soundbar', icon: '🔊', status: 'compare',
+    pick: 'Sonos Arc（配 75/77吋・免另加重低音）',
+    price: '約 NT$3.5 萬',
+    alts: '低音更強→Sonos Arc Ultra（~4.2萬）｜外型派→B&O Beosound Stage（公司貨~8.3萬／福利品~5.75萬）',
+    where: 'Sonos：momo／良興・盯年終折價券｜B&O：新光三越／101 專櫃試聽',
+    note: 'Arc Ultra 2024 上市、仍是現役旗艦，短期不會出新版。你的開放式 LDK 用 Arc 就夠，不用另加 Sub。',
+    link: 'https://biggo.com.tw/s/SONOS+Arc/'
+  },
+  {
+    name: '冰箱（日系六門・要製冰）', icon: '🧊', status: 'compare',
+    pick: '領先：Panasonic NR-F552YT（545L・省電王288度）／ 日立 RHSF53NJ（527L・冰溫室+製冰自清）',
+    price: '約 5–8 萬（價非重點）',
+    alts: '大容量備案：日立 RHW620RJ（614L・EF最高）／三菱 MR-WZ61K（607L・功能最全）— 但寬68.5/深73.8，凸出多4cm',
+    where: '條件：開口72cm→寬≤70｜旁櫃深60cm在右邊→深越淺越好+要「門往左開」｜無吊櫃高度free｜4台全日本製・全有自動製冰・全一級能效',
+    note: '尺寸（寬×深×高cm）：Panasonic552=65×69.9×185｜日立53NJ=65×70.1×183｜日立620=68.5×73.8×183｜三菱607=68.5×73.8×183（旁櫃240高、無吊櫃→高度free）。待辦：現場量寬+深、看實機、確認右開方向。四台皆2026現行款，Panasonic552已達2027能效。交屋前掃年終價。',
+    link: 'https://www.gseven.com.tw/blog_info.php?id=1001'
+  },
+  {
+    name: '空調（冷氣+全室除濕）', icon: '❄️', status: 'compare',
+    pick: '單一品牌二選一：① 日立全套（尊榮冷氣＋RDI清淨吊隱除濕）② Panasonic全套（冷氣＋F-YD36LX隱藏除濕）',
+    price: '一對三冷氣粗估 ~17–25萬｜吊隱除濕主機 ~3–6萬/台',
+    alts: '① 日立＝不鏽鋼冷排＋凍結洗淨（防霉硬體最強）＋服務廣 → 怕臭/週末宅首選｜② Panasonic＝最省電＋nanoe主動除臭抑菌',
+    where: '✅ 兩款吊隱除濕「皆可 WiFi App 遠端除濕」（日立雲端智慧控／Panasonic IoT App）；家中需 2.4GHz WiFi（Panasonic 部分機種需加購無線控制器）',
+    note: '配置：客廳吊隱冷氣＋2房壁掛、一對三室外機｜❌ 全熱不做（週末宅）｜週末宅規格：自動濕控＋連續排水＋遠端。整合關鍵＝同一空調團隊統一規劃天花風管/出風口/維修孔。大金因異味災情排除。',
+    link: 'https://www.hitachiaircon.com/tw/ranges/dehumidifier/dehumidifier-embedded'
   },
 ];
 
@@ -844,6 +892,31 @@ function renderCosts(furnitureBudget, furnitureSpent) {
   document.getElementById('totalCostVal').textContent = fmtMoneyFull(total);
 }
 
+// ── Render 選購決策清單 ─────────────────────────────────────────────────────────
+
+function renderDecisions() {
+  const grid = document.getElementById('decisionGrid');
+  if (!grid) return;
+  const stMap = { compare: '比較中', leaning: '已鎖定', decided: '已選定' };
+  const stCls = { compare: 'watching', leaning: 'announced', decided: 'ready' };
+  decisions.forEach(d => {
+    grid.innerHTML += `
+      <div class="watch-card">
+        <div class="w-top">
+          <span class="w-icon">${d.icon}</span>
+          <span class="w-name">${d.name}</span>
+          <span class="w-badge ${stCls[d.status] || 'watching'}">${stMap[d.status] || ''}</span>
+        </div>
+        <div class="w-row"><span class="w-k">⭐ 首選</span><span class="w-v">${d.pick}</span></div>
+        <div class="w-row"><span class="w-k">價格</span><span class="w-v">${d.price}</span></div>
+        <div class="w-row"><span class="w-k">備選</span><span class="w-v">${d.alts}</span></div>
+        ${d.where ? `<div class="w-row"><span class="w-k">何處買</span><span class="w-v">${d.where}</span></div>` : ''}
+        ${d.link ? `<div class="w-row"><span class="w-k">比價</span><span class="w-v"><a href="${d.link}" target="_blank" rel="noopener" style="color:var(--brass)">查看↗</a></span></div>` : ''}
+        <div class="w-note">${d.note}</div>
+      </div>`;
+  });
+}
+
 // ── Render watchlist（新版守望台）──────────────────────────────────────────────
 
 function renderWatchlist() {
@@ -897,6 +970,7 @@ function renderGadgets() {
 
 renderTimeline();
 renderMilestones();
+renderDecisions();
 renderRooms();
 renderWatchlist();
 renderGadgets();
